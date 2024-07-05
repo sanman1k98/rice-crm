@@ -1,11 +1,11 @@
 import { db, User } from "astro:db";
-import { generateId, DANGEROUS_insecurelyHashPassword } from "@/auth";
+import { generateId, scrypt } from "@/auth";
 
 async function devUser(name: string, password: string): Promise<typeof User.$inferInsert> {
   return {
     id: generateId(),
     username: name,
-    password_hash: await DANGEROUS_insecurelyHashPassword(password),
+    password_hash: await scrypt.hash(password),
   }
 }
 

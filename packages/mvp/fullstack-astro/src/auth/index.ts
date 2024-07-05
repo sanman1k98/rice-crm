@@ -1,5 +1,5 @@
 import { db, Session, User } from "astro:db";
-import { Lucia, generateIdFromEntropySize } from "lucia";
+import { Lucia, Scrypt, generateIdFromEntropySize } from "lucia";
 import { AstroDBAdapter } from "./adapter";
 
 const adapter = new AstroDBAdapter(db, Session, User);
@@ -28,6 +28,8 @@ declare module "lucia" {
 }
 
 export const generateId = () => generateIdFromEntropySize(10);
+
+export const scrypt = new Scrypt();
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();

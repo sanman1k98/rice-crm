@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { db, eq, User } from "astro:db";
-import { lucia, DANGEROUS_insecurelyVerify } from "@/auth";
+import { lucia, scrypt } from "@/auth";
 
 export const POST: APIRoute = async (context) => {
   const formData = await context.request.formData();
@@ -44,7 +44,7 @@ export const POST: APIRoute = async (context) => {
 
   const existingUser = existingUserRes.pop()!;
 
-  const validPassword = await DANGEROUS_insecurelyVerify(existingUser.password_hash, password);
+  const validPassword = await scrypt.verify(existingUser.password_hash, password);
   if (!validPassword) {
     return new Response("Incorrect username or password", {
       status: 400
