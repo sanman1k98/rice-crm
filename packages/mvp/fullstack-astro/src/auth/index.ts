@@ -29,46 +29,15 @@ declare module "lucia" {
 
 export const generateId = () => generateIdFromEntropySize(10);
 
+/** 
+ * Lucia's pure JavaScript implmentation of the "Scrypt" hashing algorithm. For
+ * a faster API, see Oslo's Scrypt which wraps `node:crypto`.
+ * 
+ * @see https://oslo.js.org/reference/password/Scrypt/
+ * @see https://lucia-auth.com/reference/main/Scrypt/
+ * @see https://thecopenhagenbook.com/password-authentication#password-storage
+ * @see https://github.com/napi-rs/node-rs
+ * @see https://github.com/paulmillr/noble-hashes
+ */
 export const scrypt = new Scrypt();
 
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-const encode = encoder.encode.bind(encoder);
-const decode = decoder.decode.bind(decoder);
-
-/** 
- * @see https://lucia-auth.com/tutorials/username-and-password/astro
- * @see https://thecopenhagenbook.com/password-authentication#password-storage
- * @see https://github.com/napi-rs/node-rs
- * @see https://github.com/paulmillr/noble-hashes
- */
-export async function hashPassword() {
-  // TODO: implementation.
-  throw new Error("Not implmented");
-}
-
-/** 
- * @see https://lucia-auth.com/tutorials/username-and-password/astro
- * @see https://thecopenhagenbook.com/password-authentication#password-storage
- * @see https://github.com/napi-rs/node-rs
- * @see https://github.com/paulmillr/noble-hashes
- */
-export async function verify() {
-  throw new Error("Not implmented");
-}
-
-/**
- * **DO NOT USE THIS IN PRODUCTION**. You will be fired from the startup:)
- *
- * @see https://thecopenhagenbook.com/password-authentication#password-storage
- */
-export async function DANGEROUS_insecurelyHashPassword(password: string) {
-  console.warn("[auth]: USING INSECURE HASHING ALGORITHM")
-  const bytes = encode(password);
-  const hash = await crypto.subtle.digest("SHA-256", bytes);
-  return decode(hash);
-}
-
-export async function DANGEROUS_insecurelyVerify(hashed: string, password: string): Promise<boolean> {
-  return hashed === await DANGEROUS_insecurelyHashPassword(password);
-}
