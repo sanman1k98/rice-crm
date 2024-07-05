@@ -1,1 +1,13 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Environment variables and secrets
+.env
+.env*.local
+
+# macOS Finder
+.DS_Store
