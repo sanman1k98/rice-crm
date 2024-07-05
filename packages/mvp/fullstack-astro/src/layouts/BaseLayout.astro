@@ -1,0 +1,23 @@
+---
+import type { ComponentProps } from "astro/types"
+import HeadMeta from "@/components/HeadMeta.astro"
+
+type Props = {
+  meta: ComponentProps<typeof HeadMeta>;
+  style?: string | Record<string, string>;
+  class?: string;
+}
+
+const { meta, style, class: className } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang={meta.locale}>
+  <head>
+    <HeadMeta {...meta} />
+    <slot name="head" />
+  </head>
+  <body class={className} style={style}>
+    <slot />
+  </body>
+</html>
