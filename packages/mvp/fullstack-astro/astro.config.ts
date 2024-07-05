@@ -4,9 +4,10 @@ import node from "@astrojs/node";
 import tailwind from "@astrojs/tailwind";
 
 export default defineConfig({
-  // Use `export const prerender = false` on pages that should be
-  // server-rendered on-demand.
-  output: "hybrid",
+  // Add `export const prerender = true` to any page or route to pre-render a
+  // static page or endpoint.
+  // https://docs.astro.build/en/guides/server-side-rendering/#opting-in-to-pre-rendering-in-server-mode
+  output: "server",
   // TODO: Investigate running an Astro project in middleware mode.
   // - https://docs.astro.build/en/guides/integrations-guide/node/#middleware
   // TODO: Investigate using SST v3 (Ion) for deployments on AWS or Cloudflare.
