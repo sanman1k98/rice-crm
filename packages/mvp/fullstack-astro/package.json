@@ -2,6 +2,13 @@
   "name": "@crm-mvp/fullstack-astro",
   "private": true,
   "type": "module",
+  "scripts": {
+    "dev": "astro dev --host",
+    "start": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
   "dependencies": {
     "@astrojs/db": "^0.11.7",
     "@astrojs/node": "^8.3.2",
