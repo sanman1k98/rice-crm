@@ -45,6 +45,16 @@ export async function hashPassword() {
   throw new Error("Not implmented");
 }
 
+/** 
+ * @see https://lucia-auth.com/tutorials/username-and-password/astro
+ * @see https://thecopenhagenbook.com/password-authentication#password-storage
+ * @see https://github.com/napi-rs/node-rs
+ * @see https://github.com/paulmillr/noble-hashes
+ */
+export async function verify() {
+  throw new Error("Not implmented");
+}
+
 /**
  * **DO NOT USE THIS IN PRODUCTION**. You will be fired from the startup:)
  *
@@ -57,3 +67,6 @@ export async function DANGEROUS_insecurelyHashPassword(password: string) {
   return decode(hash);
 }
 
+export async function DANGEROUS_insecurelyVerify(hashed: string, password: string): Promise<boolean> {
+  return hashed === await DANGEROUS_insecurelyHashPassword(password);
+}
