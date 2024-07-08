@@ -16,3 +16,4 @@
   - Astro DB can be [self-hosted in production](https://docs.astro.build/en/guides/astro-db/#self-hosted-production-deployment).
 - [Lucia](https://lucia-auth.com): framework-agnostic, session-based authentication library.
   - Supports [multiple OAuth providers](https://lucia-auth.com/guides/oauth/multiple-providers) with [Arctic](https://arcticjs.dev)
+- [Tailwind CSS](https://tailwindcss.com): Utility-first CSS framework.
