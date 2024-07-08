@@ -1,6 +1,11 @@
 import { lucia } from "./auth";
 import { defineMiddleware } from "astro:middleware";
 
+/**
+ * Validate user requests with Lucia.
+ *
+ * @see https://lucia-auth.com/getting-started/astro
+ */
 const auth = defineMiddleware(async (context, next) => {
   const sessionId = context.cookies.get(lucia.sessionCookieName)?.value ?? null;
   if (!sessionId) {
