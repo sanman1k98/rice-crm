@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "pnpm --filter fullstack-astro run dev",
     "dev:mvp": "pnpm --filter fullstack-astro run dev",
+    "build:mvp": "pnpm --filter fullstack-astro run build",
+    "preview:mvp": "pnpm --filter fullstack-astro run preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "workspaces": [
