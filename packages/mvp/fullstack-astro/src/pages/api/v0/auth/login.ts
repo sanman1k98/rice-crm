@@ -55,6 +55,5 @@ export const POST: APIRoute = async (context) => {
   const sessionCookie = lucia.createSessionCookie(session.id);
   context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-  return Response.json({ "text": "Sucess!" });
-  // return context.redirect("/");
+  return context.redirect("/home");
 }

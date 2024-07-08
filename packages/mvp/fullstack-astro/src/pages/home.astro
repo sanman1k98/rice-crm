@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+if (!Astro.locals.user)
+  return Astro.redirect("/login");
+
+const { username } = Astro.locals.user;
+const greeting = `Welcome back ${username}`;
+---
+
+<BaseLayout
+  meta={{
+    title: "Home",
+    description: greeting,
+  }}
+>
+  <main class="h-[90vh] flex flex-col place-content-center text-center">
+    <h1 class="font-bold text-5xl sm:text-7xl md:text-9xl">{greeting}</h1>
+  </main>
+</BaseLayout>
