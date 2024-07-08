@@ -13,8 +13,8 @@ type UserColumns = typeof User.$inferSelect;
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     attributes: {
-      // Set to `true` when using HTTPS.
-      secure: import.meta.env.PROD,
+      // Set to `false` for MVP.
+      secure: false,
     },
   },
   getUserAttributes: ({ username }) => ({ username }),
