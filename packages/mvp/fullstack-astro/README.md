@@ -17,3 +17,12 @@
 - [Lucia](https://lucia-auth.com): framework-agnostic, session-based authentication library.
   - Supports [multiple OAuth providers](https://lucia-auth.com/guides/oauth/multiple-providers) with [Arctic](https://arcticjs.dev)
 - [Tailwind CSS](https://tailwindcss.com): Utility-first CSS framework.
+
+## Needs further investigation
+
+- Deployments:
+  - [SST v3 (Ion)](https://ion.sst.dev/docs/) for deployments on AWS or Cloudflare. 
+- Database:
+  - [Turso's database per tenant](https://turso.tech/database-per-tenant) sounds super cool and fits our use case
+  - ol' reliable PostgreSQL
+
