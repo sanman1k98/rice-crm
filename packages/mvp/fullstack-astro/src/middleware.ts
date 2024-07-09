@@ -28,4 +28,5 @@ const auth = defineMiddleware(async (context, next) => {
   return next();
 });
 
+// TODO: Validate requests only on certain routes.
 export const onRequest = auth;

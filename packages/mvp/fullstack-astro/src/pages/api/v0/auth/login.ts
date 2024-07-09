@@ -2,6 +2,11 @@ import type { APIRoute } from "astro";
 import { db, eq, User } from "astro:db";
 import { lucia, scrypt } from "@/auth";
 
+/**
+ * Adapted from Lucia's documentation.
+ *
+ * @see https://lucia-auth.com/tutorials/username-and-password/astro
+ */
 export const POST: APIRoute = async (context) => {
   const formData = await context.request.formData();
   const username = formData.get("username");
