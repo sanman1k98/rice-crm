@@ -14,9 +14,9 @@ const User = defineTable({
     password_hash: column.text(),
     // TODO: Support multiple OAuth providers.
     // https://arcticjs.dev
-    //
+
     // TODO: Define "memberships" for users.
-    // A single user should can be "Members" of one or more "Organizations".
+    // A single user can be a "Member" of one or more "Organizations".
   }
 });
 
@@ -47,26 +47,31 @@ const Session = defineTable({
 // - "Organization" generally means a business, but can be something else like
 //   a nonprofit.
 // - an org can be created by a "User"
-// - an org can have multiple "Accounts" that it must keep track of
+// - an org can have multiple "Accounts"
 // - an org must have at least one "Member"
-// - a "Member" of an org can be an employee
-// - a "Member" 
 
 // TODO: Define "Member" (or "Membership"?) table.
 // - a member is tied to a single "User"
 // - a member is tied to an "Organization"
-// - a member has a set of permissions and
+// - a member has a set of permissions
 
 // TODO: Define "Account" table.
-// - "Account" can also mean "Customer"
-// - an account belongs to an "Organization"
+// - "Account" can also mean "Customer" or "Company"
+// - an "Account" represents the other organizations that interact with your
+//   business.
+// - an account can be created within an "Organization"
 // - keep track of "activity"; i.e., comments that members of the org can post
-// - an account can have many "Opportunities"
+// - an account can be associated with one or more "Deals"
 
-// TODO: Define "Opportunity" table.
-// - an opportunity is tied to a single "Account"
+// TODO: Define "Deal" table.
+// - a deal is tied to a single "Account"
 // - can be commented on by "Members"
 // - can be assigned to a "Member"
+
+// TODO: Define "Task" table.
+// - a task is can be created by a member of an org
+// - can be associated with a deal
+// - can be assigned to a member
 
 export default defineDb({
   tables: {
