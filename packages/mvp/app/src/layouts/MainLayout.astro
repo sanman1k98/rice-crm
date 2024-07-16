@@ -6,9 +6,12 @@ import Footer from "@/components/Footer.astro";
 export type Props = LayoutProps;
 ---
 
-<BaseLayout meta={Astro.props.meta}>
+<BaseLayout
+  meta={Astro.props.meta}
+  class="min-h-screen flex flex-col"
+>
   <Header class="pico container" user={Astro.locals.user} />
-  <main class="min-h-svh" class:list={[Astro.props.class]} style={Astro.props.style}>
+  <main class="grow" class:list={[Astro.props.class]} style={Astro.props.style}>
     <slot />
   </main>
   <Footer class="pico container" />
