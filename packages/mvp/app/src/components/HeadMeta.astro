@@ -1,11 +1,22 @@
 ---
 import { z } from "astro/zod";
 
+// TODO: create default OpenGraph image.
+
 const SITE_NAME = "MVP CRM";
 
+const DEFAULTS = {
+  LANG: "en-US",
+  OG_IMAGE: { file: "" },
+  TWITTER: { site: undefined },
+};
+
 const basic = z.object({
-  locale: z.string().default("en-US"),
+  /** Language tag (BCP 47). */
+  locale: z.string().default(DEFAULTS.LANG),
+  /** Text to display in the browser tab. */
   title: z.string(),
+  /** A description for creating a bookmark for the page. */
   description: z.string(),
   author: z.string().optional(),
 });
@@ -15,21 +26,19 @@ const articleSchema = z.object({
   modified_time: z.coerce.date(),
 });
 
+/** @see https://ogp.me */
 const ogSchema = z.object({
+  /** A more descriptive title used by the OpenGraph protocol. */
   title: z.string().optional(),
+  /** A description of the page used by the OpenGraph protocol. */
   description: z.string().optional(),
   article: articleSchema.optional(),
-  image: z
-    .object({
-      /** Path to an image file. */
-      file: z.string(),
-      alt: z.string().optional(),
-    })
-    // TODO: create default OpenGraph image.
-    .default({
-      file: "",
-      alt: "",
-    }),
+  image: z.object({
+    /** Path to an image file. */
+    file: z.string(),
+    /** Alt text for image. */
+    alt: z.string().optional(),
+  }),
 });
 
 // Twitter Cards will use OpenGraph images.
@@ -41,28 +50,25 @@ const twitterSchema = z.object({
   creator: z.string().refine(str => str.startsWith("@")).optional(),
 });
 
-const headMeta = basic
-  .extend({
-    og: ogSchema.default({}),
-  twitter: twitterSchema.default({}),
-  })
-  .transform((data) => {
-    const { og, twitter, ...basic } = data;
+const headMeta = basic.extend({
+  og: ogSchema.default({ image: DEFAULTS.OG_IMAGE }),
+  twitter: twitterSchema.default(DEFAULTS.TWITTER),
+}).transform((data) => {
+  const { og, twitter, ...basic } = data;
+  return {
+    ...basic,
+    title: `${basic.title} | ${SITE_NAME}`,
+    twitter,
+    og: {
+      ...og,
+      type: og.article ? "article" : "website",
+      title: og.title ?? basic.title,
+      description: og.description ?? basic.description,
+    },
+  };
+});
 
-    return {
-      ...basic,
-      title: `${basic.title} | ${SITE_NAME}`,
-      twitter,
-      og: {
-        ...og,
-        type: og.article ? "article" : "website",
-        title: og.title ?? basic.title,
-        description: og.description ?? basic.description,
-      },
-    };
-  });
-
-type Props = z.input<typeof headMeta>;
+export type Props = z.input<typeof headMeta>;
 
 const { title, description, og } = headMeta.parse(Astro.props);
 ---
