@@ -1,0 +1,16 @@
+---
+import type { CSSProperty } from "astro/types";
+
+export type Props = {
+  class?: string;
+  style?: string | Record<CSSProperty, string>;
+}
+---
+
+<footer class={Astro.props.class} style={Astro.props.style}>
+  <nav>
+    <ul>
+      <li><a href="https://github.com/sanman1k98/crm">GitHub</a></li>
+    </ul>
+  </nav>
+</footer>
