@@ -1,5 +1,5 @@
 {
-  "name": "@crm-mvp/fullstack-astro",
+  "name": "@mvp/app",
   "private": true,
   "type": "module",
   "scripts": {
