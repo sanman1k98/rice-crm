@@ -1,0 +1,19 @@
+---
+import type { CSSProperty } from "astro/types"
+
+type Props = {
+  class?: string;
+  style?: string | Record<CSSProperty, string>;
+};
+---
+
+<header>
+  <nav>
+    <ul>
+      <li><strong><a href="/">MVP</a></strong></li>
+    </ul>
+    <ul>
+      <li><a href="/login">Login</a></li>
+    </ul>
+  </nav>
+</header>
