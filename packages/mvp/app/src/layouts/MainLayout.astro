@@ -7,7 +7,7 @@ export type Props = LayoutProps;
 ---
 
 <BaseLayout meta={Astro.props.meta}>
-  <Header class="pico container" />
+  <Header class="pico container" user={Astro.locals.user} />
   <main class="min-h-svh" class:list={[Astro.props.class]} style={Astro.props.style}>
     <slot />
   </main>

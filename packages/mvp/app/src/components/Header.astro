@@ -4,6 +4,7 @@ import type { CSSProperty } from "astro/types"
 type Props = {
   class?: string;
   style?: string | Record<CSSProperty, string>;
+  user?: App.Locals["user"];
 };
 ---
 
@@ -13,7 +14,20 @@ type Props = {
       <li><strong><a href="/">CRM</a></strong></li>
     </ul>
     <ul>
-      <li><a href="/login">Login</a></li>
+      <li>
+        {
+          Astro.props.user ? (
+            <form
+              method="post"
+              action="/api/v0/auth/logout"
+            >
+              <input type="submit" value="Logout" />
+            </form>
+          ) : (
+            <a href="/login"><button>Login</button></a>
+          )
+        }
+      </li>
     </ul>
   </nav>
 </header>
