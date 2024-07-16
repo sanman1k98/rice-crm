@@ -50,6 +50,15 @@ const Session = defineTable({
 // - an org can have multiple "Accounts"
 // - an org must have at least one "Member"
 
+const Organization = defineTable({
+  columns: {
+    id: column.text({ primaryKey: true }),
+    created_by: column.text({
+      references: () => User.columns.id
+    }),
+  },
+})
+
 // TODO: Define "Member" (or "Membership"?) table.
 // - a member is tied to a single "User"
 // - a member is tied to an "Organization"
@@ -76,6 +85,7 @@ const Session = defineTable({
 export default defineDb({
   tables: {
     User,
-    Session
+    Session,
+    Organization,
   },
 });
