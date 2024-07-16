@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import Layout from "@/layouts/MainLayout.astro";
 
 if (!Astro.locals.user)
   return Astro.redirect("/login");
@@ -8,13 +8,14 @@ const { username } = Astro.locals.user;
 const greeting = `Welcome back ${username}`;
 ---
 
-<BaseLayout
+<Layout
   meta={{
     title: "Home",
     description: greeting,
   }}
+  class="mx-auto text-center"
 >
-  <main class="h-[90vh] flex flex-col place-content-center text-center">
-    <h1 class="font-bold text-5xl sm:text-7xl md:text-9xl">{greeting}</h1>
-  </main>
-</BaseLayout>
+  <h1 class="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+    {greeting}
+  </h1>
+</Layout>
