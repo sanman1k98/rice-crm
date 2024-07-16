@@ -82,10 +82,26 @@ const Organization = defineTable({
 // - can be associated with a deal
 // - can be assigned to a member
 
+const Task = defineTable({
+  columns: {
+    id: column.text({ primaryKey: true }),
+    created_by: column.text({
+      references: () => User.columns.id,
+    }),
+    org_id: column.text({
+      references: () => Organization.columns.id,
+    }),
+    number: column.number(),
+    title: column.text(),
+    body: column.text({ optional: true }),
+  },
+});
+
 export default defineDb({
   tables: {
     User,
     Session,
     Organization,
+    Task,
   },
 });
