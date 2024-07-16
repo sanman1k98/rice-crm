@@ -1,4 +1,5 @@
 ---
+import { db, Task, eq } from "astro:db";
 import Layout from "@/layouts/MainLayout.astro";
 
 if (!Astro.locals.user)
@@ -6,6 +7,10 @@ if (!Astro.locals.user)
 
 const { username } = Astro.locals.user;
 const greeting = `Welcome back ${username}`;
+
+const tasks = await db.select()
+  .from(Task)
+  .where(eq(Task.created_by, Astro.locals.user.id));
 ---
 
 <Layout
@@ -13,9 +18,19 @@ const greeting = `Welcome back ${username}`;
     title: "Home",
     description: greeting,
   }}
-  class="mx-auto text-center"
+  class="mx-auto"
 >
-  <h1 class="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+  <h1 class="font-bold text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
     {greeting}
   </h1>
+  <div class="pico">
+    {
+      tasks.map(t => (
+        <article>
+          <header>#{t.number} {t.title}</header>
+          {t.body}
+        </article>
+      ))
+    }
+  </div>
 </Layout>
