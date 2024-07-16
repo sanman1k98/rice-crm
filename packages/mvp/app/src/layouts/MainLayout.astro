@@ -1,0 +1,15 @@
+---
+import BaseLayout, { type Props as LayoutProps } from "./BaseLayout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+
+export type Props = LayoutProps;
+---
+
+<BaseLayout meta={Astro.props.meta}>
+  <Header class="pico container" />
+  <main class="min-h-svh" class:list={[Astro.props.class]} style={Astro.props.style}>
+    <slot />
+  </main>
+  <Footer class="pico container" />
+</BaseLayout>

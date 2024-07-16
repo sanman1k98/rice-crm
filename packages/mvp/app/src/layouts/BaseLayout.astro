@@ -1,19 +1,19 @@
 ---
-import type { ComponentProps } from "astro/types"
-import HeadMeta from "@/components/HeadMeta.astro"
+import type { CSSProperty } from "astro/types";
 import "@picocss/pico/css/pico.conditional.min.css";
+import HeadMeta, { type Props as HeadMetaProps } from "@/components/HeadMeta.astro"
 
-type Props = {
-  meta: ComponentProps<typeof HeadMeta>;
-  style?: string | Record<string, string>;
+export type Props = {
+  meta: HeadMetaProps;
   class?: string;
+  style?: string | Record<CSSProperty, string>;
 }
 
 const { meta, style, class: className } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang={meta.locale}>
+<html lang={meta.locale ?? "en-US"}>
   <head>
     <HeadMeta {...meta} />
     <slot name="head" />

@@ -1,16 +1,13 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-
-// export const prerender = true;
+import Layout from "@/layouts/MainLayout.astro";
 ---
 
-<BaseLayout
+<Layout
   meta={{
     title: "Welcome",
     description: "Welcome to MVP CRM",
   }}
+  class="flex flex-col mx-auto text-center"
 >
-  <main class="h-[90vh] flex flex-col place-content-center text-center">
-    <h1 class="font-bold text-5xl sm:text-7xl md:text-9xl">MVP CRM</h1>
-  </main>
-</BaseLayout>
+  <h1 class="font-bold text-5xl sm:text-7xl md:text-9xl">MVP CRM</h1>
+</Layout>
