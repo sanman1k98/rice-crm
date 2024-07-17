@@ -9,11 +9,11 @@ if (!user)
 
 const greeting = `Welcome back ${user.fullname}`;
 
-const tasks = await db.select()
+const tasksPromise = db.select()
   .from(Task)
   .where(eq(Task.author, user.id));
 
-const accounts = user.primary_org && await db.select()
+const accountsPromise = user.primary_org && db.select()
   .from(Account)
   .where(eq(Account.org, user.primary_org));
 ---
@@ -28,26 +28,26 @@ const accounts = user.primary_org && await db.select()
     <h2>Created tasks</h2>
     <div>
       {
-        tasks.map(t => (
+        tasksPromise.then(tasks => tasks.map(t => (
           <article class="mx-auto max-w-sm">
             {t.title}
             {t.body && <footer>{t.body}</footer>}
           </article>
-        ))
+        )))
       }
     </div>
   </section>
   {
-    accounts && (
+    accountsPromise && (
       <section class="pico container">
         <h2>Accounts</h2>
         {
-          accounts.map(account => (
+          accountsPromise.then(accounts => accounts.map(account => (
             <article class="mx-auto max-w-sm">
               {account.name}
               {account.info && <footer>{account.info}</footer>}
             </article>
-          ))
+          )))
         }
       </section>
     )
