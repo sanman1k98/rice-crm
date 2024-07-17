@@ -1,16 +1,21 @@
 ---
-import { db, Task, eq } from "astro:db";
+import { Account, Task, db, eq } from "astro:db";
 import Layout from "@/layouts/MainLayout.astro";
 
-if (!Astro.locals.user)
+const { user } = Astro.locals;
+
+if (!user)
   return Astro.redirect("/login");
 
-const { username } = Astro.locals.user;
-const greeting = `Welcome back ${username}`;
+const greeting = `Welcome back ${user.fullname}`;
 
 const tasks = await db.select()
   .from(Task)
-  .where(eq(Task.created_by, Astro.locals.user.id));
+  .where(eq(Task.author, user.id));
+
+const accounts = user.primary_org && await db.select()
+  .from(Account)
+  .where(eq(Account.org, user.primary_org));
 ---
 
 <Layout
@@ -18,19 +23,33 @@ const tasks = await db.select()
     title: "Home",
     description: greeting,
   }}
-  class="mx-auto"
 >
-  <h1 class="font-bold text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
-    {greeting}
-  </h1>
-  <div class="pico">
-    {
-      tasks.map(t => (
-        <article>
-          <header>#{t.number} {t.title}</header>
-          {t.body}
-        </article>
-      ))
-    }
-  </div>
+  <section class="pico container">
+    <h2>Created tasks</h2>
+    <div>
+      {
+        tasks.map(t => (
+          <article class="mx-auto max-w-sm">
+            {t.title}
+            {t.body && <footer>{t.body}</footer>}
+          </article>
+        ))
+      }
+    </div>
+  </section>
+  {
+    accounts && (
+      <section class="pico container">
+        <h2>Accounts</h2>
+        {
+          accounts.map(account => (
+            <article class="mx-auto max-w-sm">
+              {account.name}
+              {account.info && <footer>{account.info}</footer>}
+            </article>
+          ))
+        }
+      </section>
+    )
+  }
 </Layout>
