@@ -17,13 +17,17 @@ export const lucia = new Lucia(adapter, {
       secure: false,
     },
   },
-  getUserAttributes: ({ username }) => ({ username }),
+  getUserAttributes: (user) => ({
+    username: user.username,
+    fullname: user.fullname,
+    primary_org: user.primary_org,
+  }),
 });
 
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
-    DatabaseUserAttributes: Pick<UserColumns, "username">;
+    DatabaseUserAttributes: Pick<UserColumns, "fullname" | "username" | "primary_org">;
   }
 }
 
