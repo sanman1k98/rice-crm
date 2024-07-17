@@ -1,22 +1,45 @@
-import { column, defineDb, defineTable } from "astro:db";
+/**
+ * @file Define database tables used by the app.
+ *
+ * @see https://docs.astro.build/en/guides/astro-db/
+ */
+import { column, defineDb, defineTable, NOW } from "astro:db";
+
+/**
+ * - "Organization" generally means a business, but can be something else like
+ *   a nonprofit.
+ * - an org can be created by a "User"
+ * - an org can have multiple "Accounts"
+ * - an org must have at least one "Member"
+ */
+const Organization = defineTable({
+  columns: {
+    id: column.text({ primaryKey: true }),
+    name: column.text(),
+    description: column.text({ optional: true }),
+  },
+})
 
 // "User" and "Session" table definitions are adapted from "lucia-adapter-astrodb".
 // https://github.com/pilcrowOnPaper/lucia-adapter-astrodb
 
+/**
+ *
+ * @todo Consider supporting email-based auth.
+ * @see https://lucia-auth.com/guides/email-and-password/
+ * @todo Multiple OAuth providers.
+ * @see https://arcticjs.dev
+ */
 const User = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
-    // TODO: Consider supporting email-based auth.
-    // https://lucia-auth.com/guides/email-and-password/
     username: column.text({ unique: true }),
-    // FIXME: Deprecate username-based auth.
-    // Since this is just an MVP, its fine for now.
     password_hash: column.text(),
-    // TODO: Support multiple OAuth providers.
-    // https://arcticjs.dev
-
-    // TODO: Define "memberships" for users.
-    // A single user can be a "Member" of one or more "Organizations".
+    fullname: column.text(),
+    primary_org: column.text({
+      optional: true,
+      references: () => Organization.columns.id,
+    }),
   }
 });
 
@@ -30,10 +53,8 @@ const User = defineTable({
 const Session = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
+    userId: column.text({ references: () => User.columns.id }),
     expiresAt: column.date(),
-    userId: column.text({
-      references: () => User.columns.id
-    })
   }
 });
 
@@ -43,55 +64,58 @@ const Session = defineTable({
 // - the member level?
 // - the user level?
 
-// TODO: Define "Organization" table.
-// - "Organization" generally means a business, but can be something else like
-//   a nonprofit.
-// - an org can be created by a "User"
-// - an org can have multiple "Accounts"
-// - an org must have at least one "Member"
+/**
+ * Defines relationships between "Organizations" and "Users".
+ *
+ * - a role is tied to a single "User"
+ * - a role is tied to an "Organization"
+ * - a role has a set of permissions
+ *
+ * @summary Use to check what org a user belongs to.
+ * @todo Should we have a separate table containing different types of roles?
+ */
+const OrgRole = defineTable({
+  columns: {
+    org: column.text({ references: () => Organization.columns.id }),
+    user: column.text({ references: () => User.columns.id }),
+    /** Examples: "owner", "member", "admin". */
+    role: column.text(),
+  }
+});
 
-const Organization = defineTable({
+/**
+ * - "Account" can also mean "Customer" or "Company"
+ * - an "Account" represents the other organizations that interact with your
+ *   business.
+ * - an account can be created within an "Organization"
+ * - keep track of "activity"; i.e., comments that members of the org can post
+ * - an account can be associated with one or more "Deals"
+ */
+const Account = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
-    created_by: column.text({
-      references: () => User.columns.id
-    }),
+    org: column.text({ references: () => Organization.columns.id }),
+    name: column.text(),
+    info: column.json({ optional: true })
   },
 })
-
-// TODO: Define "Member" (or "Membership"?) table.
-// - a member is tied to a single "User"
-// - a member is tied to an "Organization"
-// - a member has a set of permissions
-
-// TODO: Define "Account" table.
-// - "Account" can also mean "Customer" or "Company"
-// - an "Account" represents the other organizations that interact with your
-//   business.
-// - an account can be created within an "Organization"
-// - keep track of "activity"; i.e., comments that members of the org can post
-// - an account can be associated with one or more "Deals"
 
 // TODO: Define "Deal" table.
 // - a deal is tied to a single "Account"
 // - can be commented on by "Members"
 // - can be assigned to a "Member"
 
-// TODO: Define "Task" table.
-// - a task is can be created by a member of an org
-// - can be associated with a deal
-// - can be assigned to a member
-
+/**
+ * - a task is can be created by a member of an org
+ * - can be associated with a deal
+ * - can be assigned to a member
+ */
 const Task = defineTable({
   columns: {
-    id: column.text({ primaryKey: true }),
-    created_by: column.text({
-      references: () => User.columns.id,
-    }),
-    org_id: column.text({
-      references: () => Organization.columns.id,
-    }),
-    number: column.number(),
+    id: column.number({ primaryKey: true }),
+    created: column.date({ default: NOW }),
+    author: column.text({ references: () => User.columns.id }),
+    org: column.text({ references: () => Organization.columns.id }),
     title: column.text(),
     body: column.text({ optional: true }),
   },
@@ -102,6 +126,8 @@ export default defineDb({
     User,
     Session,
     Organization,
+    OrgRole,
+    Account,
     Task,
   },
 });

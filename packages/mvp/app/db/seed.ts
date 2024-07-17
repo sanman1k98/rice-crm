@@ -1,53 +1,103 @@
-import { db, User, Organization, Task } from "astro:db";
+/**
+ * @file
+ */
+import { db, User, Organization, Task, OrgRole, Account } from "astro:db";
 import { generateId, scrypt } from "@/auth";
 
-async function devUser(name: string, password: string): Promise<typeof User.$inferInsert> {
+async function createUser(
+  {
+    fullname,
+    username,
+    password,
+    primary_org: org,
+  }: {
+    fullname: string,
+    username: string,
+    password: string,
+    primary_org?: ReturnType<typeof createOrg>,
+  }
+): Promise<typeof User.$inferInsert> {
   return {
     id: generateId(),
-    username: name,
+    fullname,
+    username,
     password_hash: await scrypt.hash(password),
+    primary_org: org?.id ?? null,
   }
 }
 
-function devOrg(userId: string, name: string): typeof Organization.$inferInsert {
+let orgCounter = 0;
+
+function createOrg(name: string, desc?: string): typeof Organization.$inferInsert {
   return {
-    id: name,
-    created_by: userId,
+    id: String(++orgCounter),
+    name,
+    description: desc ?? null,
   };
 }
 
-function devTask(
-  orgId: string,
-  creatorId: string,
-  tasks: Omit<typeof Task.$inferInsert, "org_id" | "created_by" >[],
+function createRoles(
+  org: ReturnType<typeof createOrg>,
+  userRoles: [user: Awaited<ReturnType<typeof createUser>>, role: string][],
+): typeof OrgRole.$inferInsert[] {
+  const orgId = org.id!;
+  return userRoles.map(userRole => ({
+    org: orgId,
+    user: userRole[0].id!,
+    role: userRole[1],
+  }));
+}
+
+function createAccount(
+  org: ReturnType<typeof createOrg>,
+  name: string,
+  info?: any,
+): typeof Account.$inferInsert {
+  return {
+    org: org.id!,
+    name,
+    info,
+  };
+}
+
+function createTasks(
+  org: ReturnType<typeof createOrg>,
+  author: Awaited<ReturnType<typeof createUser>>,
+  tasks: Omit<typeof Task.$inferInsert, "org" | "author" >[],
 ): typeof Task.$inferInsert[] {
-  return tasks.map(t => ({
-    org_id: orgId,
-    created_by: creatorId,
-    ...t,
+  return tasks.map(task => ({
+    org: org.id!,
+    author: author.id!,
+    ...task,
   }));
 }
 
 export default async function() {
-  const users = await Promise.all([
-    devUser("test", "password"),
+  const testOrg = createOrg("Test Company Incorporated");
+
+  const testUser = await createUser({
+    fullname: "Firstname Lastname",
+    username: "test",
+    password: "password",
+    primary_org: testOrg,
+  });
+
+  const testRoles = createRoles(testOrg, [
+    [testUser, "owner"],
   ]);
 
-  const testOrgCreator = users[0]!.id!;
+  const testAccount = createAccount(testOrg, "Test Account");
 
-  const orgs = [
-    devOrg(testOrgCreator, "test-org")
-  ];
-
-  const testOrg = orgs[0]!;
-
-  const testOrgTasks = devTask(testOrg.id!, testOrg.created_by!, [
-    { number: 1, title: "Create backend" },
-    { number: 2, title: "Create frontend" },
-    { number: 3, title: "Profit" },
+  const testOrgTasks = createTasks(testOrg, testUser, [
+    { title: "Create backend" },
+    { title: "Create frontend" },
+    { title: "Profit" },
+    { title: "Spend money" },
   ]);
 
-  await db.insert(User).values(users);
-  await db.insert(Organization).values(orgs)
-  await db.insert(Task).values(testOrgTasks)
+  await db.insert(Organization).values(testOrg);
+  await db.insert(User).values(testUser);
+  await db.insert(OrgRole).values(testRoles);
+  await db.insert(Account).values(testAccount);
+  await db.insert(Task).values(testOrgTasks);
 }
