@@ -14,20 +14,20 @@ type Props = {
       <li><strong><a href="/">CRM</a></strong></li>
     </ul>
     <ul>
-      <li>
-        {
-          Astro.props.user ? (
-            <form
-              method="post"
-              action="/api/v0/auth/logout"
-            >
-              <input type="submit" value="Logout" />
+      {
+        Astro.props.user ? (
+          <li><a href="/home">Home</a></li>
+          <li><a href="/tasks">Tasks</a></li>
+          <li><a href="/accounts">Accounts</a></li>
+          <li>
+            <form method="post" action="/api/v0/auth/logout">
+              <input type="submit" value="Logout" class="secondary" />
             </form>
-          ) : (
-            <a href="/login"><button>Login</button></a>
-          )
-        }
-      </li>
+          </li>
+        ) : (
+          <li><a role="button" href="/login">Login</a></li>
+        )
+      }
     </ul>
   </nav>
 </header>
