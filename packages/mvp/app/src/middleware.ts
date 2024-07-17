@@ -1,12 +1,12 @@
+import type { MiddlewareHandler } from "astro";
 import { lucia } from "./auth";
-import { defineMiddleware } from "astro:middleware";
 
 /**
  * Validate user requests with Lucia.
  *
  * @see https://lucia-auth.com/getting-started/astro
  */
-const auth = defineMiddleware(async (context, next) => {
+const auth: MiddlewareHandler = async (context, next) => {
   const sessionId = context.cookies.get(lucia.sessionCookieName)?.value ?? null;
   if (!sessionId) {
     context.locals.user = null;
@@ -26,7 +26,7 @@ const auth = defineMiddleware(async (context, next) => {
   context.locals.session = session;
   context.locals.user = user;
   return next();
-});
+};
 
 // TODO: Validate requests only on certain routes.
 export const onRequest = auth;
