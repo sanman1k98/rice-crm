@@ -4,7 +4,6 @@ import type { CSSProperty } from "astro/types"
 type Props = {
   class?: string;
   style?: string | Record<CSSProperty, string>;
-  user?: App.Locals["user"];
 };
 ---
 
@@ -15,7 +14,7 @@ type Props = {
     </ul>
     <ul>
       {
-        Astro.props.user ? (
+        Astro.locals.user ? (
           <li><a href="/home">Home</a></li>
           <li><a href="/tasks">Tasks</a></li>
           <li><a href="/accounts">Accounts</a></li>
