@@ -1,6 +1,6 @@
 ---
-import { Account, Task, db, eq } from "astro:db";
 import Layout from "@/layouts/MainLayout.astro";
+import { orgTasks, orgAccounts, orgInfo } from "@/utils/queries";
 
 const { user } = Astro.locals;
 
@@ -9,13 +9,11 @@ if (!user)
 
 const greeting = `Welcome back ${user.fullname}`;
 
-const tasksPromise = db.select()
-  .from(Task)
-  .where(eq(Task.author, user.id));
-
-const accountsPromise = user.primary_org && db.select()
-  .from(Account)
-  .where(eq(Account.org, user.primary_org));
+const [org, tasks, accounts] = await Promise.all([
+  orgInfo.get({ org: user.primary_org }).then(org => org!),
+  orgTasks.all({ org: user.primary_org }),
+  orgAccounts.all({ org: user.primary_org }),
+]);
 ---
 
 <Layout
@@ -24,32 +22,30 @@ const accountsPromise = user.primary_org && db.select()
     description: greeting,
   }}
 >
+  <div class="pico container">
+    <h1>{org.name}</h1>
+  </div>
   <section class="pico container">
     <h2>Created tasks</h2>
     <div>
       {
-        tasksPromise.then(tasks => tasks.map(t => (
+        tasks.map(task => (
           <article class="mx-auto max-w-sm">
-            {t.title}
-            {t.body && <footer>{t.body}</footer>}
+            {task.title}
+            {task.body && <footer>{task.body}</footer>}
           </article>
-        )))
+        ))
       }
     </div>
   </section>
-  {
-    accountsPromise && (
-      <section class="pico container">
-        <h2>Accounts</h2>
-        {
-          accountsPromise.then(accounts => accounts.map(account => (
-            <article class="mx-auto max-w-sm">
-              {account.name}
-              {account.info && <footer>{account.info}</footer>}
-            </article>
-          )))
-        }
-      </section>
-    )
-  }
+  <section class="pico container">
+    <h2>Accounts</h2>
+    {
+      accounts.map(account => (
+        <article class="mx-auto max-w-sm">
+          {account.name}
+        </article>
+      ))
+    }
+  </section>
 </Layout>
