@@ -14,7 +14,7 @@ async function createUser(
     fullname: string,
     username: string,
     password: string,
-    primary_org?: ReturnType<typeof createOrg>,
+    primary_org: ReturnType<typeof createOrg>,
   }
 ): Promise<typeof User.$inferInsert> {
   return {
@@ -22,7 +22,7 @@ async function createUser(
     fullname,
     username,
     password_hash: await scrypt.hash(password),
-    primary_org: org?.id ?? null,
+    primary_org: org.id!,
   }
 }
 

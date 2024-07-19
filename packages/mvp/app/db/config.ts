@@ -36,10 +36,7 @@ const User = defineTable({
     username: column.text({ unique: true }),
     password_hash: column.text(),
     fullname: column.text(),
-    primary_org: column.text({
-      optional: true,
-      references: () => Organization.columns.id,
-    }),
+    primary_org: column.text({ references: () => Organization.columns.id }),
   }
 });
 
