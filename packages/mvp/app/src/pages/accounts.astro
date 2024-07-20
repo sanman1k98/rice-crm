@@ -1,13 +1,13 @@
 ---
 import Layout from "@/layouts/MainLayout.astro";
-import { orgAccounts } from "@/utils/queries";
+import { getOrgAccounts } from "@/lib/orgs"
 
 const { user } = Astro.locals;
 
 if (!user)
   return Astro.redirect("/login");
 
-const accounts = await orgAccounts.all({ org: user.primary_org });
+const accounts = await getOrgAccounts(user.primary_org);
 ---
 
 <Layout
