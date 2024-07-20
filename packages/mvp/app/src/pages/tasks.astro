@@ -1,15 +1,13 @@
 ---
-import { Task, db, eq } from "astro:db";
 import Layout from "@/layouts/MainLayout.astro";
+import { orgTasks } from "@/utils/queries";
 
 const { user } = Astro.locals;
 
 if (!user)
   return Astro.redirect("/login");
 
-const tasksPromise = db.select()
-  .from(Task)
-  .where(eq(Task.author, user.id));
+const tasks = await orgTasks.all({ org: user.primary_org });
 ---
 
 <Layout
@@ -21,12 +19,12 @@ const tasksPromise = db.select()
   <div class="pico container">
     <h1>My tasks</h1>
     {
-      tasksPromise.then(tasks => tasks.map(t => (
+      tasks.map(t => (
         <article class="mx-auto max-w-sm">
           {t.title}
           {t.body && <footer>{t.body}</footer>}
         </article>
-      )))
+      ))
     }
   </div>
 </Layout>

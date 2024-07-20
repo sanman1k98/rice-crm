@@ -1,5 +1,5 @@
 /**
- * @file Prepared SQL statements for common queries.
+ * @file Prepared SQL statements.
  */
 import { Account, Organization, OrgRole, Task, User, db, eq, sql } from "astro:db";
 

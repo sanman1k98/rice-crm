@@ -1,15 +1,13 @@
 ---
-import { Account, db, eq } from "astro:db";
 import Layout from "@/layouts/MainLayout.astro";
+import { orgAccounts } from "@/utils/queries";
 
 const { user } = Astro.locals;
 
 if (!user)
   return Astro.redirect("/login");
 
-const accountsPromise = user.primary_org && db.select()
-  .from(Account)
-  .where(eq(Account.org, user.primary_org));
+const accounts = await orgAccounts.all({ org: user.primary_org });
 ---
 
 <Layout
@@ -21,13 +19,11 @@ const accountsPromise = user.primary_org && db.select()
   <div class="pico container">
   <h1>Accounts</h1>
     {
-      accountsPromise && (
-        accountsPromise.then(accounts => accounts.map(account => (
-          <section class="mx-auto">
-            <h2>{account.name}</h2>
-          </section>
-        )))
-      )
+      accounts.map(account => (
+        <article class="mx-auto max-w-sm">
+          {account.name}
+        </article>
+      ))
     }
   </div>
 </Layout>
