@@ -14,7 +14,7 @@ import { column, defineDb, defineTable, NOW } from "astro:db";
  */
 const Organization = defineTable({
   columns: {
-    id: column.text({ primaryKey: true }),
+    id: column.number({ primaryKey: true }),
     name: column.text(),
     description: column.text({ optional: true }),
   },
@@ -36,7 +36,7 @@ const User = defineTable({
     username: column.text({ unique: true }),
     password_hash: column.text(),
     fullname: column.text(),
-    primary_org: column.text({ references: () => Organization.columns.id }),
+    primary_org: column.number({ references: () => Organization.columns.id }),
   }
 });
 
@@ -73,7 +73,7 @@ const Session = defineTable({
  */
 const OrgRole = defineTable({
   columns: {
-    org: column.text({ references: () => Organization.columns.id }),
+    org: column.number({ references: () => Organization.columns.id }),
     user: column.text({ references: () => User.columns.id }),
     /** Examples: "owner", "member", "admin". */
     role: column.text(),
@@ -90,8 +90,8 @@ const OrgRole = defineTable({
  */
 const Account = defineTable({
   columns: {
-    id: column.text({ primaryKey: true }),
-    org: column.text({ references: () => Organization.columns.id }),
+    id: column.number({ primaryKey: true }),
+    org: column.number({ references: () => Organization.columns.id }),
     name: column.text(),
     info: column.json({ optional: true })
   },
@@ -112,7 +112,7 @@ const Task = defineTable({
     id: column.number({ primaryKey: true }),
     created: column.date({ default: NOW }),
     author: column.text({ references: () => User.columns.id }),
-    org: column.text({ references: () => Organization.columns.id }),
+    org: column.number({ references: () => Organization.columns.id }),
     title: column.text(),
     body: column.text({ optional: true }),
   },
