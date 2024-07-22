@@ -18,8 +18,11 @@ export default async function() {
   });
 
   await createAccount({
-    name: "Test Account",
     org: testOrg.id,
+    name: "Test Customer",
+    description: "This Account was created for development.",
+    email: "test.customer@example.com",
+    address: "Earth",
   });
 
   await createTasks(testUser, [

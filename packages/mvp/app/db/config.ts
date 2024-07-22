@@ -93,7 +93,9 @@ const Account = defineTable({
     id: column.number({ primaryKey: true }),
     org: column.number({ references: () => Organization.columns.id }),
     name: column.text(),
-    info: column.json({ optional: true })
+    description: column.text(),
+    email: column.text(),
+    address: column.text(),
   },
 })
 
