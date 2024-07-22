@@ -1,0 +1,23 @@
+---
+import type { Account } from "astro:db";
+
+type Props = {
+  class?: string;
+  account: typeof Account.$inferSelect;
+  gradient?: string;
+};
+
+const { account } = Astro.props;
+---
+
+<div class="pico" class:list={[Astro.props.class]}>
+  <article class="max-w-min">
+    <div class:list={["size-48 rounded", Astro.props.gradient ?? "bg-gradient-to-tr from-gray-200 to-sky-50"]}></div>
+    <footer>
+      <a
+        href={`/accounts/${account.id}`}
+        class="contrast"
+      >{account.name}</a>
+    </footer>
+  </article>
+</div>
