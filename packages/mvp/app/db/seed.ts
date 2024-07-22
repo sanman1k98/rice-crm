@@ -26,9 +26,33 @@ export default async function() {
   });
 
   await createTasks(testUser, [
-    { title: "Create backend" },
-    { title: "Create frontend" },
-    { title: "Profit" },
-    { title: "Spend money" },
+    {
+      title: "Create backend",
+      body: `
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
+odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
+sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`
+    },
+    {
+      title: "Create frontend",
+      body: `
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
+odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
+sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`
+    },
+    {
+      title: "Profit",
+      body: `
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
+odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
+sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`
+    },
+    {
+      title: "Spend money",
+      body: `
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
+odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
+sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`
+    },
   ]);
 }
