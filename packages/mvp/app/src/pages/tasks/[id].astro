@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/MainLayout.astro";
 import { getTaskInfo } from "@/lib/tasks";
+import { getUserInfo } from "@/lib/users";
 
 const { user } = Astro.locals;
 
@@ -11,6 +12,8 @@ const task = await getTaskInfo(Number(Astro.params.id));
 
 if (!task)
   return Astro.redirect("/404");
+
+const author = await getUserInfo(task.author);
 ---
 
 <Layout
@@ -21,6 +24,11 @@ if (!task)
 >
   <div class="container">
     <h1>{task.title}</h1>
+    {task.body && <p class="max-w-prose">{task.body}</p>}
+    <ul>
+      <li>Author: {author?.fullname}</li>
+      <li>Created at: {task.created.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</li>
+    </ul>
   </div>
 </Layout>
 
