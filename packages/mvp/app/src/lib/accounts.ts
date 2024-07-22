@@ -1,4 +1,4 @@
-import { db, Account } from "astro:db";
+import { Account, db, eq, sql } from "astro:db";
 
 export async function createAccount(
   account: typeof Account.$inferInsert,
@@ -8,4 +8,12 @@ export async function createAccount(
     .values(account)
     .returning()
     .get();
+}
+
+export async function getAccountInfo(accountId: typeof Account.$inferSelect["id"]) {
+  return db
+    .select()
+    .from(Account)
+    .where(eq(sql.placeholder("id"), Account.id))
+    .get({ id: accountId });
 }
