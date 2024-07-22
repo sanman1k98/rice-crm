@@ -16,11 +16,20 @@ if (!account)
 <Layout
   meta={{
     title: account.name,
-    description: account.name,
+    description: account.description,
   }}
 >
   <div class="container">
     <h1>{account.name}</h1>
+    <h2>Description</h2>
+    <p>{account.description}</p>
+    <h3>Additional info</h3>
+    <address>
+      <ul>
+        <li>Email: {account.email}</li>
+        <li>Address: {account.address}</li>
+      </ul>
+    </address>
   </div>
 </Layout>
 
