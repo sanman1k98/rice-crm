@@ -37,7 +37,7 @@ const [org, tasks, accounts] = await Promise.all([
 
   <section class="container">
     <h2>Accounts</h2>
-    <div>
+    <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
       {accounts.map((account, idx) => (
         <AccountCard
           account={account}
