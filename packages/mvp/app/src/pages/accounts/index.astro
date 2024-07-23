@@ -2,6 +2,7 @@
 import Layout from "@/layouts/MainLayout.astro";
 import AccountCard from "@/components/AccountCard.astro";
 import { getOrgAccounts } from "@/lib/orgs"
+import { createAccount } from "@/lib/accounts";
 
 const { user } = Astro.locals;
 
@@ -10,10 +11,17 @@ if (!user)
 
 if (Astro.request.method === "POST") {
   try {
-    const data = await Astro.request.formData();
-    const entries = data.entries();
-    const ret = Object.fromEntries(entries);
-    return Response.json(ret, {status: 200});
+    // FIXME: Validate FormData
+    const formData = Object.fromEntries(
+      await Astro.request.formData().then(data => data.entries())
+    );
+    // @ts-ignore assume FormData is good.
+    const createdAccount = await createAccount({
+      org: user.primary_org,
+      ...formData,
+    });
+    console.log(createdAccount);
+    return Astro.redirect(`/accounts/${createdAccount.id}`);
   } catch (e) {
     return Response.json(e, { status: 500 });
   }
