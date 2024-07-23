@@ -1,11 +1,19 @@
 ---
 import Layout from "@/layouts/MainLayout.astro";
+import AccountCard from "@/components/AccountCard.astro";
 import { getOrgAccounts } from "@/lib/orgs"
 
 const { user } = Astro.locals;
 
 if (!user)
   return Astro.redirect("/login");
+
+const gradients = [
+  "bg-gradient-to-t from-green-200 to-zinc-200",
+  "bg-gradient-to-tr from-pink-200 to-sky-200",
+  "bg-gradient-to-tr from-purple-200 to-blue-200",
+  "bg-gradient-to-t from-orange-200 to-teal-200",
+];
 
 const accounts = await getOrgAccounts(user.primary_org);
 ---
@@ -15,15 +23,15 @@ const accounts = await getOrgAccounts(user.primary_org);
     title: "Accounts",
     description: "Organization accounts",
   }}
+  class="container"
 >
-  <div class="pico container">
   <h1>Accounts</h1>
-    {
-      accounts.map(account => (
-        <article class="mx-auto max-w-sm">
-          {account.name}
-        </article>
-      ))
-    }
+  <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+    {accounts.map((account, idx) => (
+      <AccountCard
+        account={account}
+        gradient={gradients[idx % gradients.length]!}
+      />
+    ))}
   </div>
 </Layout>
