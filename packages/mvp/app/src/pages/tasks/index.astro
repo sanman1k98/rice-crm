@@ -16,11 +16,10 @@ const tasks = await getOrgTasks(user.primary_org);
     title: "Tasks",
     description: "Tasks",
   }}
+  class="container"
 >
-  <div class="pico container">
-    <h1>Tasks</h1>
-    <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
-      {tasks.map(task => <TaskCard task={task} class="w-full md:w-64" />)}
-    </div>
+  <h1>Tasks</h1>
+  <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+    {tasks.map(task => <TaskCard task={task} class="w-full md:w-64" />)}
   </div>
 </Layout>
