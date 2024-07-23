@@ -5,6 +5,23 @@ type Props = {
   class?: string;
   style?: string | Record<CSSProperty, string>;
 };
+
+type PageLink = {
+  text: string;
+  href: string;
+  current: boolean;
+};
+
+const applyCurrentProp = (page: Omit<PageLink, "current">): PageLink => ({
+  current: Astro.url.pathname.startsWith(page.href),
+  ...page,
+});
+
+const pages = [
+  { text: "Home", href: "/home" },
+  { text: "Tasks", href: "/tasks" },
+  { text: "Accounts", href: "/accounts" },
+].map(applyCurrentProp);
 ---
 
 <header class={Astro.props.class} style={Astro.props.style}>
@@ -13,20 +30,25 @@ type Props = {
       <li><strong><a href="/">CRM</a></strong></li>
     </ul>
     <ul>
-      {
-        Astro.locals.user ? (
-          <li><a href="/home">Home</a></li>
-          <li><a href="/tasks">Tasks</a></li>
-          <li><a href="/accounts">Accounts</a></li>
-          <li>
-            <form method="post" action="/api/v0/auth/logout">
-              <input type="submit" value="Logout" class="secondary" />
-            </form>
-          </li>
-        ) : (
-          <li><a role="button" href="/login">Login</a></li>
-        )
-      }
+      {Astro.locals.user ? (
+        <>
+          {pages.map(page => (
+            <li>
+              <a
+                aria-current={page.current}
+                href={page.href}
+              >{page.text}</a>
+            </li>
+          ))}
+        </>
+        <li>
+          <form method="post" action="/api/v0/auth/logout">
+            <input type="submit" value="Logout" class="secondary" />
+          </form>
+        </li>
+      ) : (
+        <li><a role="button" href="/login">Login</a></li>
+      )}
     </ul>
   </nav>
 </header>
