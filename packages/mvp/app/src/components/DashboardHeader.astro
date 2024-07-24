@@ -17,11 +17,14 @@ const applyCurrentProp = (page: Omit<PageLink, "current">): PageLink => ({
   ...page,
 });
 
-const pages = [
-  { text: "Home", href: "/home" },
-  { text: "Tasks", href: "/tasks" },
-  { text: "Accounts", href: "/accounts" },
-].map(applyCurrentProp);
+const pages = Array.from(
+  [
+    { text: "Home", href: "/home" },
+    { text: "Tasks", href: "/tasks" },
+    { text: "Accounts", href: "/accounts" },
+  ],
+  applyCurrentProp,
+);
 ---
 
 <header class={Astro.props.class} style={Astro.props.style}>
