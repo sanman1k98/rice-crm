@@ -16,11 +16,12 @@ import Layout from "@/layouts/MainLayout.astro";
   <div class="pico">
     <h1>Login</h1>
     <form
+      id="login"
       method="post"
       action="api/v0/auth/login"
     >
       <label>
-        <span>Username</span>
+        Username
         <input
           id="username"
           name="username"
@@ -30,7 +31,7 @@ import Layout from "@/layouts/MainLayout.astro";
         />
       </label>
       <label>
-        <span>Password</span>
+        Password
         <input
           id="password"
           name="password"
@@ -38,6 +39,11 @@ import Layout from "@/layouts/MainLayout.astro";
           type="password"
           required
         />
+        <small
+          id="invalid-helper"
+          aria-hidden="true"
+          class="!text-red-600 aria-hidden:hidden"
+        ></small>
       </label>
       <input
         type="submit"
@@ -45,4 +51,25 @@ import Layout from "@/layouts/MainLayout.astro";
       />
     </form>
   </div>
+  <script>
+    (document.getElementById("login") as HTMLFormElement).addEventListener("submit", async function(ev) {
+      ev.preventDefault();
+
+      try {
+        const res = await fetch(this.action, {
+          method: this.method,
+          body: new FormData(this),
+        });
+
+        if (res.redirected || res.ok)
+          return window.location.replace("/home");
+
+        const helper = this.querySelector(":scope #invalid-helper")!;
+        helper.removeAttribute("aria-hidden");
+        helper.textContent = await res.text()
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  </script>
 </Layout>
