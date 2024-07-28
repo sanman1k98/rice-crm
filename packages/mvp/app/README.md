@@ -24,7 +24,7 @@
 ## Needs further investigation
 
 - Deployments:
-  - [SST v3 (Ion)](https://ion.sst.dev/docs/) for deployments on AWS or Cloudflare. 
+  - [SST v3 (Ion)](https://ion.sst.dev/docs/) for deployments on AWS or Cloudflare.
 - Database:
   - [Turso's database per tenant](https://turso.tech/database-per-tenant) sounds super cool and fits our use case
     - Example app: [Turso CRM](https://github.com/tursodatabase/examples/tree/master/app-turso-crm-er)
@@ -35,6 +35,8 @@
 The API is designed with a *resource-oriented architecture* in mind in order to clearly establish hierarchical **relationships between resources** and **outline all the functionalities** of the application. The API routes have the base path `/api/v0/` and the source files for each endpoint can be found in the [`./src/pages/api/v0/`](./src/pages/api/v0/) directory.
 
 The following resources provided inspiration and helped in the design of the API:
+
+- O'Reilly book: [RESTful Web Services](https://www.oreilly.com/library/view/restful-web-services/9780596529260/)
 - [GitHub's REST API](https://docs.github.com/en/rest/about-the-rest-api/about-the-rest-api?apiVersion=2022-11-28)
   - [Organizations](https://docs.github.com/en/rest/orgs/orgs?apiVersion=2022-11-28)
   - [Issues](https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28)
