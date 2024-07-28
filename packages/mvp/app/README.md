@@ -16,6 +16,9 @@
   - Astro DB can be [self-hosted in production](https://docs.astro.build/en/guides/astro-db/#self-hosted-production-deployment).
 - [Lucia](https://lucia-auth.com): framework-agnostic, session-based authentication library.
   - Supports [multiple OAuth providers](https://lucia-auth.com/guides/oauth/multiple-providers) with [Arctic](https://arcticjs.dev)
+- [Pico CSS](https://picocss.com): Minimal CSS framework for semantic HTML
+  - [Apply Pico styles selectively](https://picocss.com/docs/conditional) by wrapping elements in a `.pico` class.
+  - Opinionated CSS reset for consistent typographic styles across entire site.
 - [Tailwind CSS](https://tailwindcss.com): Utility-first CSS framework.
 
 ## Needs further investigation
