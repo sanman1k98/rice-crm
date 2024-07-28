@@ -27,6 +27,7 @@
   - [SST v3 (Ion)](https://ion.sst.dev/docs/) for deployments on AWS or Cloudflare. 
 - Database:
   - [Turso's database per tenant](https://turso.tech/database-per-tenant) sounds super cool and fits our use case
+    - Example app: [Turso CRM](https://github.com/tursodatabase/examples/tree/master/app-turso-crm-er)
   - ol' reliable PostgreSQL
 
 ## REST API
