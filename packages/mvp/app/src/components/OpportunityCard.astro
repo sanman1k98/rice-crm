@@ -1,0 +1,19 @@
+---
+import type { Opportunity } from "astro:db";
+
+type Props = {
+  class?: string;
+  opportunity: typeof Opportunity.$inferSelect;
+};
+
+const { opportunity } = Astro.props;
+---
+
+<div class="pico" class:list={[Astro.props.class]}>
+  <article>
+    <a
+      href={`/tasks/${opportunity.id}`}
+      class="contrast"
+    >{opportunity.name}</a>
+  </article>
+</div>
