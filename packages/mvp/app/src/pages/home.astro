@@ -1,8 +1,9 @@
 ---
 import Layout from "@/layouts/MainLayout.astro";
 import AccountCard from "@/components/AccountCard.astro";
+import OpportunityCard from "@/components/OpportunityCard.astro";
 import TaskCard from "@/components/TaskCard.astro";
-import { getOrgInfo, getOrgTasks, getOrgAccounts } from "@/lib/orgs"
+import { getOrgInfo, getOrgTasks, getOrgAccounts, getOrgOpportunities } from "@/lib/orgs"
 
 const { user } = Astro.locals;
 
@@ -18,10 +19,11 @@ const gradients = [
 
 const greeting = `Welcome back ${user.fullname}`;
 
-const [org, tasks, accounts] = await Promise.all([
+const [org, tasks, accounts, opportunites] = await Promise.all([
   getOrgInfo(user.primary_org),
   getOrgTasks(user.primary_org),
   getOrgAccounts(user.primary_org),
+  getOrgOpportunities(user.primary_org),
 ]);
 ---
 
@@ -44,6 +46,13 @@ const [org, tasks, accounts] = await Promise.all([
           gradient={gradients[idx % gradients.length]!}
         />
       ))}
+    </div>
+  </section>
+
+  <section class="container">
+    <h2>Opportunities</h2>
+    <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+      {opportunites.map(o => <OpportunityCard opportunity={o} class="w-full md:w-64" />)}
     </div>
   </section>
 
