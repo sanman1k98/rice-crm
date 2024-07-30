@@ -48,9 +48,7 @@ export const selectOrgOpportunities = db
   .where(eq(Opportunity.org, sql.placeholder("id")))
   .prepare();
 
-export async function getOrgOpportunities(id: typeof Organization.$inferSelect["id"]) {
-  return selectOrgOpportunities.all({ id });
-}
+export const getOrgOpportunities = (id: typeof Organization.$inferSelect["id"]) => selectOrgOpportunities.all({ id })
 
 export const orgMembers = db
   .select()
