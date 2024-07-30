@@ -97,12 +97,24 @@ const Account = defineTable({
     email: column.text(),
     address: column.text(),
   },
-})
+});
 
-// TODO: Define "Deal" table.
-// - a deal is tied to a single "Account"
-// - can be commented on by "Members"
-// - can be assigned to a "Member"
+/**
+ * - an "Opportunity" is tied to a single "Account"
+ * - can be commented on by "Members"
+ * - can be assigned to a "Member"
+ */
+const Opportunity = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    org: column.number({ references: () => Organization.columns.id }),
+    account: column.number({ references: () => Account.columns.id }),
+    author: column.text({ references: () => User.columns.id }),
+    name: column.text(),
+    stage: column.text(),
+    amount: column.number(),
+  },
+});
 
 /**
  * - a task is can be created by a member of an org
@@ -127,6 +139,7 @@ export default defineDb({
     Organization,
     OrgRole,
     Account,
+    Opportunity,
     Task,
   },
 });
