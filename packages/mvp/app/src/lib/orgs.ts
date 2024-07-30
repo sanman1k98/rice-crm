@@ -1,7 +1,7 @@
 /**
  * @file Functions to interact with orgs using prepared SQL statements.
  */
-import { Account, Organization, OrgRole, Task, User, db, eq, sql } from "astro:db";
+import { Account, Organization, OrgRole, Task, User, db, eq, sql, Opportunity } from "astro:db";
 import { createInsertPlaceholders } from "@/utils/sql";
 
 const { id: _, ...insertOrgPlaceholders } = createInsertPlaceholders(Organization);
@@ -41,6 +41,16 @@ const orgAccounts = db
   .prepare();
 
 export const getOrgAccounts = (id: typeof Organization.$inferSelect["id"]) => orgAccounts.all({ id });
+
+export const selectOrgOpportunities = db
+  .select()
+  .from(Opportunity)
+  .where(eq(Opportunity.org, sql.placeholder("id")))
+  .prepare();
+
+export async function getOrgOpportunities(id: typeof Organization.$inferSelect["id"]) {
+  return selectOrgOpportunities.all({ id });
+}
 
 export const orgMembers = db
   .select()
