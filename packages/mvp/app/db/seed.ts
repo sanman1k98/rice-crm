@@ -1,6 +1,7 @@
 import { createOrg } from "@/lib/orgs";
 import { createUser } from "@/lib/users";
 import { createAccount } from "@/lib/accounts";
+import { createOpportunity } from "@/lib/opportunities";
 import { createTasks } from "@/lib/tasks";
 
 export default async function() {
@@ -17,12 +18,21 @@ export default async function() {
     role: "owner",
   });
 
-  await createAccount({
+  const testCustomer = await createAccount({
     org: testOrg.id,
     name: "Test Customer",
     description: "This Account was created for development.",
     email: "test.customer@example.com",
     address: "Earth",
+  });
+
+  await createOpportunity({
+    org: testOrg.id,
+    author: testUser.id,
+    account: testCustomer.id,
+    name: "Example opportunity",
+    stage: "In progess",
+    amount: 1_000_000,
   });
 
   await createTasks(testUser, [
