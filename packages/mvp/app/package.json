@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev --host",
     "start": "astro dev --host",
+    "check": "tsc --noEmit && astro check",
     "build": "ASTRO_DATABASE_FILE=./.astro/content.db astro build",
     "build:local": "ASTRO_DATABASE_FILE=./.astro/content.db astro build",
     "preview": "astro preview --host",
