@@ -53,3 +53,5 @@ const joinOrgMembers = db
   .leftJoin(Organization, eq(OrgRole.org, Organization.id))
   .where(eq(Organization.id, sql.placeholder("org")))
   .prepare();
+
+export const getOrgMembers = (id: OrgId) => joinOrgMembers.all({ id });
