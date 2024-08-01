@@ -4,6 +4,7 @@
 import { Account, Opportunity, Organization, OrgRole, Task, User, db, eq, sql } from "astro:db";
 
 type CreateOrgValue = Omit<typeof Organization.$inferSelect, "id">;
+type OrgId = typeof Organization.$inferSelect["id"];
 
 export async function createOrg(org: CreateOrgValue) {
   return db
@@ -19,7 +20,7 @@ const orgInfo = db
   .where(eq(sql.placeholder("id"), Organization.id))
   .prepare();
 
-export const getOrgInfo = (id: typeof Organization.$inferSelect["id"]) => orgInfo.get({ id });
+export const getOrgInfo = (id: OrgId) => selectOrg.get({ id });
 
 export const orgTasks = db
   .select()
@@ -27,7 +28,7 @@ export const orgTasks = db
   .where(eq(Task.org, sql.placeholder("id")))
   .prepare();
 
-export const getOrgTasks = (id: typeof Organization.$inferSelect["id"]) => orgTasks.all({ id });
+export const getOrgTasks = (id: OrgId) => selectOrgTasks.all({ id });
 
 const orgAccounts = db
   .select()
@@ -35,7 +36,7 @@ const orgAccounts = db
   .where(eq(Account.org, sql.placeholder("id")))
   .prepare();
 
-export const getOrgAccounts = (id: typeof Organization.$inferSelect["id"]) => orgAccounts.all({ id });
+export const getOrgAccounts = (id: OrgId) => selectOrgAccounts.all({ id });
 
 export const selectOrgOpportunities = db
   .select()
@@ -43,7 +44,7 @@ export const selectOrgOpportunities = db
   .where(eq(Opportunity.org, sql.placeholder("id")))
   .prepare();
 
-export const getOrgOpportunities = (id: typeof Organization.$inferSelect["id"]) => selectOrgOpportunities.all({ id })
+export const getOrgOpportunities = (id: OrgId) => selectOrgOpportunities.all({ id })
 
 export const orgMembers = db
   .select()
