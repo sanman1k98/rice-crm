@@ -1,21 +1,16 @@
 /**
  * @file Functions to interact with orgs using prepared SQL statements.
  */
-import { Account, Organization, OrgRole, Task, User, db, eq, sql, Opportunity } from "astro:db";
-import { createInsertPlaceholders } from "@/utils/sql";
-
-const { id: _, ...insertOrgPlaceholders } = createInsertPlaceholders(Organization);
-
-const insertOrg = db
-  .insert(Organization)
-  .values(insertOrgPlaceholders)
-  .returning()
-  .prepare();
+import { Account, Opportunity, Organization, OrgRole, Task, User, db, eq, sql } from "astro:db";
 
 type CreateOrgValue = Omit<typeof Organization.$inferSelect, "id">;
 
 export async function createOrg(org: CreateOrgValue) {
-  return insertOrg.get(org);
+  return db
+    .insert(Organization)
+    .values(org)
+    .returning()
+    .get();
 }
 
 const orgInfo = db
