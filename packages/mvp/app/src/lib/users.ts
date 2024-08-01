@@ -10,10 +10,10 @@ export const ROLES = [
 ] as const;
 
 type UserId = typeof User.$inferSelect["id"];
-type OmitPasswordHash<T> = Omit<T, "password_hash">;
-export type UserInfo = OmitPasswordHash<typeof User.$inferSelect>;
 
-type CreateUserValue = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
+export type UserInfo = Omit<typeof User.$inferSelect, "password_hash">;
+
+type UserInit = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
   password: string;
   /** @defaultValue `"member"`*/
   role?: typeof ROLES[number];
@@ -50,7 +50,7 @@ type CreateUserValue = Omit<typeof User.$inferInsert, "id" | "password_hash"> & 
  * then use to constrain the `partialUserColumns` object.
  */
 
-const partialUserColumns: OmitPasswordHash<typeof User._.columns> = {
+const partialUserColumns: Omit<typeof User._.columns, "password_hash"> = {
   id: User.id,
   username: User.username,
   fullname: User.fullname,
@@ -60,7 +60,7 @@ const partialUserColumns: OmitPasswordHash<typeof User._.columns> = {
 /**
  * Create a new user and define their role within the given organization.
  *
- * @param user -
+ * @param opts -
  * An object with properties defining the new user, including an
  * optional `role` property to change from default.
  *
@@ -68,12 +68,12 @@ const partialUserColumns: OmitPasswordHash<typeof User._.columns> = {
  * The row inserted into the `User` table including the generated `id`, but
  * without the `password_hash` column.
  */
-export async function createUser(user: CreateUserValue): Promise<UserInfo> {
+export async function createUser(opts: UserInit): Promise<UserInfo> {
   const {
     password,
     role = "member",
     ...rest
-  } = user;
+  } = opts;
 
   // Insert the new user and get it back.
   const newUser = await db
