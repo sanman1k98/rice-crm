@@ -67,7 +67,7 @@ export const getOrgInfo = (id: OrgId): Promise<typeof Organization.$inferSelect 
  * @param id The id of the Organization.
  * @returns Rows from the "Task" table.
  */
-export const getOrgTasks = (id: OrgId): Promise<typeof Task.$inferSelect[] | undefined> =>
+export const getOrgTasks = (id: OrgId): Promise<typeof Task.$inferSelect[]> =>
   selectOrgTasks.all({ id });
 
 /**
@@ -76,7 +76,7 @@ export const getOrgTasks = (id: OrgId): Promise<typeof Task.$inferSelect[] | und
  * @param id The id of the Organization.
  * @returns Rows from the "Account" table.
  */
-export const getOrgAccounts = (id: OrgId): Promise<typeof Account.$inferSelect[] | undefined> =>
+export const getOrgAccounts = (id: OrgId): Promise<typeof Account.$inferSelect[]> =>
   selectOrgAccounts.all({ id });
 
 /**
@@ -85,7 +85,7 @@ export const getOrgAccounts = (id: OrgId): Promise<typeof Account.$inferSelect[]
  * @param id The id of the Organization.
  * @returns Rows from the "Opportunity" table.
  */
-export const getOrgOpportunities = (id: OrgId): Promise<typeof Opportunity.$inferSelect[] | undefined> =>
+export const getOrgOpportunities = (id: OrgId): Promise<typeof Opportunity.$inferSelect[]> =>
   selectOrgOpportunities.all({ id });
 
 export const getOrgMembers = (id: OrgId) =>
