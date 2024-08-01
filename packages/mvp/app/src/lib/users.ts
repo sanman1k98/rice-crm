@@ -8,7 +8,7 @@ export const ROLES = [
 
 type UserId = typeof User.$inferSelect["id"];
 type OmitPasswordHash<T> = Omit<T, "password_hash">;
-type UserInfo = OmitPasswordHash<typeof User.$inferSelect>;
+export type UserInfo = OmitPasswordHash<typeof User.$inferSelect>;
 
 type CreateUserValue = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
   password: string;

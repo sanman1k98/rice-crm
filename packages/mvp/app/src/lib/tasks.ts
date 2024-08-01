@@ -1,20 +1,38 @@
-import { Task, User, db, eq, sql } from "astro:db";
+/**
+ * @file CRUD operations for tasks.
+ */
+import { Task, db, eq, sql } from "astro:db";
+import type { UserInfo } from "./users";
 
-type CreateTaskValues = Omit<typeof Task.$inferInsert, "author" | "org">[]
+type TaskId = typeof Task.$inferSelect["id"];
+type CreateTaskParam = Omit<typeof Task.$inferInsert, "author" | "org">;
 
+/**
+ * Create tasks.
+ *
+ * @param author - A `UserInfo` object to use as the author of the tasks.
+ * @param tasks - The list of tasks to create.
+ */
 export async function createTasks(
-  author: typeof User.$inferSelect,
-  tasks: CreateTaskValues,
+  author: UserInfo,
+  tasks: CreateTaskParam[],
 ) {
   const { id: authorId, primary_org: orgId } = author;
   const values = tasks.map(task => ({ org: orgId, author: authorId, ...task }));
   return db.insert(Task).values(values);
 }
 
-export async function getTaskInfo(id: typeof Task.$inferSelect["id"]) {
-  return db
-    .select()
-    .from(Task)
-    .where(eq(sql.placeholder("id"), Task.id))
-    .get({ id });
-}
+const selectTask = db
+  .select()
+  .from(Task)
+  .where(eq(Task.id, sql.placeholder("id")))
+  .prepare();
+
+/**
+ * Get information about a task.
+ *
+ * @param id - The `id` of the task.
+ * @returns The first matching row from the `Task` table if found.
+ */
+export const getTaskInfo = (id: TaskId): Promise<typeof Task.$inferSelect | undefined> =>
+  selectTask.get({ id });
