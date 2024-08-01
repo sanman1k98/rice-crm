@@ -1,3 +1,6 @@
+/**
+ * @file CRUD operations for users.
+ */
 import { OrgRole, User, db, eq, sql } from "astro:db";
 import { generateId, scrypt } from "@/auth";
 

@@ -1,3 +1,6 @@
+/**
+ * @file CRUD operations for accounts.
+ */
 import { Account, db, eq, sql } from "astro:db";
 
 type AccountId = typeof Account.$inferSelect["id"];
