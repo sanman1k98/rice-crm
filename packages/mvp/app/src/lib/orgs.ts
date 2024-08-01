@@ -3,10 +3,16 @@
  */
 import { Account, Opportunity, Organization, OrgRole, Task, User, db, eq, sql } from "astro:db";
 
-type CreateOrgValue = Omit<typeof Organization.$inferSelect, "id">;
+type CreateOrgValue = Omit<typeof Organization.$inferInsert, "id">;
 type OrgId = typeof Organization.$inferSelect["id"];
 
-export async function createOrg(org: CreateOrgValue) {
+/**
+ * Inserts a new row in the "Organization" table.
+ *
+ * @param org An object with properties defining a new Organization.
+ * @returns A promise resolving to the inserted row.
+ */
+export async function createOrg(org: CreateOrgValue): Promise<typeof Organization.$inferSelect> {
   return db
     .insert(Organization)
     .values(org)
@@ -20,7 +26,14 @@ const selectOrg = db
   .where(eq(sql.placeholder("id"), Organization.id))
   .prepare();
 
-export const getOrgInfo = (id: OrgId) => selectOrg.get({ id });
+/**
+ * Get information about an Organization with the given "id".
+ *
+ * @param id The id of the Organization.
+ * @returns The first matching fow from the "Organization" table if found.
+ */
+export const getOrgInfo = (id: OrgId): Promise<typeof Organization.$inferSelect | undefined> =>
+  selectOrg.get({ id });
 
 const selectOrgTasks = db
   .select()
@@ -28,7 +41,14 @@ const selectOrgTasks = db
   .where(eq(Task.org, sql.placeholder("id")))
   .prepare();
 
-export const getOrgTasks = (id: OrgId) => selectOrgTasks.all({ id });
+/**
+ * Get all the tasks for the given Organization
+ *
+ * @param id The id of the Organization.
+ * @returns Rows from the "Task" table.
+ */
+export const getOrgTasks = (id: OrgId): Promise<typeof Task.$inferSelect[] | undefined> =>
+  selectOrgTasks.all({ id });
 
 const selectOrgAccounts = db
   .select()
@@ -36,7 +56,14 @@ const selectOrgAccounts = db
   .where(eq(Account.org, sql.placeholder("id")))
   .prepare();
 
-export const getOrgAccounts = (id: OrgId) => selectOrgAccounts.all({ id });
+/**
+ * Get all the accounts for the given Organization
+ *
+ * @param id The id of the Organization.
+ * @returns Rows from the "Account" table.
+ */
+export const getOrgAccounts = (id: OrgId): Promise<typeof Account.$inferSelect[] | undefined> =>
+  selectOrgAccounts.all({ id });
 
 const selectOrgOpportunities = db
   .select()
@@ -44,7 +71,14 @@ const selectOrgOpportunities = db
   .where(eq(Opportunity.org, sql.placeholder("id")))
   .prepare();
 
-export const getOrgOpportunities = (id: OrgId) => selectOrgOpportunities.all({ id })
+/**
+ * Get all the opportunities for the given Organization
+ *
+ * @param id The id of the Organization.
+ * @returns Rows from the "Opportunity" table.
+ */
+export const getOrgOpportunities = (id: OrgId): Promise<typeof Opportunity.$inferSelect[] | undefined> =>
+  selectOrgOpportunities.all({ id });
 
 const joinOrgMembers = db
   .select()
