@@ -14,7 +14,7 @@ export async function createOrg(org: CreateOrgValue) {
     .get();
 }
 
-const orgInfo = db
+const selectOrg = db
   .select()
   .from(Organization)
   .where(eq(sql.placeholder("id"), Organization.id))
@@ -22,7 +22,7 @@ const orgInfo = db
 
 export const getOrgInfo = (id: OrgId) => selectOrg.get({ id });
 
-export const orgTasks = db
+const selectOrgTasks = db
   .select()
   .from(Task)
   .where(eq(Task.org, sql.placeholder("id")))
@@ -30,7 +30,7 @@ export const orgTasks = db
 
 export const getOrgTasks = (id: OrgId) => selectOrgTasks.all({ id });
 
-const orgAccounts = db
+const selectOrgAccounts = db
   .select()
   .from(Account)
   .where(eq(Account.org, sql.placeholder("id")))
@@ -38,7 +38,7 @@ const orgAccounts = db
 
 export const getOrgAccounts = (id: OrgId) => selectOrgAccounts.all({ id });
 
-export const selectOrgOpportunities = db
+const selectOrgOpportunities = db
   .select()
   .from(Opportunity)
   .where(eq(Opportunity.org, sql.placeholder("id")))
@@ -46,7 +46,7 @@ export const selectOrgOpportunities = db
 
 export const getOrgOpportunities = (id: OrgId) => selectOrgOpportunities.all({ id })
 
-export const orgMembers = db
+const joinOrgMembers = db
   .select()
   .from(OrgRole)
   .leftJoin(User, eq(OrgRole.user, User.id))
