@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev": "pnpm --filter app run dev",
     "dev:mvp": "pnpm --filter app run dev",
     "build:mvp": "pnpm --filter app run build",
