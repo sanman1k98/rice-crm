@@ -5,6 +5,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "pnpm --filter app run dev",
+    "lint": "eslint .",
     "dev:mvp": "pnpm --filter app run dev",
     "build:mvp": "pnpm --filter app run build",
     "preview:mvp": "pnpm --filter app run preview",
@@ -15,6 +16,7 @@
     "@stylistic/eslint-plugin": "^2.6.1",
     "eslint": "^9.8.0",
     "globals": "^15.9.0",
+    "typescript": "^5.5.4",
     "typescript-eslint": "^8.0.0"
   }
 }
