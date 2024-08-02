@@ -8,8 +8,5 @@
     "build:mvp": "pnpm --filter app run build",
     "preview:mvp": "pnpm --filter app run preview",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "workspaces": [
-    "packages/**/*"
-  ]
+  }
 }
