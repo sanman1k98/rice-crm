@@ -26,7 +26,7 @@ type OpportunityInit = Omit<typeof Opportunity.$inferInsert, "id"> & {
  */
 export async function createOpportunity(opts: OpportunityInit): Promise<OpportunityInfo> {
   const parsed = stagesSchema.safeParse(opts.stage);
-  if (!parsed.success && parsed.error) {
+  if (parsed.error) {
     throw new Error(
       `Invalid stage "${opts.stage}" when creating opportunity "${opts.name}"`,
       { cause: parsed.error }

@@ -15,7 +15,7 @@ export function createInsertPlaceholders<
   },
 >(table: TTable): TPlaceholders {
   return Object.fromEntries(
-    // @ts-ignore Astro DB types are wack
+    // @ts-expect-error Astro DB types are wack
     Object.keys(table[Symbol.for("drizzle:Columns")]).map(col => [col, sql.placeholder(col)])
   ) as TPlaceholders;
 }
