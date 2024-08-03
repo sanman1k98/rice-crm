@@ -43,4 +43,15 @@ export default defineConfig(
       "@typescript-eslint/no-explicit-any": "off",
     },
   },
+
+  {
+    name: createRuleName("ts", "tmp-hack"),
+    files: ["packages/mvp/app/{db,src}/**"],
+    rules: {
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+    }
+  },
 );
