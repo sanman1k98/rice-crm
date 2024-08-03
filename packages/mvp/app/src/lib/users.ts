@@ -2,7 +2,7 @@
  * @file CRUD operations for users.
  */
 import { OrgRole, User, db, eq, sql } from "astro:db";
-import { generateId, scrypt } from "@/auth";
+import { generateId, scrypt } from "@/auth/utils";
 
 export const ROLES = [
   "member",
@@ -69,20 +69,15 @@ const partialUserColumns: Omit<typeof User._.columns, "password_hash"> = {
  * without the `password_hash` column.
  */
 export async function createUser(opts: UserInit): Promise<UserInfo> {
-  const {
-    password,
-    role = "member",
-    ...rest
-  } = opts;
+  const { password, role = "member", ...rest } = opts;
+
+  const id = generateId() as string;
+  const password_hash = await scrypt.hash(password);
 
   // Insert the new user and get it back.
   const newUser = await db
     .insert(User)
-    .values({
-      id: generateId(),
-      password_hash: await scrypt.hash(password),
-      ...rest,
-    })
+    .values({ id, password_hash, ...rest })
     .returning(partialUserColumns)
     .get();
 
