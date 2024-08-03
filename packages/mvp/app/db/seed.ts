@@ -1,7 +1,7 @@
 import { createOrg } from "@/lib/orgs";
 import { createUser, OrgRoleNameEnum } from "@/lib/users";
 import { createAccount } from "@/lib/accounts";
-import { createOpportunity } from "@/lib/opportunities";
+import { createOpportunity, OpportunityStageEnum } from "@/lib/opportunities";
 import { createTasks } from "@/lib/tasks";
 
 export default async function() {
@@ -31,7 +31,7 @@ export default async function() {
     author: testUser.id,
     account: testCustomer.id,
     name: "Example opportunity",
-    stage: "In progess",
+    stage: OpportunityStageEnum.InProgress,
     amount: 1_000_000,
   });
 

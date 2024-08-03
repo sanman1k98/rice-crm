@@ -5,6 +5,7 @@
  */
 import { column, defineDb, defineTable, NOW } from "astro:db";
 import type { OrgRoleNameEnum } from "@/lib/users";
+import type { OpportunityStageEnum } from "@/lib/opportunities";
 import type { TaskStatusEnum } from "@/lib/tasks";
 
 /**
@@ -113,7 +114,8 @@ const Opportunity = defineTable({
     account: column.number({ references: () => Account.columns.id }),
     author: column.text({ references: () => User.columns.id }),
     name: column.text(),
-    stage: column.text(),
+    /** @see {@link OpportunityStageEnum}*/
+    stage: column.number({ default: 0 }),
     amount: column.number(),
   },
 });
