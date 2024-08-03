@@ -18,14 +18,17 @@ export default defineConfig(
     name: createRuleName("ignores"),
     ignores: ["**/dist/"],
   },
+
   {
     name: "eslint/js/recommended",
     ...js.configs.recommended,
   },
-  ...ts.configs.strict,
+
   ...ts.configs.strictTypeChecked,
+  ...ts.configs.stylisticTypeChecked,
+
   {
-    name: createRuleName("ts", "lang"),
+    name: createRuleName("ts"),
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: import.meta.dirname,
@@ -35,9 +38,6 @@ export default defineConfig(
         ],
       },
     },
-  },
-  {
-    name: createRuleName("ts"),
     rules: {
       "@typescript-eslint/triple-slash-reference": "off",
     },
