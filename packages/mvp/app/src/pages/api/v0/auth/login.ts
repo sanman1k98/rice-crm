@@ -1,6 +1,12 @@
 import type { APIRoute } from "astro";
-import { db, eq, User } from "astro:db";
+import { db, eq, sql, User } from "astro:db";
 import { lucia, scrypt } from "@/auth";
+
+const selectUser = db
+  .select()
+  .from(User)
+  .where(eq(User.username, sql.placeholder("username")))
+  .prepare();
 
 /**
  * Adapted from Lucia's documentation.
@@ -27,11 +33,9 @@ export const POST: APIRoute = async (context) => {
     });
   }
 
-  const existingUserRes = await db.select()
-    .from(User)
-    .where(eq(User.username, username));
+  const existingUser = await selectUser.get({ username });
 
-  if (existingUserRes.length !== 1) {
+  if (!existingUser) {
     // NOTE:
     // Returning immediately allows malicious actors to figure out valid
     // usernames from response times, allowing them to only focus on guessing
@@ -46,8 +50,6 @@ export const POST: APIRoute = async (context) => {
       status: 400
     });
   }
-
-  const existingUser = existingUserRes.pop()!;
 
   const validPassword = await scrypt.verify(existingUser.password_hash, password);
   if (!validPassword) {
