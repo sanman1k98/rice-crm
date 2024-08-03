@@ -16,7 +16,7 @@ export default defineConfig(
     // Global ignores
     // @see https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignoring-files-with-ignores
     name: createRuleName("ignores"),
-    ignores: ["**/dist/", "**/.astro/"],
+    ignores: ["**/dist/"],
   },
   {
     name: "eslint/js/recommended",
