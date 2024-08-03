@@ -4,6 +4,7 @@
  * @see https://docs.astro.build/en/guides/astro-db/
  */
 import { column, defineDb, defineTable, NOW } from "astro:db";
+import type { TaskStatusEnum } from "@/lib/tasks";
 
 /**
  * - "Organization" generally means a business, but can be something else like
@@ -129,6 +130,10 @@ const Task = defineTable({
     org: column.number({ references: () => Organization.columns.id }),
     title: column.text(),
     body: column.text({ optional: true }),
+    /**
+     * @see {@link TaskStatusEnum}
+     */
+    status: column.number({ default: 0 }),
   },
 });
 
