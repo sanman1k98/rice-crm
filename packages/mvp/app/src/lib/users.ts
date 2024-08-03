@@ -4,22 +4,26 @@
 import { OrgRole, User, db, eq, sql } from "astro:db";
 import { generateId, scrypt } from "@/auth/utils";
 
-export const ROLES = [
-  "member",
-  "owner",
-] as const;
+export const OrgRoleNameEnum = {
+  /** Default role for a new user. */
+  Member: 0,
+  Owner: 1,
+} as const;
 
-type UserId = typeof User.$inferSelect["id"];
-
+/** @see {@link OrgRoleNameEnum} */
+export type OrgRoleName = typeof OrgRoleNameEnum[keyof typeof OrgRoleNameEnum];
 export type UserInfo = Omit<typeof User.$inferSelect, "password_hash">;
 
+type UserId = UserInfo["id"];
 type UserInit = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
   password: string;
   /** @defaultValue `"member"`*/
-  role?: typeof ROLES[number];
+  role?: OrgRoleName;
 };
 
 /**
+ * @summary Used to specify which columns in `User` table to query.
+ *
  * WARN: `@astrojs/db@0.11.7` table types DO NOT accurately match their runtime values.
  *
  * Astro DB uses Drizzle ORM under the hood but with some added functionality
@@ -38,7 +42,9 @@ type UserInit = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
  * use object destructuring and the spread operator to create the
  * `partialUserColumns` object below.
  *
+ * @example
  * ```ts
+ * // This will not work
  * const { password_hash: _, ...partialUserColumns } = User._.columns;
  * ```
  *
@@ -49,7 +55,6 @@ type UserInit = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
  * At least we can use the generated types to derive our own type which we can
  * then use to constrain the `partialUserColumns` object.
  */
-
 const partialUserColumns: Omit<typeof User._.columns, "password_hash"> = {
   id: User.id,
   username: User.username,
@@ -69,7 +74,7 @@ const partialUserColumns: Omit<typeof User._.columns, "password_hash"> = {
  * without the `password_hash` column.
  */
 export async function createUser(opts: UserInit): Promise<UserInfo> {
-  const { password, role = "member", ...rest } = opts;
+  const { role = OrgRoleNameEnum.Member, password, ...rest } = opts;
 
   const id = generateId() as string;
   const password_hash = await scrypt.hash(password);

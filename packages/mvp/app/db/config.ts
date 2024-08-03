@@ -4,6 +4,7 @@
  * @see https://docs.astro.build/en/guides/astro-db/
  */
 import { column, defineDb, defineTable, NOW } from "astro:db";
+import type { OrgRoleNameEnum } from "@/lib/users";
 import type { TaskStatusEnum } from "@/lib/tasks";
 
 /**
@@ -76,8 +77,8 @@ const OrgRole = defineTable({
   columns: {
     org: column.number({ references: () => Organization.columns.id }),
     user: column.text({ references: () => User.columns.id }),
-    /** Examples: "owner", "member", "admin". */
-    role: column.text(),
+    /** @see {@link OrgRoleNameEnum} */
+    role: column.number({ default: 0 }),
   }
 });
 
