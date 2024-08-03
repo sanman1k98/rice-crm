@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "pnpm --filter app run dev",
     "lint": "eslint .",
+    "dev": "pnpm --filter app run dev",
+    "lint:mvp": "eslint ./packages/mvp/app/",
     "dev:mvp": "pnpm --filter app run dev",
     "build:mvp": "pnpm --filter app run build",
     "preview:mvp": "pnpm --filter app run preview",
