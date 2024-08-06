@@ -2,23 +2,15 @@
  * @file CRUD operations for opportunities.
  */
 import { Opportunity, db, eq, sql } from "astro:db";
-// import { z } from "astro/zod";
 
 export const OpportunityStageEnum = {
+  /** Default stage when creating a new opportunity. */
   Planning: 0,
   InProgress: 1,
   Completed: 2,
 } as const;
 
 export type OpportunityStage = typeof OpportunityStageEnum[keyof typeof OpportunityStageEnum];
-
-export const STAGES = [
-  "Planning",
-  "In progess",
-  "Completed",
-] as const;
-
-// const stagesSchema = z.enum(STAGES);
 
 type OpportunityInfo = typeof Opportunity.$inferSelect;
 type OpportunityId = OpportunityInfo["id"];
@@ -34,13 +26,6 @@ type OpportunityInit = Omit<typeof Opportunity.$inferInsert, "id"> & {
  * @returns The row inserted into the `Opportunity` table.
  */
 export async function createOpportunity(opts: OpportunityInit): Promise<OpportunityInfo> {
-  // const parsed = stagesSchema.safeParse(opts.stage);
-  // if (parsed.error) {
-  //   throw new Error(
-  //     `Invalid stage "${opts.stage}" when creating opportunity "${opts.name}"`,
-  //     { cause: parsed.error }
-  //   );
-  // }
   return db
     .insert(Opportunity)
     .values(opts)

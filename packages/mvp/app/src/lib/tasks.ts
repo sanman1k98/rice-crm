@@ -1,7 +1,4 @@
 /**
- * @module 
- */
-/**
  * @file CRUD operations for tasks.
  */
 import { Task, db, eq, sql } from "astro:db";
