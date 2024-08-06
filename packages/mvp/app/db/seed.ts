@@ -1,5 +1,5 @@
 import { createOrg } from "@/lib/orgs";
-import { createUser, OrgRoleNameEnum } from "@/lib/users";
+import { createUser, OrgRoleValueEnum } from "@/lib/users";
 import { createAccount } from "@/lib/accounts";
 import { createOpportunity, OpportunityStageEnum } from "@/lib/opportunities";
 import { createTasks } from "@/lib/tasks";
@@ -15,7 +15,7 @@ export default async function() {
     username: "test",
     password: "password",
     primary_org: testOrg.id,
-    role: OrgRoleNameEnum.Owner,
+    role: OrgRoleValueEnum.Owner,
   });
 
   const testCustomer = await createAccount({

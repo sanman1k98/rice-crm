@@ -4,21 +4,21 @@
 import { OrgRole, User, db, eq, sql } from "astro:db";
 import { generateId, scrypt } from "@/auth/utils";
 
-export const OrgRoleNameEnum = {
+export const OrgRoleValueEnum = {
   /** Default role for a new user. */
   Member: 0,
   Owner: 1,
 } as const;
 
-/** @see {@link OrgRoleNameEnum} */
-export type OrgRoleName = typeof OrgRoleNameEnum[keyof typeof OrgRoleNameEnum];
+/** @see {@link OrgRoleValueEnum} */
+export type OrgRoleValue = typeof OrgRoleValueEnum[keyof typeof OrgRoleValueEnum];
 export type UserInfo = Omit<typeof User.$inferSelect, "password_hash">;
 
 type UserId = UserInfo["id"];
 type UserInit = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
   password: string;
-  /** @defaultValue `"member"`*/
-  role?: OrgRoleName;
+  /** @defaultValue `OrgRoleValueEnum.Member`*/
+  role?: OrgRoleValue;
 };
 
 /**
@@ -74,7 +74,7 @@ const partialUserColumns: Omit<typeof User._.columns, "password_hash"> = {
  * without the `password_hash` column.
  */
 export async function createUser(opts: UserInit): Promise<UserInfo> {
-  const { role = OrgRoleNameEnum.Member, password, ...rest } = opts;
+  const { role = OrgRoleValueEnum.Member, password, ...rest } = opts;
 
   const id = generateId() as string;
   const password_hash = await scrypt.hash(password);

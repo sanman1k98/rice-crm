@@ -4,9 +4,10 @@
  * @see https://docs.astro.build/en/guides/astro-db/
  */
 import { column, defineDb, defineTable, NOW } from "astro:db";
-import type { OrgRoleNameEnum } from "@/lib/users";
-import type { OpportunityStageEnum } from "@/lib/opportunities";
-import type { TaskStatusEnum } from "@/lib/tasks";
+
+// @ts-expect-error Type imports are used by JSDoc links.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { OrgRoleValueEnum, OpportunityStageEnum, TaskStatusEnum } from "@/lib/enums";
 
 /**
  * - "Organization" generally means a business, but can be something else like
@@ -28,9 +29,8 @@ const Organization = defineTable({
 
 /**
  *
- * @todo Consider supporting email-based auth.
+ * TODO: Consider supporting email-based auth and multiple OAuth providers.
  * @see https://lucia-auth.com/guides/email-and-password/
- * @todo Multiple OAuth providers.
  * @see https://arcticjs.dev
  */
 const User = defineTable({
@@ -78,7 +78,7 @@ const OrgRole = defineTable({
   columns: {
     org: column.number({ references: () => Organization.columns.id }),
     user: column.text({ references: () => User.columns.id }),
-    /** @see {@link OrgRoleNameEnum} */
+    /** @see {@link OrgRoleValueEnum} */
     role: column.number({ default: 0 }),
   }
 });
