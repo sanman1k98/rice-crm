@@ -1,6 +1,7 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import { getOrgAccounts } from "@/lib/orgs";
+import { type OpportunityInit, OpportunityStageEnum, createOpportunity } from "@/lib/opportunities";
 
 const { user } = Astro.locals;
 
@@ -10,8 +11,28 @@ if (!user)
 const accounts = await getOrgAccounts(user.primary_org);
 
 if (Astro.request.method === "POST") {
-  const data = { status: 500, statusText: "Not implemented" };
-  return Response.json(data, data);
+  type RawFormData = {
+    account: string;
+    name: string;
+    amount: string;
+  };
+
+  // FIXME: Validate FormData.
+  const formData = Object.fromEntries(
+    await Astro.request.formData().then(data => data.entries()),
+  ) as RawFormData;
+
+  const init = {
+    account: Number.parseInt(formData.account),
+    amount: Number.parseFloat(formData.amount),
+    name: formData.name,
+    org: user.primary_org,
+    author: user.id,
+    stage: OpportunityStageEnum.InProgress,
+  } satisfies OpportunityInit;
+
+  const created = await createOpportunity(init);
+  return Astro.redirect(`/opportunities/${created.id}`);
 };
 ---
 
@@ -39,11 +60,11 @@ if (Astro.request.method === "POST") {
         </select>
         <label>
           Name
-          <input type="text" required>
+          <input type="text" name="name" required>
         </label>
         <label>
           Amount
-          <input type="number" required>
+          <input type="number" name="amount" required>
         </label>
         <input type="submit" value="Create">
       </fieldset>
