@@ -12,7 +12,7 @@ export const OpportunityStageEnum = {
 
 export type OpportunityStage = typeof OpportunityStageEnum[keyof typeof OpportunityStageEnum];
 
-type OpportunityInfo = typeof Opportunity.$inferSelect;
+export type OpportunityInfo = typeof Opportunity.$inferSelect;
 type OpportunityId = OpportunityInfo["id"];
 export type OpportunityInit = Omit<typeof Opportunity.$inferInsert, "id"> & {
   /** @see {@link OpportunityStage} */

@@ -1,7 +1,8 @@
 /**
  * @file CRUD operations for accounts.
  */
-import { Account, db, eq, sql } from "astro:db";
+import { Account, Opportunity, db, eq, sql } from "astro:db";
+import type { OpportunityInfo } from "./opportunities";
 
 type AccountInfo = typeof Account.$inferSelect;
 type AccountId = AccountInfo["id"];
@@ -27,6 +28,12 @@ const selectAccount = db
   .where(eq(Account.id, sql.placeholder("id")))
   .prepare();
 
+const selectAccountOpportunities = db
+  .select()
+  .from(Opportunity)
+  .where(eq(Opportunity.account, sql.placeholder("id")))
+  .prepare();
+
 /**
  * Get information about an account.
  *
@@ -35,3 +42,12 @@ const selectAccount = db
  */
 export const getAccountInfo = (id: AccountId): Promise<AccountInfo | undefined> =>
   selectAccount.get({ id });
+
+/**
+ * Get all the opportunities for a given account.
+ *
+ * @param id - The `id` of the account.
+ * @returns A list of opportunities associated with the given account.
+ */
+export const getAccountOpportunities = (id: AccountId): Promise<OpportunityInfo[]> =>
+  selectAccountOpportunities.all({ id });
