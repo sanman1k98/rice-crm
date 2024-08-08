@@ -14,7 +14,7 @@ export type OpportunityStage = typeof OpportunityStageEnum[keyof typeof Opportun
 
 type OpportunityInfo = typeof Opportunity.$inferSelect;
 type OpportunityId = OpportunityInfo["id"];
-type OpportunityInit = Omit<typeof Opportunity.$inferInsert, "id"> & {
+export type OpportunityInit = Omit<typeof Opportunity.$inferInsert, "id"> & {
   /** @see {@link OpportunityStage} */
   stage?: OpportunityStage;
 };

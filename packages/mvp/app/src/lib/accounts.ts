@@ -3,9 +3,9 @@
  */
 import { Account, db, eq, sql } from "astro:db";
 
-type AccountId = typeof Account.$inferSelect["id"];
-type AccountInit = Omit<typeof Account.$inferInsert, "id">;
 type AccountInfo = typeof Account.$inferSelect;
+type AccountId = AccountInfo["id"];
+type AccountInit = Omit<typeof Account.$inferInsert, "id">;
 
 /**
  * Create a new account.
