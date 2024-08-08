@@ -1,10 +1,13 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
+import { getOrgAccounts } from "@/lib/orgs";
 
 const { user } = Astro.locals;
 
 if (!user)
   return Astro.redirect("/login");
+
+const accounts = await getOrgAccounts(user.primary_org);
 
 if (Astro.request.method === "POST") {
   const data = { status: 500, statusText: "Not implemented" };
@@ -20,4 +23,30 @@ if (Astro.request.method === "POST") {
   class="container"
 >
   <h1>Create a new opportunity</h1>
+  <div class="pico">
+    <form method="post">
+      <fieldset>
+        <label for="account">Account</label>
+        <select name="account" id="account" required>
+          <option selected disabled value="">
+            Select account...
+          </option>
+          {
+            accounts.map(acc => (
+              <option value={acc.id}>{acc.name}</option>
+            ))
+          }
+        </select>
+        <label>
+          Name
+          <input type="text" required>
+        </label>
+        <label>
+          Amount
+          <input type="number" required>
+        </label>
+        <input type="submit" value="Create">
+      </fieldset>
+    </form>
+  </div>
 </MainLayout>
