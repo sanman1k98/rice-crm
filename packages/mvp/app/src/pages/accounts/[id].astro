@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/MainLayout.astro";
-import { getAccountInfo } from "@/lib/accounts";
+import OpportunityCard from "@/components/OpportunityCard.astro";
+import { getAccountInfo, getAccountOpportunities } from "@/lib/accounts";
 
 const { user } = Astro.locals;
 
@@ -9,12 +10,15 @@ if (!user)
 
 const id = Number.parseInt(Astro.params.id!, 10);
 
-const account = Number.isInteger(id)
-  ? await getAccountInfo(id)
-  : null;
+if (!Number.isInteger(id))
+  return new Response(null, { status: 404 });
+
+const account = await getAccountInfo(id);
 
 if (!account)
   return new Response(null, { status: 404 });
+
+const opportunities = await getAccountOpportunities(id);
 ---
 
 <Layout
@@ -34,6 +38,10 @@ if (!account)
         <li>Address: {account.address}</li>
       </ul>
     </address>
+    <h3>Opportunities</h3>
+    <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+      {opportunities.map(opportunity => <OpportunityCard opportunity={opportunity} class="w-full md:w-64" />)}
+    </div>
   </div>
 </Layout>
 
