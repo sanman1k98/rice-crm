@@ -29,6 +29,7 @@
   - [Turso's database per tenant](https://turso.tech/database-per-tenant) sounds super cool and fits our use case
     - Example app: [Turso CRM](https://github.com/tursodatabase/examples/tree/master/app-turso-crm-er)
   - ol' reliable PostgreSQL
+    - [pglite](https://pglite.dev)
 
 ## **WIP**: REST API
 
