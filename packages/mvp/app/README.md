@@ -30,17 +30,20 @@
     - Example app: [Turso CRM](https://github.com/tursodatabase/examples/tree/master/app-turso-crm-er)
   - ol' reliable PostgreSQL
 
-## REST API
+## **WIP**: REST API
 
-The API is designed with a *resource-oriented architecture* in mind in order to clearly establish hierarchical **relationships between resources** and **outline all the functionalities** of the application. The API routes have the base path `/api/v0/` and the source files for each endpoint can be found in the [`./src/pages/api/v0/`](./src/pages/api/v0/) directory.
+The API is designed with a *resource-oriented architecture* in mind in order to clearly establish **hierarchical relationships between resources** and **outline all the functionalities** of the application. The API routes have the base path `/api/v0/` and the source files for each endpoint can be found in the [`./src/pages/api/v0/`](./src/pages/api/v0/) directory.
 
-The following resources provided inspiration and helped in the design of the API:
-- HubSpot developer documentation: 
+### Resources
+
+#### API documentation of popular services
+
+- HubSpot:
   - [Understanding the CRM](https://developers.hubspot.com/docs/api/crm/understanding-the-crm)
   - Object overviews and API endpoints:
-    - [Companies](https://developers.hubspot.com/docs/api/crm/companies)
+    - [Companies](https://developers.hubspot.com/docs/api/crm/companies) (also called *Accounts* in other CRMs)
     - [Contacts](https://developers.hubspot.com/docs/api/crm/contacts)
-    - [Deals](https://developers.hubspot.com/docs/api/crm/deals)
+    - [Deals](https://developers.hubspot.com/docs/api/crm/deals) (also called *Opportunities* in other CRMs)
     - [Tasks](https://developers.hubspot.com/docs/api/crm/tasks)
     - [Notes](https://developers.hubspot.com/docs/api/crm/notes)
     - [Communications](https://developers.hubspot.com/docs/api/crm/communications)
@@ -48,6 +51,7 @@ The following resources provided inspiration and helped in the design of the API
   - [Organizations](https://docs.github.com/en/rest/orgs/orgs?apiVersion=2022-11-28)
   - [Issues](https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28)
 
-Other useful resources:
+#### Misc
+
 - O'Reilly book: [RESTful Web Services](https://www.oreilly.com/library/view/restful-web-services/9780596529260/)
 - Google Cloud documentation: [Resource-oriented design](https://cloud.google.com/apis/design/resources)
