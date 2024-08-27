@@ -3,6 +3,7 @@
  */
 import { Task, db, eq, sql } from "astro:db";
 import type { UserInfo } from "./users";
+import type { OpportunityId } from "./opportunities";
 
 /** Maps application logic to database values. */
 export const TaskStatusEnum = {
@@ -15,8 +16,8 @@ export const TaskStatusEnum = {
 export type TaskStatus = typeof TaskStatusEnum[keyof typeof TaskStatusEnum];
 export type TaskInfo = typeof Task.$inferSelect;
 
-type TaskId = TaskInfo["id"];
-type TaskInit = Omit<typeof Task.$inferInsert, "id"> & {
+export type TaskId = TaskInfo["id"];
+export type TaskInit = Omit<typeof Task.$inferInsert, "id"> & {
   /**
    * Optionally use {@link TaskStatusEnum} to specify a value.
    *
