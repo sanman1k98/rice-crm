@@ -41,6 +41,14 @@ export async function createTasks(
   return db.insert(Task).values(values);
 }
 
+export async function createTask(opts: TaskInit) {
+  return db
+    .insert(Task)
+    .values(opts)
+    .returning()
+    .get();
+}
+
 const selectTask = db
   .select()
   .from(Task)
@@ -55,3 +63,18 @@ const selectTask = db
  */
 export const getTaskInfo = (id: TaskId): Promise<typeof Task.$inferSelect | undefined> =>
   selectTask.get({ id });
+
+const selectTasksForOpportunity = db
+  .select()
+  .from(Task)
+  .where(eq(Task.opportunity, sql.placeholder("id")))
+  .prepare();
+
+/**
+ * Get a list of tasks associated with an opportunity.
+ *
+ * @param id - The `id` of the opportunity.
+ * @returns A list of rows from the `Tasks` table where `opportunity` equals the given `id`.
+ */
+export const getTasksForOpportunity = (id: OpportunityId): Promise<typeof Task.$inferSelect[]> =>
+  selectTasksForOpportunity.all({ id });
