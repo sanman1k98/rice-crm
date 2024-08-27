@@ -22,4 +22,9 @@ const opportunities = await getOrgOpportunities(user.primary_org);
   <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
     {opportunities.map(opportunity => <OpportunityCard opportunity={opportunity} class="w-full md:w-64" />)}
   </div>
+  <div class="pico flex justify-center mt-24">
+    <a type="button" href="/opportunities/new">
+      Create new opportunity
+    </a>
+  </div>
 </Layout>
