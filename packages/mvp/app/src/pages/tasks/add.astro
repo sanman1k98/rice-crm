@@ -1,5 +1,6 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
+import { createTask, type TaskInit } from "@/lib/tasks";
 
 const { user } = Astro.locals;
 
@@ -7,8 +8,28 @@ if (!user)
   return Astro.redirect("/login");
 
 if (Astro.request.method === "POST") {
-  const data = { status: 500, statusText: "Not implemented" };
-  return Response.json(data, data);
+  type RawFormData = Omit<TaskInit, "author" | "org" | "created" | "status">;
+
+  // FIXME: Validate FormData.
+  const formData = Object.fromEntries(
+    await Astro.request.formData().then(data => data.entries()),
+  ) as RawFormData;
+
+  let opportunity: number | null = null;
+  if (Astro.url.searchParams.has("opportunity"))
+    opportunity = Number.parseInt(Astro.url.searchParams.get("opportunity")!);
+
+  const taskInit = {
+    author: user.id,
+    org: user.primary_org,
+    opportunity,
+    ...formData,
+  } satisfies TaskInit;
+
+  const newTask = await createTask(taskInit);
+  const { id: taskId } = newTask;
+
+  return Astro.redirect(`/tasks/${id}`);
 };
 ---
 
@@ -20,4 +41,26 @@ if (Astro.request.method === "POST") {
   class="container"
 >
   <h1>Create a new task</h1>
+  <section class="pico">
+    <form method="post">
+      <fieldset>
+        <label>
+          Title
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            required
+          >
+        </label>
+        <label>
+          <textarea
+            name="body"
+            placeholder="A description of the task..."
+          />
+        </label>
+        <input type="submit" value="Add task">
+      </fieldset>
+    </form>
+  </section>
 </MainLayout>
