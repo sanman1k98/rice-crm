@@ -27,9 +27,8 @@ if (Astro.request.method === "POST") {
   } satisfies TaskInit;
 
   const newTask = await createTask(taskInit);
-  const { id: taskId } = newTask;
 
-  return Astro.redirect(`/tasks/${id}`);
+  return Astro.redirect(`/tasks/${newTask.id}`);
 };
 ---
 
