@@ -20,9 +20,9 @@ const applyCurrentProp = (page: Omit<PageLink, "current">): PageLink => ({
 const pages = Array.from(
   [
     { text: "Home", href: "/home" },
-    { text: "Tasks", href: "/tasks" },
-    { text: "Opportunities", href: "/opportunities" },
     { text: "Accounts", href: "/accounts" },
+    { text: "Opportunities", href: "/opportunities" },
+    { text: "Tasks", href: "/tasks" },
   ],
   applyCurrentProp,
 );
