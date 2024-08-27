@@ -1,7 +1,9 @@
 ---
 import Layout from "@/layouts/MainLayout.astro";
+import TaskCard from "@/components/TaskCard.astro";
 import { getOpportunityInfo } from "@/lib/opportunities";
 import { getUserInfo } from "@/lib/users";
+import { getTasksForOpportunity } from "@/lib/tasks";
 
 const { user } = Astro.locals;
 
@@ -17,7 +19,10 @@ const opportunity = Number.isInteger(id)
 if (!opportunity)
   return new Response(null, { status: 404 });
 
-const author = await getUserInfo(opportunity.author);
+const [author, tasks] = await Promise.all([
+  getUserInfo(opportunity.author),
+  getTasksForOpportunity(opportunity.id),
+]);
 ---
 
 <Layout
@@ -25,9 +30,11 @@ const author = await getUserInfo(opportunity.author);
     title: opportunity.name,
     description: opportunity.name,
   }}
+  class="container"
 >
-  <div class="container">
-    <h1>{opportunity.name}</h1>
+  <h1>{opportunity.name}</h1>
+  <section>
+    <h2>Overview</h2>
     <ul>
       <li>
         <strong>Stage:</strong>
@@ -42,6 +49,24 @@ const author = await getUserInfo(opportunity.author);
         {author!.fullname}
       </li>
     </ul>
-  </div>
+  </section>
+  <section>
+    <h2>Tasks</h2>
+    { 
+      tasks.length ? (
+        tasks.map(t => <TaskCard task={t} />)
+      ) : (
+        <p>No associated tasks</p>
+      )
+    }
+  </section>
+  <section class="pico flex justify-center mt-24">
+    <a
+      type="button"
+      href=`/tasks/add?opportunity=${opportunity.id}`
+    >
+      Create new task
+    </a>
+  </section>
 </Layout>
 
