@@ -9,5 +9,8 @@ dist/
 .env
 .env*.local
 
+# Local databases for development
+packages/mvp/api/.databases
+
 # macOS Finder
 .DS_Store
