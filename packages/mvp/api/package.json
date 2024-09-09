@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "db-service:push": "drizzle-kit push --config=./db-service/drizzle.config.ts"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.2",
