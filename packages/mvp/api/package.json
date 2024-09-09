@@ -1,0 +1,17 @@
+{
+  "name": "@mvp/api",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@hono/zod-validator": "^0.2.2",
+    "@libsql/client": "^0.10.0",
+    "drizzle-orm": "^0.33.0",
+    "hono": "^4.5.11",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@hono/vite-dev-server": "^0.16.0",
+    "drizzle-kit": "^0.24.2",
+    "vite": "^5.4.3"
+  }
+}
