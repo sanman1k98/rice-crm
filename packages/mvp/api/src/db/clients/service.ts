@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client'
-import * as schema from '@/db/schemas/service';
+import * as schema from '../schemas/service';
 import { localServiceDbPath } from '../../../db-shared/utils';
 
 export function createServiceDbClient() {
