@@ -6,6 +6,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
+    "vite": "vite",
     "db-service:push": "drizzle-kit push --config=./db-service/drizzle.config.ts"
   },
   "dependencies": {
