@@ -1,0 +1,13 @@
+# NOTE: keep in-sync with `eslint.config.js` and `pretter.config.js`
+#
+# https://editorconfig.org
+
+root = true
+
+[*]
+max_line_length = 100
+indent_style = tab
+indent_size = 2
+
+[*.{md,toml,yml}]
+indent_style = space
