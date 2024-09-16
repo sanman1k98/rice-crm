@@ -3,11 +3,10 @@
  *
  * @see https://docs.astro.build/en/guides/astro-db/
  */
-import { column, defineDb, defineTable, NOW } from "astro:db";
+import { column, defineDb, defineTable, NOW } from 'astro:db';
 
 // @ts-expect-error Type imports are used by JSDoc links.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { OrgRoleValueEnum, OpportunityStageEnum, TaskStatusEnum } from "@/lib/enums";
 
 /**
  * - "Organization" generally means a business, but can be something else like
@@ -17,12 +16,12 @@ import type { OrgRoleValueEnum, OpportunityStageEnum, TaskStatusEnum } from "@/l
  * - an org must have at least one "Member"
  */
 const Organization = defineTable({
-  columns: {
-    id: column.number({ primaryKey: true }),
-    name: column.text(),
-    description: column.text({ optional: true }),
-  },
-})
+	columns: {
+		id: column.number({ primaryKey: true }),
+		name: column.text(),
+		description: column.text({ optional: true }),
+	},
+});
 
 // "User" and "Session" table definitions are adapted from "lucia-adapter-astrodb".
 // https://github.com/pilcrowOnPaper/lucia-adapter-astrodb
@@ -34,13 +33,13 @@ const Organization = defineTable({
  * @see https://arcticjs.dev
  */
 const User = defineTable({
-  columns: {
-    id: column.text({ primaryKey: true }),
-    username: column.text({ unique: true }),
-    password_hash: column.text(),
-    fullname: column.text(),
-    primary_org: column.number({ references: () => Organization.columns.id }),
-  }
+	columns: {
+		id: column.text({ primaryKey: true }),
+		username: column.text({ unique: true }),
+		password_hash: column.text(),
+		fullname: column.text(),
+		primary_org: column.number({ references: () => Organization.columns.id }),
+	},
 });
 
 /**
@@ -51,11 +50,11 @@ const User = defineTable({
  * @see https://github.com/pilcrowOnPaper/lucia-adapter-astrodb
  */
 const Session = defineTable({
-  columns: {
-    id: column.text({ primaryKey: true }),
-    userId: column.text({ references: () => User.columns.id }),
-    expiresAt: column.date(),
-  }
+	columns: {
+		id: column.text({ primaryKey: true }),
+		userId: column.text({ references: () => User.columns.id }),
+		expiresAt: column.date(),
+	},
 });
 
 // TODO: Integrations?? How should we do integrations?
@@ -75,12 +74,12 @@ const Session = defineTable({
  * @todo Should we have a separate table containing different types of roles?
  */
 const OrgRole = defineTable({
-  columns: {
-    org: column.number({ references: () => Organization.columns.id }),
-    user: column.text({ references: () => User.columns.id }),
-    /** @see {@link OrgRoleValueEnum} */
-    role: column.number({ default: 0 }),
-  }
+	columns: {
+		org: column.number({ references: () => Organization.columns.id }),
+		user: column.text({ references: () => User.columns.id }),
+		/** @see {@link OrgRoleValueEnum} */
+		role: column.number({ default: 0 }),
+	},
 });
 
 /**
@@ -92,14 +91,14 @@ const OrgRole = defineTable({
  * - an account can be associated with one or more "Deals"
  */
 const Account = defineTable({
-  columns: {
-    id: column.number({ primaryKey: true }),
-    org: column.number({ references: () => Organization.columns.id }),
-    name: column.text(),
-    description: column.text(),
-    email: column.text(),
-    address: column.text(),
-  },
+	columns: {
+		id: column.number({ primaryKey: true }),
+		org: column.number({ references: () => Organization.columns.id }),
+		name: column.text(),
+		description: column.text(),
+		email: column.text(),
+		address: column.text(),
+	},
 });
 
 /**
@@ -108,16 +107,16 @@ const Account = defineTable({
  * - can be assigned to a "Member"
  */
 const Opportunity = defineTable({
-  columns: {
-    id: column.number({ primaryKey: true }),
-    org: column.number({ references: () => Organization.columns.id }),
-    account: column.number({ references: () => Account.columns.id }),
-    author: column.text({ references: () => User.columns.id }),
-    name: column.text(),
-    /** @see {@link OpportunityStageEnum}*/
-    stage: column.number({ default: 0 }),
-    amount: column.number(),
-  },
+	columns: {
+		id: column.number({ primaryKey: true }),
+		org: column.number({ references: () => Organization.columns.id }),
+		account: column.number({ references: () => Account.columns.id }),
+		author: column.text({ references: () => User.columns.id }),
+		name: column.text(),
+		/** @see {@link OpportunityStageEnum} */
+		stage: column.number({ default: 0 }),
+		amount: column.number(),
+	},
 });
 
 /**
@@ -126,29 +125,29 @@ const Opportunity = defineTable({
  * - can be assigned to a member
  */
 const Task = defineTable({
-  columns: {
-    id: column.number({ primaryKey: true }),
-    created: column.date({ default: NOW }),
-    author: column.text({ references: () => User.columns.id }),
-    org: column.number({ references: () => Organization.columns.id }),
-    title: column.text(),
-    body: column.text({ optional: true }),
-    /**
-     * @see {@link TaskStatusEnum}
-     */
-    status: column.number({ default: 0 }),
-    opportunity: column.number({ optional: true, references: () => Opportunity.columns.id }),
-  },
+	columns: {
+		id: column.number({ primaryKey: true }),
+		created: column.date({ default: NOW }),
+		author: column.text({ references: () => User.columns.id }),
+		org: column.number({ references: () => Organization.columns.id }),
+		title: column.text(),
+		body: column.text({ optional: true }),
+		/**
+		 * @see {@link TaskStatusEnum}
+		 */
+		status: column.number({ default: 0 }),
+		opportunity: column.number({ optional: true, references: () => Opportunity.columns.id }),
+	},
 });
 
 export default defineDb({
-  tables: {
-    User,
-    Session,
-    Organization,
-    OrgRole,
-    Account,
-    Opportunity,
-    Task,
-  },
+	tables: {
+		User,
+		Session,
+		Organization,
+		OrgRole,
+		Account,
+		Opportunity,
+		Task,
+	},
 });

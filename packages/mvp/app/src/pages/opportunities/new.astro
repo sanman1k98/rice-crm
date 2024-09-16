@@ -1,16 +1,16 @@
 ---
-import MainLayout from "@/layouts/MainLayout.astro";
-import { getOrgAccounts } from "@/lib/orgs";
-import { type OpportunityInit, OpportunityStageEnum, createOpportunity } from "@/lib/opportunities";
+import MainLayout from '@/layouts/MainLayout.astro';
+import { createOpportunity, type OpportunityInit, OpportunityStageEnum } from '@/lib/opportunities';
+import { getOrgAccounts } from '@/lib/orgs';
 
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect("/login");
+  return Astro.redirect('/login');
 
 const accounts = await getOrgAccounts(user.primary_org);
 
-if (Astro.request.method === "POST") {
+if (Astro.request.method === 'POST') {
   type RawFormData = {
     account: string;
     name: string;
@@ -19,7 +19,7 @@ if (Astro.request.method === "POST") {
 
   // FIXME: Validate FormData.
   const formData = Object.fromEntries(
-    await Astro.request.formData().then(data => data.entries()),
+    await Astro.request.formData().then((data) => data.entries()),
   ) as RawFormData;
 
   const init = {
@@ -37,11 +37,11 @@ if (Astro.request.method === "POST") {
 ---
 
 <MainLayout
-  meta={{
-    title: "New Opportunity",
-    description: "Create a new opportunity"
+	meta={{
+    title: 'New Opportunity',
+    description: 'Create a new opportunity',
   }}
-  class="container"
+	class="container"
 >
   <h1>Create a new opportunity</h1>
   <div class="pico">
@@ -53,7 +53,7 @@ if (Astro.request.method === "POST") {
             Select account...
           </option>
           {
-            accounts.map(acc => (
+            accounts.map((acc) => (
               <option value={acc.id}>{acc.name}</option>
             ))
           }

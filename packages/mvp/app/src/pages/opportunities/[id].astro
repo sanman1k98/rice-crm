@@ -1,14 +1,14 @@
 ---
-import Layout from "@/layouts/MainLayout.astro";
-import TaskCard from "@/components/TaskCard.astro";
-import { getOpportunityInfo } from "@/lib/opportunities";
-import { getUserInfo } from "@/lib/users";
-import { getTasksForOpportunity } from "@/lib/tasks";
+import TaskCard from '@/components/TaskCard.astro';
+import Layout from '@/layouts/MainLayout.astro';
+import { getOpportunityInfo } from '@/lib/opportunities';
+import { getTasksForOpportunity } from '@/lib/tasks';
+import { getUserInfo } from '@/lib/users';
 
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect("/login");
+  return Astro.redirect('/login');
 
 const id = Number.parseInt(Astro.params.id!, 10);
 
@@ -26,11 +26,11 @@ const [author, tasks] = await Promise.all([
 ---
 
 <Layout
-  meta={{
+	meta={{
     title: opportunity.name,
     description: opportunity.name,
   }}
-  class="container"
+	class="container"
 >
   <h1>{opportunity.name}</h1>
   <section>
@@ -42,7 +42,7 @@ const [author, tasks] = await Promise.all([
       </li>
       <li>
         <strong>Amount:</strong>
-        {opportunity.amount.toLocaleString(undefined, { style: "currency", currency: "USD" })}
+        {opportunity.amount.toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
       </li>
       <li>
         <strong>Author:</strong>
@@ -52,18 +52,20 @@ const [author, tasks] = await Promise.all([
   </section>
   <section>
     <h2>Tasks</h2>
-    { 
-      tasks.length ? (
-        tasks.map(t => <TaskCard task={t} />)
-      ) : (
+    {
+      tasks.length
+? (
+        tasks.map((t) => <TaskCard task={t} />)
+      )
+: (
         <p>No associated tasks</p>
       )
     }
   </section>
   <section class="pico flex justify-center mt-24">
     <a
-      type="button"
-      href=`/tasks/add?opportunity=${opportunity.id}`
+	type="button"
+	href=`/tasks/add?opportunity=${opportunity.id}`
     >
       Create new task
     </a>

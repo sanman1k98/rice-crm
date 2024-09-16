@@ -1,16 +1,16 @@
 ---
-import Layout from "@/layouts/MainLayout.astro";
+import Layout from '@/layouts/MainLayout.astro';
 
 type Props = { error: unknown };
 const { error } = Astro.props;
 ---
 
 <Layout
-  meta={{
-    title: "Error",
-    description: "Something went wrong",
+	meta={{
+    title: 'Error',
+    description: 'Something went wrong',
   }}
-  class="flex flex-col max-w-full mx-auto justify-center text-center"
+	class="flex flex-col max-w-full mx-auto justify-center text-center"
 >
   <h1 class="pb-[10svh] font-bold text-5xl sm:text-7xl md:text-9xl">Error</h1>
   {import.meta.env.DEV && (

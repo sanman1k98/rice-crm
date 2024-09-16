@@ -1,12 +1,12 @@
 ---
-import Layout from "@/layouts/MainLayout.astro";
-import { getTaskInfo } from "@/lib/tasks";
-import { getUserInfo } from "@/lib/users";
+import Layout from '@/layouts/MainLayout.astro';
+import { getTaskInfo } from '@/lib/tasks';
+import { getUserInfo } from '@/lib/users';
 
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect("/login");
+  return Astro.redirect('/login');
 
 const id = Number.parseInt(Astro.params.id!, 10);
 
@@ -21,7 +21,7 @@ const author = await getUserInfo(task.author);
 ---
 
 <Layout
-  meta={{
+	meta={{
     title: task.title,
     description: task.title,
   }}
@@ -31,7 +31,7 @@ const author = await getUserInfo(task.author);
     {task.body && <p class="max-w-prose">{task.body}</p>}
     <ul>
       <li>Author: {author?.fullname}</li>
-      <li>Created at: {task.created.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</li>
+      <li>Created at: {task.created.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</li>
     </ul>
   </div>
 </Layout>

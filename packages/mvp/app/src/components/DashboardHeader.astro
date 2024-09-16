@@ -2,7 +2,7 @@
 // TODO: only have links for authenticated users.
 // Don't conditionally render links based on `Astro.locals.user`.
 
-import type { CSSProperty } from "astro/types"
+import type { CSSProperty } from 'astro/types';
 
 type Props = {
   class?: string;
@@ -15,18 +15,20 @@ type PageLink = {
   current: boolean;
 };
 
-const applyCurrentProp = (page: Omit<PageLink, "current">): PageLink => ({
+function applyCurrentProp(page: Omit<PageLink, 'current'>): PageLink {
+  return {
   current: Astro.url.pathname.startsWith(page.href),
   ...page,
-});
+};
+}
 
 const pages = Array.from(
   [
-    { text: "Home", href: "/home" },
-    { text: "Accounts", href: "/accounts" },
-    { text: "Opportunities", href: "/opportunities" },
-    { text: "Tasks", href: "/tasks" },
-    { text: "Leads", href: "/leads" },
+    { text: 'Home', href: '/home' },
+    { text: 'Accounts', href: '/accounts' },
+    { text: 'Opportunities', href: '/opportunities' },
+    { text: 'Tasks', href: '/tasks' },
+    { text: 'Leads', href: '/leads' },
   ],
   applyCurrentProp,
 );
@@ -38,13 +40,14 @@ const pages = Array.from(
       <li><strong><a href="/home">CRM</a></strong></li>
     </ul>
     <ul>
-      {Astro.locals.user ? (
+      {Astro.locals.user
+? (
         <>
-          {pages.map(page => (
+          {pages.map((page) => (
             <li class="!hidden md:!block">
               <a
-                aria-current={page.current}
-                href={page.href}
+	aria-current={page.current}
+	href={page.href}
               >{page.text}</a>
             </li>
           ))}
@@ -54,7 +57,8 @@ const pages = Array.from(
             <input type="submit" value="Logout" class="secondary" />
           </form>
         </li>
-      ) : (
+      )
+: (
         <li class="!hidden md:!inline-block"><a role="button" href="/login">Login</a></li>
       )}
       <li class="md:!hidden">
@@ -62,11 +66,11 @@ const pages = Array.from(
           <summary>Menu</summary>
           <ul dir="rtl">
             {
-              pages.map(page => (
+              pages.map((page) => (
                 <li class="">
                   <a
-                    aria-current={page.current}
-                    href={page.href}
+	aria-current={page.current}
+	href={page.href}
                   >{page.text}</a>
                 </li>
               ))

@@ -1,23 +1,23 @@
 ---
-import MainLayout from "@/layouts/MainLayout.astro";
+import MainLayout from '@/layouts/MainLayout.astro';
 
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect("/login");
+  return Astro.redirect('/login');
 
-if (Astro.request.method === "POST") {
-  const data = { status: 500, statusText: "Not implemented" };
+if (Astro.request.method === 'POST') {
+  const data = { status: 500, statusText: 'Not implemented' };
   return Response.json(data, data);
 };
 ---
 
 <MainLayout
-  meta={{
-    title: "Onboard",
-    description: "Onboard a new customer"
+	meta={{
+    title: 'Onboard',
+    description: 'Onboard a new customer',
   }}
-  class="container"
+	class="container"
 >
   <h1>Onboard a new customer</h1>
 </MainLayout>

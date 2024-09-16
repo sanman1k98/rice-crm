@@ -1,23 +1,23 @@
 ---
-import MainLayout from "@/layouts/MainLayout.astro";
-import { createTask, type TaskInit } from "@/lib/tasks";
+import MainLayout from '@/layouts/MainLayout.astro';
+import { createTask, type TaskInit } from '@/lib/tasks';
 
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect("/login");
+  return Astro.redirect('/login');
 
-if (Astro.request.method === "POST") {
-  type RawFormData = Omit<TaskInit, "author" | "org" | "created" | "status">;
+if (Astro.request.method === 'POST') {
+  type RawFormData = Omit<TaskInit, 'author' | 'org' | 'created' | 'status'>;
 
   // FIXME: Validate FormData.
   const formData = Object.fromEntries(
-    await Astro.request.formData().then(data => data.entries()),
+    await Astro.request.formData().then((data) => data.entries()),
   ) as RawFormData;
 
   let opportunity: number | null = null;
-  if (Astro.url.searchParams.has("opportunity"))
-    opportunity = Number.parseInt(Astro.url.searchParams.get("opportunity")!);
+  if (Astro.url.searchParams.has('opportunity'))
+    opportunity = Number.parseInt(Astro.url.searchParams.get('opportunity')!);
 
   const taskInit = {
     author: user.id,
@@ -33,11 +33,11 @@ if (Astro.request.method === "POST") {
 ---
 
 <MainLayout
-  meta={{
-    title: "Add Task",
-    description: "Create a new task"
+	meta={{
+    title: 'Add Task',
+    description: 'Create a new task',
   }}
-  class="container"
+	class="container"
 >
   <h1>Create a new task</h1>
   <section class="pico">
@@ -46,16 +46,16 @@ if (Astro.request.method === "POST") {
         <label>
           Title
           <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            required
-          >
+	type="text"
+	name="title"
+	placeholder="Title"
+	required
+>
         </label>
         <label>
           <textarea
-            name="body"
-            placeholder="A description of the task..."
+	name="body"
+	placeholder="A description of the task..."
           />
         </label>
         <input type="submit" value="Add task">

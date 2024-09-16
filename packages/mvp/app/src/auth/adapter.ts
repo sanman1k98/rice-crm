@@ -2,14 +2,14 @@
  * Adapted from "lucia-adapter-astrodb".
  * @see https://github.com/pilcrowOnPaper/lucia-adapter-astrodb/blob/main/src/index.ts
  */
-import type { Database, Table } from "@astrojs/db/runtime";
+import type { Database, Table } from '@astrojs/db/runtime';
 import type {
-  Adapter,
-  DatabaseSession,
-  DatabaseUser,
-  UserId,
-} from "lucia";
-import { eq, lte } from "astro:db";
+	Adapter,
+	DatabaseSession,
+	DatabaseUser,
+	UserId,
+} from 'lucia';
+import { eq, lte } from 'astro:db';
 
 export class AstroDBAdapter implements Adapter {
 	private db: Database;
@@ -32,18 +32,19 @@ export class AstroDBAdapter implements Adapter {
 	}
 
 	public async getSessionAndUser(
-		sessionId: string
+		sessionId: string,
 	): Promise<[session: DatabaseSession | null, user: DatabaseUser | null]> {
 		const result = await this.db
 			.select({
 				user: this.userTable,
-				session: this.sessionTable
+				session: this.sessionTable,
 			})
 			.from(this.sessionTable)
 			.innerJoin(this.userTable, eq(this.sessionTable.userId, this.userTable.id))
 			.where(eq(this.sessionTable.id, sessionId))
 			.get();
-		if (!result) return [null, null];
+		if (!result)
+			return [null, null];
 		return [transformIntoDatabaseSession(result.session), transformIntoDatabaseUser(result.user)];
 	}
 
@@ -65,7 +66,7 @@ export class AstroDBAdapter implements Adapter {
 				id: session.id,
 				userId: session.userId,
 				expiresAt: session.expiresAt,
-				...session.attributes
+				...session.attributes,
 			})
 			.run();
 	}
@@ -74,7 +75,7 @@ export class AstroDBAdapter implements Adapter {
 		await this.db
 			.update(this.sessionTable)
 			.set({
-				expiresAt: expiresAt
+				expiresAt,
 			})
 			.where(eq(this.sessionTable.id, sessionId))
 			.run();
@@ -91,7 +92,7 @@ function transformIntoDatabaseSession(raw: any): DatabaseSession {
 		userId,
 		id,
 		expiresAt,
-		attributes
+		attributes,
 	};
 }
 
@@ -99,7 +100,7 @@ function transformIntoDatabaseUser(raw: any): DatabaseUser {
 	const { id, ...attributes } = raw;
 	return {
 		id,
-		attributes
+		attributes,
 	};
 }
 
@@ -123,7 +124,7 @@ export type SessionTable = Table<
 	any,
 	{
 		id: {
-			type: "text";
+			type: 'text';
 			schema: {
 				unique: false;
 				deprecated: any;
@@ -133,7 +134,7 @@ export type SessionTable = Table<
 			};
 		};
 		expiresAt: {
-			type: "date";
+			type: 'date';
 			schema: {
 				optional: false;
 				unique: false;
@@ -166,4 +167,4 @@ export type SessionTable = Table<
 	}
 >;
 
-type UserIdColumnType = UserId extends string ? "text" : UserId extends number ? "number" : never;
+type UserIdColumnType = UserId extends string ? 'text' : UserId extends number ? 'number' : never;

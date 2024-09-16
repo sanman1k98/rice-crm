@@ -1,24 +1,24 @@
+import { generateId, scrypt } from '@/auth/utils';
 /**
  * @file CRUD operations for users.
  */
-import { OrgRole, User, db, eq, sql } from "astro:db";
-import { generateId, scrypt } from "@/auth/utils";
+import { db, eq, OrgRole, sql, User } from 'astro:db';
 
 export const OrgRoleValueEnum = {
-  /** Default role for a new user. */
-  Member: 0,
-  Owner: 1,
+	/** Default role for a new user. */
+	Member: 0,
+	Owner: 1,
 } as const;
 
 /** @see {@link OrgRoleValueEnum} */
 export type OrgRoleValue = typeof OrgRoleValueEnum[keyof typeof OrgRoleValueEnum];
-export type UserInfo = Omit<typeof User.$inferSelect, "password_hash">;
+export type UserInfo = Omit<typeof User.$inferSelect, 'password_hash'>;
 
-type UserId = UserInfo["id"];
-type UserInit = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
-  password: string;
-  /** @defaultValue `OrgRoleValueEnum.Member`*/
-  role?: OrgRoleValue;
+type UserId = UserInfo['id'];
+type UserInit = Omit<typeof User.$inferInsert, 'id' | 'password_hash'> & {
+	password: string;
+	/** @defaultValue `OrgRoleValueEnum.Member` */
+	role?: OrgRoleValue;
 };
 
 /**
@@ -55,11 +55,11 @@ type UserInit = Omit<typeof User.$inferInsert, "id" | "password_hash"> & {
  * At least we can use the generated types to derive our own type which we can
  * then use to constrain the `partialUserColumns` object.
  */
-const partialUserColumns: Omit<typeof User._.columns, "password_hash"> = {
-  id: User.id,
-  username: User.username,
-  fullname: User.fullname,
-  primary_org: User.primary_org,
+const partialUserColumns: Omit<typeof User._.columns, 'password_hash'> = {
+	id: User.id,
+	username: User.username,
+	fullname: User.fullname,
+	primary_org: User.primary_org,
 };
 
 /**
@@ -74,36 +74,36 @@ const partialUserColumns: Omit<typeof User._.columns, "password_hash"> = {
  * without the `password_hash` column.
  */
 export async function createUser(opts: UserInit): Promise<UserInfo> {
-  const { role = OrgRoleValueEnum.Member, password, ...rest } = opts;
+	const { role = OrgRoleValueEnum.Member, password, ...rest } = opts;
 
-  const id = generateId() as string;
-  const password_hash = await scrypt.hash(password);
+	const id = generateId() as string;
+	const password_hash = await scrypt.hash(password);
 
-  // Insert the new user and get it back.
-  const newUser = await db
-    .insert(User)
-    .values({ id, password_hash, ...rest })
-    .returning(partialUserColumns)
-    .get();
+	// Insert the new user and get it back.
+	const newUser = await db
+		.insert(User)
+		.values({ id, password_hash, ...rest })
+		.returning(partialUserColumns)
+		.get();
 
-  // Define their role in their primary org.
-  await db
-    .insert(OrgRole)
-    .values({
-      user: newUser.id,
-      org: newUser.primary_org,
-      role,
-    });
+	// Define their role in their primary org.
+	await db
+		.insert(OrgRole)
+		.values({
+			user: newUser.id,
+			org: newUser.primary_org,
+			role,
+		});
 
-  // TODO: Return both `UserInfo` and `OrgRole` information.
-  return newUser;
+	// TODO: Return both `UserInfo` and `OrgRole` information.
+	return newUser;
 };
 
 const selectUser = db
-  .select(partialUserColumns)
-  .from(User)
-  .where(eq(sql.placeholder("id"), User.id))
-  .prepare();
+	.select(partialUserColumns)
+	.from(User)
+	.where(eq(sql.placeholder('id'), User.id))
+	.prepare();
 
 /**
  * Get information about the given user.
@@ -111,5 +111,6 @@ const selectUser = db
  * @param id - The `id` of the user.
  * @returns The first matching row from the `User` table if found.
  */
-export const getUserInfo = (id: UserId): Promise<UserInfo | undefined> =>
-  selectUser.get({ id }); 
+export function getUserInfo(id: UserId): Promise<UserInfo | undefined> {
+	return selectUser.get({ id });
+}

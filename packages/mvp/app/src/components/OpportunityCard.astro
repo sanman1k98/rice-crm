@@ -1,5 +1,5 @@
 ---
-import type { Opportunity } from "astro:db";
+import type { Opportunity } from 'astro:db';
 
 type Props = {
   class?: string;
@@ -12,8 +12,8 @@ const { opportunity } = Astro.props;
 <div class="pico" class:list={[Astro.props.class]}>
   <article>
     <a
-      href={`/opportunities/${opportunity.id}`}
-      class="contrast"
+	href={`/opportunities/${opportunity.id}`}
+	class="contrast"
     >{opportunity.name}</a>
   </article>
 </div>

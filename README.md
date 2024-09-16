@@ -41,4 +41,3 @@ Most commands needed when developing this project are defined in the â€œscriptsâ
 ```sh
 pnpm run dev
 ```
-

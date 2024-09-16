@@ -1,14 +1,14 @@
 ---
-import BaseLayout, { type Props as LayoutProps } from "./BaseLayout.astro";
-import Header from "@/components/DashboardHeader.astro";
-import Footer from "@/components/Footer.astro";
+import Header from '@/components/DashboardHeader.astro';
+import Footer from '@/components/Footer.astro';
+import BaseLayout, { type Props as LayoutProps } from './BaseLayout.astro';
 
 export type Props = LayoutProps;
 ---
 
 <BaseLayout
-  meta={Astro.props.meta}
-  class="min-h-screen flex flex-col"
+	meta={Astro.props.meta}
+	class="min-h-screen flex flex-col"
 >
   <Header class="pico container" />
   <main class="grow" class:list={[Astro.props.class]} style={Astro.props.style}>

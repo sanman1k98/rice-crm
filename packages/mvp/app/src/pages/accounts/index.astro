@@ -1,19 +1,19 @@
 ---
-import Layout from "@/layouts/MainLayout.astro";
-import AccountCard from "@/components/AccountCard.astro";
-import { getOrgAccounts } from "@/lib/orgs"
-import { createAccount } from "@/lib/accounts";
+import AccountCard from '@/components/AccountCard.astro';
+import Layout from '@/layouts/MainLayout.astro';
+import { createAccount } from '@/lib/accounts';
+import { getOrgAccounts } from '@/lib/orgs';
 
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect("/login");
+  return Astro.redirect('/login');
 
-if (Astro.request.method === "POST") {
+if (Astro.request.method === 'POST') {
   try {
     // FIXME: Validate FormData
     const formData = Object.fromEntries(
-      await Astro.request.formData().then(data => data.entries())
+      await Astro.request.formData().then((data) => data.entries()),
     );
     // @ts-ignore assume FormData is good.
     const createdAccount = await createAccount({
@@ -28,28 +28,28 @@ if (Astro.request.method === "POST") {
 }
 
 const gradients = [
-  "bg-gradient-to-t from-green-200 to-zinc-200",
-  "bg-gradient-to-tr from-pink-200 to-sky-200",
-  "bg-gradient-to-tr from-purple-200 to-blue-200",
-  "bg-gradient-to-t from-orange-200 to-teal-200",
+  'bg-gradient-to-t from-green-200 to-zinc-200',
+  'bg-gradient-to-tr from-pink-200 to-sky-200',
+  'bg-gradient-to-tr from-purple-200 to-blue-200',
+  'bg-gradient-to-t from-orange-200 to-teal-200',
 ];
 
 const accounts = await getOrgAccounts(user.primary_org);
 ---
 
 <Layout
-  meta={{
-    title: "Accounts",
-    description: "Organization accounts",
+	meta={{
+    title: 'Accounts',
+    description: 'Organization accounts',
   }}
-  class="container"
+	class="container"
 >
   <h1>Accounts</h1>
   <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
     {accounts.map((account, idx) => (
       <AccountCard
-        account={account}
-        gradient={gradients[idx % gradients.length]!}
+	account={account}
+	gradient={gradients[idx % gradients.length]!}
       />
     ))}
   </div>
@@ -68,40 +68,40 @@ const accounts = await getOrgAccounts(user.primary_org);
           <label>
             Name
             <input
-              type="text"
-              required
-              name="name"
+	type="text"
+	required
+	name="name"
             />
           </label>
           <label>
             Description
             <input
-              type="text"
-              required
-              name="description"
+	type="text"
+	required
+	name="description"
             />
           </label>
           <label>
             Email
             <input
-              type="email"
-              required
-              name="email"
+	type="email"
+	required
+	name="email"
             />
           </label>
           <label>
             Address
             <input
-              type="text"
-              required
-              name="address"
+	type="text"
+	required
+	name="address"
             />
           </label>
           <footer>
             <button
-              class="secondary"
-              formmethod="dialog"
-              formnovalidate
+	class="secondary"
+	formmethod="dialog"
+	formnovalidate
             >Cancel</button>
             <button>Confirm</button>
           </footer>
