@@ -13,6 +13,8 @@ export const OpportunityStageEnum = {
 	Closed: 5,
 } as const;
 
+const OpportunityStageNames = Object.keys(OpportunityStageEnum) as (keyof typeof OpportunityStageEnum)[];
+
 export type OpportunityStage = typeof OpportunityStageEnum[keyof typeof OpportunityStageEnum];
 
 export type OpportunityInfo = typeof Opportunity.$inferSelect;
@@ -21,6 +23,13 @@ export type OpportunityInit = Omit<typeof Opportunity.$inferInsert, 'id'> & {
 	/** @see {@link OpportunityStage} */
 	stage?: OpportunityStage;
 };
+
+export function getOpportunityStageName(stage: number | OpportunityStage) {
+	const name = OpportunityStageNames[stage];
+	if (!name)
+		throw new TypeError('Invalid OpportunityStage value');
+	return name;
+}
 
 /**
  * Create a new opportunity.
