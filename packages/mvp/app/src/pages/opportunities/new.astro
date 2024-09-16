@@ -1,39 +1,20 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
-import { createOpportunity, type OpportunityInit, OpportunityStageEnum } from '@/lib/opportunities';
 import { getOrgAccounts } from '@/lib/orgs';
+import { actions } from 'astro:actions';
 
 const { user } = Astro.locals;
 
 if (!user)
 	return Astro.redirect('/login');
 
+const result = Astro.getActionResult(actions.opportunities.create);
+
+// FIXME: update UI when form action errors.
+if (result && !result.error)
+	return Astro.redirect(`/opportunities/${result.data.id}`);
+
 const accounts = await getOrgAccounts(user.primary_org);
-
-if (Astro.request.method === 'POST') {
-	type RawFormData = {
-		account: string;
-		name: string;
-		amount: string;
-	};
-
-	// FIXME: Validate FormData.
-	const formData = Object.fromEntries(
-		await Astro.request.formData().then((data) => data.entries()),
-	) as RawFormData;
-
-	const init = {
-		account: Number.parseInt(formData.account),
-		amount: Number.parseFloat(formData.amount),
-		name: formData.name,
-		org: user.primary_org,
-		author: user.id,
-		stage: OpportunityStageEnum.InProgress,
-	} satisfies OpportunityInit;
-
-	const created = await createOpportunity(init);
-	return Astro.redirect(`/opportunities/${created.id}`);
-}
 ---
 
 <MainLayout
@@ -45,7 +26,7 @@ if (Astro.request.method === 'POST') {
 >
 	<h1>Create a new opportunity</h1>
 	<div class="pico">
-		<form method="post">
+		<form method="post" action={actions.opportunities.create}>
 			<fieldset>
 				<label for="account">Account</label>
 				<select name="account" id="account" required>
