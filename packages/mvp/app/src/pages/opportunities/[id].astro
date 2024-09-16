@@ -1,7 +1,7 @@
 ---
 import TaskCard from '@/components/TaskCard.astro';
 import Layout from '@/layouts/MainLayout.astro';
-import { getOpportunityInfo } from '@/lib/opportunities';
+import { getOpportunityInfo, getOpportunityStageName } from '@/lib/opportunities';
 import { getTasksForOpportunity } from '@/lib/tasks';
 import { getUserInfo } from '@/lib/users';
 
@@ -18,6 +18,8 @@ const opportunity = Number.isInteger(id)
 
 if (!opportunity)
   return new Response(null, { status: 404 });
+
+const stageName = getOpportunityStageName(opportunity.stage);
 
 const [author, tasks] = await Promise.all([
 	getUserInfo(opportunity.author),
@@ -38,7 +40,7 @@ const [author, tasks] = await Promise.all([
 		<ul>
 			<li>
 				<strong>Stage:</strong>
-				{opportunity.stage}
+				{stageName}
 			</li>
 			<li>
 				<strong>Amount:</strong>
