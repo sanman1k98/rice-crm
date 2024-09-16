@@ -1,0 +1,5 @@
+# We use eslint to format JS and TS.
+**/*.[jt]s
+**/*.[cm][jt]s
+**/*.[jt]sx
+**/*.[cm][jt]sx
