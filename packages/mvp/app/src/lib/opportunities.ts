@@ -5,9 +5,12 @@ import { db, eq, Opportunity, sql } from 'astro:db';
 
 export const OpportunityStageEnum = {
 	/** Default stage when creating a new opportunity. */
-	Planning: 0,
-	InProgress: 1,
-	Completed: 2,
+	Engage: 0,
+	Qualify: 1,
+	Design: 2,
+	Propose: 3,
+	Negotiate: 4,
+	Closed: 5,
 } as const;
 
 export type OpportunityStage = typeof OpportunityStageEnum[keyof typeof OpportunityStageEnum];
