@@ -1,9 +1,13 @@
-import antfu, { GLOB_MARKDOWN, GLOB_TOML, GLOB_YAML } from '@antfu/eslint-config';
+import antfu, { GLOB_JSON, GLOB_MARKDOWN, GLOB_TOML, GLOB_YAML } from '@antfu/eslint-config';
 
 // https://github.com/antfu/eslint-config
 export default antfu(
 	{
-		ignores: ['com.crm/**', 'customer/**'],
+		ignores: [
+			'com.crm/**',
+			'customer/**',
+			'pnpm-lock.yaml',
+		],
 		stylistic: {
 			semi: true,
 			quotes: 'single',
@@ -30,7 +34,7 @@ export default antfu(
 	{
 		// Matches prettier overrides.
 		name: 'user/stylistic/indent/overrides',
-		files: [GLOB_MARKDOWN, GLOB_TOML, GLOB_YAML],
+		files: [GLOB_JSON, GLOB_MARKDOWN, GLOB_TOML, GLOB_YAML],
 		rules: {
 			'style/indent': ['error', 2],
 		},
