@@ -8,68 +8,53 @@ import Layout from '@/layouts/MainLayout.astro';
 
 <Layout
 	meta={{
-    title: 'Login',
-    description: 'Login to MVP CRM',
-  }}
+		title: 'Login',
+		description: 'Login to MVP CRM',
+	}}
 	class="mx-auto max-w-md"
 >
-  <div class="pico">
-    <h1>Login</h1>
-    <form
-	id="login"
-	method="post"
-	action="api/v0/auth/login"
-    >
-      <label>
-        Username
-        <input
-	id="username"
-	name="username"
-	placeholder="test"
-	type="text"
-	required
-        />
-      </label>
-      <label>
-        Password
-        <input
-	id="password"
-	name="password"
-	placeholder="password"
-	type="password"
-	required
-        />
-        <small
-	id="invalid-helper"
-	aria-hidden="true"
-	class="!text-red-600 aria-hidden:hidden"
-        ></small>
-      </label>
-      <input
-	type="submit"
-	value="Login"
-      />
-    </form>
-  </div>
-  <script>
-    (document.getElementById('login') as HTMLFormElement).addEventListener('submit', async function (ev) {
-    	ev.preventDefault();
+	<div class="pico">
+		<h1>Login</h1>
+		<form id="login" method="post" action="api/v0/auth/login">
+			<label>
+				Username
+				<input id="username" name="username" placeholder="test" type="text" required />
+			</label>
+			<label>
+				Password
+				<input id="password" name="password" placeholder="password" type="password" required />
+				<small
+					id="invalid-helper"
+					aria-hidden="true"
+					class="!text-red-600 aria-hidden:hidden"
+				></small>
+			</label>
+			<input type="submit" value="Login" />
+		</form>
+	</div>
 
-    	try {
-    		const res = await fetch(this.action, {
-    			method: this.method,
-    			body: new FormData(this),
-    		});
+	<script>
+(document.getElementById('login') as HTMLFormElement).addEventListener(
+	'submit',
+	async function (ev) {
+		ev.preventDefault();
 
-    		if (res.redirected || res.ok)
-    			return window.location.replace('/home');
+		try {
+			const res = await fetch(this.action, {
+				method: this.method,
+				body: new FormData(this),
+			});
 
-    		const helper = this.querySelector(':scope #invalid-helper')!;
-    		helper.removeAttribute('aria-hidden');
-    		helper.textContent = await res.text();
-    	} catch (e) {
-    		console.error(e);
-    	}
-    });
-  </script>
+			if (res.redirected || res.ok)
+				return window.location.replace('/home');
+
+			const helper = this.querySelector(':scope #invalid-helper')!;
+			helper.removeAttribute('aria-hidden');
+			helper.textContent = await res.text();
+		} catch (e) {
+			console.error(e);
+		}
+	},
+);
+</script>
 </Layout>

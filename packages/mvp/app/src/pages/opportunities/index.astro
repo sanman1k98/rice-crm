@@ -6,25 +6,27 @@ import { getOrgOpportunities } from '@/lib/orgs';
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect('/login');
+	return Astro.redirect('/login');
 
 const opportunities = await getOrgOpportunities(user.primary_org);
 ---
 
 <Layout
 	meta={{
-    title: 'Opportunities',
-    description: 'Opportunities',
-  }}
+		title: 'Opportunities',
+		description: 'Opportunities',
+	}}
 	class="container"
 >
-  <h1>Opportunities</h1>
-  <section class="sm:flex flex-row sm:flex-wrap gap-x-4">
-    {opportunities.map((opportunity) => <OpportunityCard opportunity={opportunity} class="w-full md:w-64" />)}
-  </section>
-  <section class="pico flex justify-center mt-24">
-    <a type="button" href="/opportunities/new">
-      Create new opportunity
-    </a>
-  </section>
+	<h1>Opportunities</h1>
+	<section class="sm:flex flex-row sm:flex-wrap gap-x-4">
+		{
+			opportunities.map((opportunity) => (
+				<OpportunityCard opportunity={opportunity} class="w-full md:w-64" />
+			))
+		}
+	</section>
+	<section class="pico flex justify-center mt-24">
+		<a type="button" href="/opportunities/new"> Create new opportunity </a>
+	</section>
 </Layout>

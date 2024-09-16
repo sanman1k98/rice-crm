@@ -8,58 +8,57 @@ import { getOrgAccounts, getOrgInfo, getOrgOpportunities, getOrgTasks } from '@/
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect('/login');
+	return Astro.redirect('/login');
 
 const gradients = [
-  'bg-gradient-to-t from-green-200 to-zinc-200',
-  'bg-gradient-to-tr from-pink-200 to-sky-200',
-  'bg-gradient-to-tr from-purple-200 to-blue-200',
-  'bg-gradient-to-t from-orange-200 to-teal-200',
+	'bg-gradient-to-t from-green-200 to-zinc-200',
+	'bg-gradient-to-tr from-pink-200 to-sky-200',
+	'bg-gradient-to-tr from-purple-200 to-blue-200',
+	'bg-gradient-to-t from-orange-200 to-teal-200',
 ];
 
 const greeting = `Welcome back ${user.fullname}`;
 
 const [org, tasks, accounts, opportunites] = await Promise.all([
-  getOrgInfo(user.primary_org),
-  getOrgTasks(user.primary_org),
-  getOrgAccounts(user.primary_org),
-  getOrgOpportunities(user.primary_org),
+	getOrgInfo(user.primary_org),
+	getOrgTasks(user.primary_org),
+	getOrgAccounts(user.primary_org),
+	getOrgOpportunities(user.primary_org),
 ]);
 ---
 
 <Layout
 	meta={{
-    title: 'Home',
-    description: greeting,
-  }}
+		title: 'Home',
+		description: greeting,
+	}}
 >
-  <div class="pico container">
-    <h1>{org!.name}</h1>
-  </div>
+	<div class="pico container">
+		<h1>{org!.name}</h1>
+	</div>
 
-  <section class="container">
-    <h2>Accounts</h2>
-    <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
-      {accounts.map((account, idx) => (
-        <AccountCard
-	account={account}
-	gradient={gradients[idx % gradients.length]!}
-        />
-      ))}
-    </div>
-  </section>
+	<section class="container">
+		<h2>Accounts</h2>
+		<div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+			{
+				accounts.map((account, idx) => (
+					<AccountCard account={account} gradient={gradients[idx % gradients.length]!} />
+				))
+			}
+		</div>
+	</section>
 
-  <section class="container">
-    <h2>Opportunities</h2>
-    <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
-      {opportunites.map((o) => <OpportunityCard opportunity={o} class="w-full md:w-64" />)}
-    </div>
-  </section>
+	<section class="container">
+		<h2>Opportunities</h2>
+		<div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+			{opportunites.map((o) => <OpportunityCard opportunity={o} class="w-full md:w-64" />)}
+		</div>
+	</section>
 
-  <section class="container">
-    <h2>Tasks</h2>
-    <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
-      {tasks.map((task) => <TaskCard task={task} class="w-full md:w-64" />)}
-    </div>
-  </section>
+	<section class="container">
+		<h2>Tasks</h2>
+		<div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+			{tasks.map((task) => <TaskCard task={task} class="w-full md:w-64" />)}
+		</div>
+	</section>
 </Layout>

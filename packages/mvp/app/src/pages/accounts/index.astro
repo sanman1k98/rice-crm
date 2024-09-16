@@ -7,31 +7,30 @@ import { getOrgAccounts } from '@/lib/orgs';
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect('/login');
+	return Astro.redirect('/login');
 
 if (Astro.request.method === 'POST') {
-  try {
-    // FIXME: Validate FormData
-    const formData = Object.fromEntries(
-      await Astro.request.formData().then((data) => data.entries()),
-    );
-    // @ts-ignore assume FormData is good.
-    const createdAccount = await createAccount({
-      org: user.primary_org,
-      ...formData,
-    });
-    console.log(createdAccount);
-    return Astro.redirect(`/accounts/${createdAccount.id}`);
-  } catch (e) {
-    return Response.json(e, { status: 500 });
-  }
+	try {
+		// FIXME: Validate FormData
+		const formData = Object.fromEntries(
+			await Astro.request.formData().then((data) => data.entries()),
+		);
+		// @ts-ignore assume FormData is good.
+		const createdAccount = await createAccount({
+			org: user.primary_org,
+			...formData,
+		});
+		return Astro.redirect(`/accounts/${createdAccount.id}`);
+	} catch (e) {
+		return Response.json(e, { status: 500 });
+	}
 }
 
 const gradients = [
-  'bg-gradient-to-t from-green-200 to-zinc-200',
-  'bg-gradient-to-tr from-pink-200 to-sky-200',
-  'bg-gradient-to-tr from-purple-200 to-blue-200',
-  'bg-gradient-to-t from-orange-200 to-teal-200',
+	'bg-gradient-to-t from-green-200 to-zinc-200',
+	'bg-gradient-to-tr from-pink-200 to-sky-200',
+	'bg-gradient-to-tr from-purple-200 to-blue-200',
+	'bg-gradient-to-t from-orange-200 to-teal-200',
 ];
 
 const accounts = await getOrgAccounts(user.primary_org);
@@ -39,74 +38,51 @@ const accounts = await getOrgAccounts(user.primary_org);
 
 <Layout
 	meta={{
-    title: 'Accounts',
-    description: 'Organization accounts',
-  }}
+		title: 'Accounts',
+		description: 'Organization accounts',
+	}}
 	class="container"
 >
-  <h1>Accounts</h1>
-  <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
-    {accounts.map((account, idx) => (
-      <AccountCard
-	account={account}
-	gradient={gradients[idx % gradients.length]!}
-      />
-    ))}
-  </div>
-  <div class="pico flex justify-center mt-24">
-    <button class="" onclick="window['onboarding-form'].showModal()">
-      Onboard new account
-    </button>
-  </div>
-  <div class="pico">
-    <dialog id="onboarding-form">
-      <form method="post">
-        <article>
-          <header>
-            <h2>Onboard account</h2>
-          </header>
-          <label>
-            Name
-            <input
-	type="text"
-	required
-	name="name"
-            />
-          </label>
-          <label>
-            Description
-            <input
-	type="text"
-	required
-	name="description"
-            />
-          </label>
-          <label>
-            Email
-            <input
-	type="email"
-	required
-	name="email"
-            />
-          </label>
-          <label>
-            Address
-            <input
-	type="text"
-	required
-	name="address"
-            />
-          </label>
-          <footer>
-            <button
-	class="secondary"
-	formmethod="dialog"
-	formnovalidate
-            >Cancel</button>
-            <button>Confirm</button>
-          </footer>
-        </article>
-      </form>
-    </dialog>
-  </div>
+	<h1>Accounts</h1>
+	<div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+		{
+			accounts.map((account, idx) => (
+				<AccountCard account={account} gradient={gradients[idx % gradients.length]!} />
+			))
+		}
+	</div>
+	<div class="pico flex justify-center mt-24">
+		<button class="" onclick="window['onboarding-form'].showModal()"> Onboard new account </button>
+	</div>
+	<div class="pico">
+		<dialog id="onboarding-form">
+			<form method="post">
+				<article>
+					<header>
+						<h2>Onboard account</h2>
+					</header>
+					<label>
+						Name
+						<input type="text" required name="name" />
+					</label>
+					<label>
+						Description
+						<input type="text" required name="description" />
+					</label>
+					<label>
+						Email
+						<input type="email" required name="email" />
+					</label>
+					<label>
+						Address
+						<input type="text" required name="address" />
+					</label>
+					<footer>
+						<button class="secondary" formmethod="dialog" formnovalidate>Cancel</button>
+						<button>Confirm</button>
+					</footer>
+				</article>
+			</form>
+		</dialog>
+	</div>
 </Layout>

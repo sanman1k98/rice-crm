@@ -8,7 +8,7 @@ import { getUserInfo } from '@/lib/users';
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect('/login');
+	return Astro.redirect('/login');
 
 const id = Number.parseInt(Astro.params.id!, 10);
 
@@ -20,55 +20,41 @@ if (!opportunity)
   return new Response(null, { status: 404 });
 
 const [author, tasks] = await Promise.all([
-  getUserInfo(opportunity.author),
-  getTasksForOpportunity(opportunity.id),
+	getUserInfo(opportunity.author),
+	getTasksForOpportunity(opportunity.id),
 ]);
 ---
 
 <Layout
 	meta={{
-    title: opportunity.name,
-    description: opportunity.name,
-  }}
+		title: opportunity.name,
+		description: opportunity.name,
+	}}
 	class="container"
 >
-  <h1>{opportunity.name}</h1>
-  <section>
-    <h2>Overview</h2>
-    <ul>
-      <li>
-        <strong>Stage:</strong>
-        {opportunity.stage}
-      </li>
-      <li>
-        <strong>Amount:</strong>
-        {opportunity.amount.toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
-      </li>
-      <li>
-        <strong>Author:</strong>
-        {author!.fullname}
-      </li>
-    </ul>
-  </section>
-  <section>
-    <h2>Tasks</h2>
-    {
-      tasks.length
-? (
-        tasks.map((t) => <TaskCard task={t} />)
-      )
-: (
-        <p>No associated tasks</p>
-      )
-    }
-  </section>
-  <section class="pico flex justify-center mt-24">
-    <a
-	type="button"
-	href=`/tasks/add?opportunity=${opportunity.id}`
-    >
-      Create new task
-    </a>
-  </section>
+	<h1>{opportunity.name}</h1>
+	<section>
+		<h2>Overview</h2>
+		<ul>
+			<li>
+				<strong>Stage:</strong>
+				{opportunity.stage}
+			</li>
+			<li>
+				<strong>Amount:</strong>
+				{opportunity.amount.toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
+			</li>
+			<li>
+				<strong>Author:</strong>
+				{author!.fullname}
+			</li>
+		</ul>
+	</section>
+	<section>
+		<h2>Tasks</h2>
+		{tasks.length ? tasks.map((t) => <TaskCard task={t} />) : <p>No associated tasks</p>}
+	</section>
+	<section class="pico flex justify-center mt-24">
+		<a type="button" href=`/tasks/add?opportunity=${opportunity.id}`> Create new task </a>
+	</section>
 </Layout>
-

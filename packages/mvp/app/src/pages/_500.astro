@@ -7,15 +7,17 @@ const { error } = Astro.props;
 
 <Layout
 	meta={{
-    title: 'Error',
-    description: 'Something went wrong',
-  }}
+		title: 'Error',
+		description: 'Something went wrong',
+	}}
 	class="flex flex-col max-w-full mx-auto justify-center text-center"
 >
-  <h1 class="pb-[10svh] font-bold text-5xl sm:text-7xl md:text-9xl">Error</h1>
-  {import.meta.env.DEV && (
-    <div class="mx-4 p-4 rounded-lg shadow-inner overflow-auto">
-      <pre>{error}</pre>
-    </div>
-  )}
+	<h1 class="pb-[10svh] font-bold text-5xl sm:text-7xl md:text-9xl">Error</h1>
+	{
+		import.meta.env.DEV && (
+			<div class="mx-4 p-4 rounded-lg shadow-inner overflow-auto">
+				<pre>{error}</pre>
+			</div>
+		)
+	}
 </Layout>

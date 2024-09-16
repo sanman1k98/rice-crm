@@ -6,42 +6,45 @@ import { getAccountInfo, getAccountOpportunities } from '@/lib/accounts';
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect('/login');
+	return Astro.redirect('/login');
 
 const id = Number.parseInt(Astro.params.id!, 10);
 
 if (!Number.isInteger(id))
-  return new Response(null, { status: 404 });
+	return new Response(null, { status: 404 });
 
 const account = await getAccountInfo(id);
 
 if (!account)
-  return new Response(null, { status: 404 });
+	return new Response(null, { status: 404 });
 
 const opportunities = await getAccountOpportunities(id);
 ---
 
 <Layout
 	meta={{
-    title: account.name,
-    description: account.description,
-  }}
+		title: account.name,
+		description: account.description,
+	}}
 >
-  <div class="container">
-    <h1>{account.name}</h1>
-    <h2>Description</h2>
-    <p>{account.description}</p>
-    <h3>Additional info</h3>
-    <address>
-      <ul>
-        <li>Email: {account.email}</li>
-        <li>Address: {account.address}</li>
-      </ul>
-    </address>
-    <h3>Opportunities</h3>
-    <div class="sm:flex flex-row sm:flex-wrap gap-x-4">
-      {opportunities.map((opportunity) => <OpportunityCard opportunity={opportunity} class="w-full md:w-64" />)}
-    </div>
-  </div>
+	<div class="container">
+		<h1>{account.name}</h1>
+		<h2>Description</h2>
+		<p>{account.description}</p>
+		<h3>Additional info</h3>
+		<address>
+			<ul>
+				<li>Email: {account.email}</li>
+				<li>Address: {account.address}</li>
+			</ul>
+		</address>
+		<h3>Opportunities</h3>
+		<div class="sm:flex flex-row sm:flex-wrap gap-x-4">
+			{
+				opportunities.map((opportunity) => (
+					<OpportunityCard opportunity={opportunity} class="w-full md:w-64" />
+				))
+			}
+		</div>
+	</div>
 </Layout>
-

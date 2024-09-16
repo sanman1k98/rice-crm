@@ -6,68 +6,62 @@ import { getOrgAccounts } from '@/lib/orgs';
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect('/login');
+	return Astro.redirect('/login');
 
 const accounts = await getOrgAccounts(user.primary_org);
 
 if (Astro.request.method === 'POST') {
-  type RawFormData = {
-    account: string;
-    name: string;
-    amount: string;
-  };
+	type RawFormData = {
+		account: string;
+		name: string;
+		amount: string;
+	};
 
-  // FIXME: Validate FormData.
-  const formData = Object.fromEntries(
-    await Astro.request.formData().then((data) => data.entries()),
-  ) as RawFormData;
+	// FIXME: Validate FormData.
+	const formData = Object.fromEntries(
+		await Astro.request.formData().then((data) => data.entries()),
+	) as RawFormData;
 
-  const init = {
-    account: Number.parseInt(formData.account),
-    amount: Number.parseFloat(formData.amount),
-    name: formData.name,
-    org: user.primary_org,
-    author: user.id,
-    stage: OpportunityStageEnum.InProgress,
-  } satisfies OpportunityInit;
+	const init = {
+		account: Number.parseInt(formData.account),
+		amount: Number.parseFloat(formData.amount),
+		name: formData.name,
+		org: user.primary_org,
+		author: user.id,
+		stage: OpportunityStageEnum.InProgress,
+	} satisfies OpportunityInit;
 
-  const created = await createOpportunity(init);
-  return Astro.redirect(`/opportunities/${created.id}`);
-};
+	const created = await createOpportunity(init);
+	return Astro.redirect(`/opportunities/${created.id}`);
+}
 ---
 
 <MainLayout
 	meta={{
-    title: 'New Opportunity',
-    description: 'Create a new opportunity',
-  }}
+		title: 'New Opportunity',
+		description: 'Create a new opportunity',
+	}}
 	class="container"
 >
-  <h1>Create a new opportunity</h1>
-  <div class="pico">
-    <form method="post">
-      <fieldset>
-        <label for="account">Account</label>
-        <select name="account" id="account" required>
-          <option selected disabled value="">
-            Select account...
-          </option>
-          {
-            accounts.map((acc) => (
-              <option value={acc.id}>{acc.name}</option>
-            ))
-          }
-        </select>
-        <label>
-          Name
-          <input type="text" name="name" required>
-        </label>
-        <label>
-          Amount
-          <input type="number" name="amount" required>
-        </label>
-        <input type="submit" value="Create">
-      </fieldset>
-    </form>
-  </div>
+	<h1>Create a new opportunity</h1>
+	<div class="pico">
+		<form method="post">
+			<fieldset>
+				<label for="account">Account</label>
+				<select name="account" id="account" required>
+					<option selected disabled value=""> Select account... </option>
+					{accounts.map((acc) => <option value={acc.id}>{acc.name}</option>)}
+				</select>
+				<label>
+					Name
+					<input type="text" name="name" required />
+				</label>
+				<label>
+					Amount
+					<input type="number" name="amount" required />
+				</label>
+				<input type="submit" value="Create" />
+			</fieldset>
+		</form>
+	</div>
 </MainLayout>
