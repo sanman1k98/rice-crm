@@ -1,4 +1,7 @@
 ---
+// TODO: only have links for authenticated users.
+// Don't conditionally render links based on `Astro.locals.user`.
+
 import type { CSSProperty } from "astro/types"
 
 type Props = {
@@ -23,6 +26,7 @@ const pages = Array.from(
     { text: "Accounts", href: "/accounts" },
     { text: "Opportunities", href: "/opportunities" },
     { text: "Tasks", href: "/tasks" },
+    { text: "Leads", href: "/leads" },
   ],
   applyCurrentProp,
 );
@@ -37,7 +41,7 @@ const pages = Array.from(
       {Astro.locals.user ? (
         <>
           {pages.map(page => (
-            <li>
+            <li class="!hidden md:!block">
               <a
                 aria-current={page.current}
                 href={page.href}
@@ -45,14 +49,31 @@ const pages = Array.from(
             </li>
           ))}
         </>
-        <li>
+        <li class="!hidden md:!block">
           <form method="post" action="/api/v0/auth/logout">
             <input type="submit" value="Logout" class="secondary" />
           </form>
         </li>
       ) : (
-        <li><a role="button" href="/login">Login</a></li>
+        <li class="!hidden md:!inline-block"><a role="button" href="/login">Login</a></li>
       )}
+      <li class="md:!hidden">
+        <details class="dropdown">
+          <summary>Menu</summary>
+          <ul dir="rtl">
+            {
+              pages.map(page => (
+                <li class="">
+                  <a
+                    aria-current={page.current}
+                    href={page.href}
+                  >{page.text}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </details>
+      </li>
     </ul>
   </nav>
 </header>
