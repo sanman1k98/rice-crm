@@ -31,7 +31,7 @@ export default async function () {
 		author: testUser.id,
 		account: testCustomer.id,
 		name: 'Example opportunity',
-		stage: OpportunityStageEnum.InProgress,
+		stage: OpportunityStageEnum.Engage,
 		amount: 1_000_000,
 	});
 
