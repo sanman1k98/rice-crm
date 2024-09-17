@@ -6,7 +6,7 @@
 import { column, defineDb, defineTable, NOW } from 'astro:db';
 
 // @ts-expect-error Type imports are used by JSDoc links.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { OpportunityStageEnum, OrgRoleValueEnum, TaskStatusEnum } from '@/lib/enums';
 
 /**
  * - "Organization" generally means a business, but can be something else like
