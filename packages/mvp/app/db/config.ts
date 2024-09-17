@@ -136,7 +136,7 @@ const Task = defineTable({
 		 * @see {@link TaskStatusEnum}
 		 */
 		status: column.number({ default: 0 }),
-		opportunity: column.number({ optional: true, references: () => Opportunity.columns.id }),
+		opportunity: column.number({ references: () => Opportunity.columns.id }),
 	},
 });
 

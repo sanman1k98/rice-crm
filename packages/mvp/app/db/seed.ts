@@ -26,7 +26,7 @@ export default async function () {
 		address: 'Earth',
 	});
 
-	await createOpportunity({
+	const exampleOpportunity = await createOpportunity({
 		org: testOrg.id,
 		author: testUser.id,
 		account: testCustomer.id,
@@ -38,6 +38,7 @@ export default async function () {
 	await createTasks(testUser, [
 		{
 			title: 'Create backend',
+			opportunity: exampleOpportunity.id,
 			body: `
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
 odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
@@ -45,6 +46,7 @@ sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`,
 		},
 		{
 			title: 'Create frontend',
+			opportunity: exampleOpportunity.id,
 			body: `
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
 odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
@@ -52,6 +54,7 @@ sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`,
 		},
 		{
 			title: 'Profit',
+			opportunity: exampleOpportunity.id,
 			body: `
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
 odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
@@ -59,6 +62,7 @@ sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`,
 		},
 		{
 			title: 'Spend money',
+			opportunity: exampleOpportunity.id,
 			body: `
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
 odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
