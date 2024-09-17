@@ -1,36 +1,35 @@
 ---
+import type { CSSProperty } from 'astro/types';
+
 // TODO: only have links for authenticated users.
 // Don't conditionally render links based on `Astro.locals.user`.
 
-import type { CSSProperty } from 'astro/types';
-
 type Props = {
-  class?: string;
-  style?: string | Record<CSSProperty, string>;
+	class?: string;
+	style?: string | Record<CSSProperty, string>;
 };
 
 type PageLink = {
-  text: string;
-  href: string;
-  current: boolean;
+	text: string;
+	href: string;
+	current: boolean;
 };
 
 function applyCurrentProp(page: Omit<PageLink, 'current'>): PageLink {
-  return {
-  current: Astro.url.pathname.startsWith(page.href),
-  ...page,
-};
+	return {
+		current: Astro.url.pathname.startsWith(page.href),
+		...page,
+	};
 }
 
 const pages = Array.from(
-  [
-    { text: 'Home', href: '/home' },
-    { text: 'Accounts', href: '/accounts' },
-    { text: 'Opportunities', href: '/opportunities' },
-    { text: 'Tasks', href: '/tasks' },
-    { text: 'Leads', href: '/leads' },
-  ],
-  applyCurrentProp,
+	[
+		{ text: 'Home', href: '/home' },
+		{ text: 'Accounts', href: '/accounts' },
+		{ text: 'Opportunities', href: '/opportunities' },
+		{ text: 'Leads', href: '/leads' },
+	],
+	applyCurrentProp,
 );
 ---
 
