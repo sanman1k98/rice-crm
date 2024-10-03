@@ -1,7 +1,9 @@
 /**
- * @file Define database tables used by the app.
+ * @file Define database tables for a single tenant CRM application.
+ * @todo Define tables using multiple files.
  *
  * @see https://docs.astro.build/en/guides/astro-db/
+ * @see https://docs.astro.build/en/guides/integrations-guide/db/
  */
 import { column, defineDb, defineTable, NOW } from 'astro:db';
 
@@ -14,6 +16,8 @@ import type { OpportunityStageEnum, OrgRoleValueEnum, TaskStatusEnum } from '@/l
  * - an org can be created by a "User"
  * - an org can have multiple "Accounts"
  * - an org must have at least one "Member"
+ *
+ * @deprecated
  */
 const Organization = defineTable({
 	columns: {
@@ -38,6 +42,9 @@ const User = defineTable({
 		username: column.text({ unique: true }),
 		password_hash: column.text(),
 		fullname: column.text(),
+		/**
+		 * @deprecated
+		 */
 		primary_org: column.number({ references: () => Organization.columns.id }),
 	},
 });
@@ -75,6 +82,9 @@ const Session = defineTable({
  */
 const OrgRole = defineTable({
 	columns: {
+		/**
+		 * @deprecated
+		 */
 		org: column.number({ references: () => Organization.columns.id }),
 		user: column.text({ references: () => User.columns.id }),
 		/** @see {@link OrgRoleValueEnum} */
@@ -93,6 +103,9 @@ const OrgRole = defineTable({
 const Account = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
+		/**
+		 * @deprecated
+		 */
 		org: column.number({ references: () => Organization.columns.id }),
 		name: column.text(),
 		description: column.text(),
@@ -109,6 +122,9 @@ const Account = defineTable({
 const Opportunity = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
+		/**
+		 * @deprecated
+		 */
 		org: column.number({ references: () => Organization.columns.id }),
 		account: column.number({ references: () => Account.columns.id }),
 		author: column.text({ references: () => User.columns.id }),
@@ -129,6 +145,9 @@ const Task = defineTable({
 		id: column.number({ primaryKey: true }),
 		created: column.date({ default: NOW }),
 		author: column.text({ references: () => User.columns.id }),
+		/**
+		 * @deprecated
+		 */
 		org: column.number({ references: () => Organization.columns.id }),
 		title: column.text(),
 		body: column.text({ optional: true }),
