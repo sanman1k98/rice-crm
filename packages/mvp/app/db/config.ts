@@ -99,6 +99,7 @@ const OrgRole = defineTable({
  * - an account can be created within an "Organization"
  * - keep track of "activity"; i.e., comments that members of the org can post
  * - an account can be associated with one or more "Deals"
+ * @deprecated Use `Company` instead.
  */
 const Account = defineTable({
 	columns: {
@@ -114,10 +115,103 @@ const Account = defineTable({
 	},
 });
 
+const Company = defineTable({
+	columns: {
+		id: column.number({ primaryKey: true }),
+		name: column.text({ unique: true }),
+		industry: column.text({ optional: true }),
+		market: column.text({ optional: true }),
+		region: column.text({ optional: true }),
+		emails: column.json({ optional: true }),
+		phones: column.json({ optional: true }),
+		/** Websites and socials. */
+		links: column.json({ optional: true }),
+		addresses: column.json({ optional: true }),
+		note: column.text({ optional: true }),
+	},
+});
+
+/**
+ * Referenced by `Leads`.
+ */
+const Contact = defineTable({
+	columns: {
+		id: column.number({ primaryKey: true }),
+		company: column.number({ references: () => Company.columns.id }),
+		name: column.text(),
+		emails: column.json({ optional: true }),
+		phones: column.json({ optional: true }),
+		addresses: column.json({ optional: true }),
+		/** Websites and socials. */
+		links: column.json({ optional: true }),
+		note: column.text({ optional: true }),
+	},
+});
+
+/**
+ * Leads are gathered from various sources such as websites, mailing lists, conferences, LinkedIn,
+ * etc. A lead can become a deal when all of the qualification criteria are met.
+ *
+ * Leads are managed by sales development representatives (SDRs). An SDR manages leads in bulk,
+ * updating hundreds at a time.
+ */
+const Lead = defineTable({
+	columns: {
+		id: column.number({ primaryKey: true }),
+		author: column.text({ references: () => User.columns.id }),
+		contact: column.number({ references: () => Contact.columns.id }),
+		status: column.text({ optional: true }),
+		created: column.date({ default: NOW }),
+		updated: column.date({ default: NOW }),
+	},
+});
+
+/**
+ * Used to label leads, just like how labels are used in GitHub Issues.
+ */
+const Label = defineTable({
+	columns: {
+		id: column.number({ primaryKey: true }),
+		name: column.text({ unique: true }),
+		description: column.text(),
+		/** RGB hex value. */
+		color: column.text(),
+	},
+});
+
+/**
+ * Additional metadata for leads; defines many-to-many relationships.
+ */
+const LeadsMeta = defineTable({
+	columns: {
+		lead: column.number({ references: () => Lead.columns.id }),
+		label: column.number({ references: () => Label.columns.id, optional: true }),
+	},
+});
+
+/**
+ * Deals are created from leads.
+ *
+ * Once a Lead is qualified, we create a new row in this table reference the original Lead, along
+ * with additional information.
+ */
+const Deal = defineTable({
+	columns: {
+		id: column.number({ primaryKey: true }),
+		/** The original lead. */
+		lead: column.number({ references: () => Lead.columns.id }),
+		company: column.number({ references: () => Company.columns.id }),
+		/** Amount of money for this deal. */
+		amount: column.number(),
+		currency: column.text(),
+	},
+});
+
 /**
  * - an "Opportunity" is tied to a single "Account"
  * - can be commented on by "Members"
  * - can be assigned to a "Member"
+ * @deprecated Use `Deal` and `Lead` instead.
  */
 const Opportunity = defineTable({
 	columns: {
@@ -167,6 +261,12 @@ export default defineDb({
 		OrgRole,
 		Account,
 		Opportunity,
+		Company,
+		Contact,
+		Lead,
+		Label,
+		LeadsMeta,
+		Deal,
 		Task,
 	},
 });
