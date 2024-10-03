@@ -18,13 +18,13 @@
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^3.7.3",
-		"@astrojs/check": "^0.7.0",
+		"@astrojs/check": "^0.9.3",
 		"eslint": "^9.11.1",
 		"eslint-plugin-astro": "^1.2.4",
 		"prettier": "^3.3.3",
 		"prettier-plugin-astro": "^0.14.1",
 		"prettier-plugin-tailwindcss": "^0.6.8",
 		"typescript": "^5.6.2",
-		"typescript-eslint": "^8.7.0"
+		"typescript-eslint": "^8.8.0"
 	}
 }
