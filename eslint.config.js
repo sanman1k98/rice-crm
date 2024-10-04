@@ -29,7 +29,11 @@ export default antfu(
 			},
 		},
 		// Enable Astro eslint plugin.
-		astro: true,
+		astro: {
+			overrides: {
+				'antfu/no-top-level-await': 'off',
+			},
+		},
 	},
 	{
 		// Matches prettier overrides.
