@@ -14,7 +14,7 @@ const result = Astro.getActionResult(actions.opportunities.create);
 if (result && !result.error)
 	return Astro.redirect(`/opportunities/${result.data.id}`);
 
-const accounts = await getOrgAccounts(user.primary_org);
+const accounts = await getOrgAccounts();
 ---
 
 <MainLayout

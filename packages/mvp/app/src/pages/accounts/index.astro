@@ -16,10 +16,7 @@ if (Astro.request.method === 'POST') {
 			await Astro.request.formData().then((data) => data.entries()),
 		);
 		// @ts-ignore assume FormData is good.
-		const createdAccount = await createAccount({
-			org: user.primary_org,
-			...formData,
-		});
+		const createdAccount = await createAccount(formData);
 		return Astro.redirect(`/accounts/${createdAccount.id}`);
 	} catch (e) {
 		return Response.json(e, { status: 500 });
@@ -33,7 +30,7 @@ const gradients = [
 	'bg-gradient-to-t from-orange-200 to-teal-200',
 ];
 
-const accounts = await getOrgAccounts(user.primary_org);
+const accounts = await getOrgAccounts();
 ---
 
 <Layout

@@ -3,7 +3,7 @@ import AccountCard from '@/components/AccountCard.astro';
 import OpportunityCard from '@/components/OpportunityCard.astro';
 import TaskCard from '@/components/TaskCard.astro';
 import Layout from '@/layouts/MainLayout.astro';
-import { getOrgAccounts, getOrgInfo, getOrgOpportunities, getOrgTasks } from '@/lib/orgs';
+import { getOrgAccounts, getOrgOpportunities, getOrgTasks } from '@/lib/orgs';
 
 const { user } = Astro.locals;
 
@@ -19,11 +19,10 @@ const gradients = [
 
 const greeting = `Welcome back ${user.fullname}`;
 
-const [org, tasks, accounts, opportunites] = await Promise.all([
-	getOrgInfo(user.primary_org),
-	getOrgTasks(user.primary_org),
-	getOrgAccounts(user.primary_org),
-	getOrgOpportunities(user.primary_org),
+const [tasks, accounts, opportunites] = await Promise.all([
+	getOrgTasks(),
+	getOrgAccounts(),
+	getOrgOpportunities(),
 ]);
 ---
 
@@ -34,7 +33,7 @@ const [org, tasks, accounts, opportunites] = await Promise.all([
 	}}
 >
 	<div class="pico container">
-		<h1>{org!.name}</h1>
+		<h1>Home</h1>
 	</div>
 
 	<section class="container">

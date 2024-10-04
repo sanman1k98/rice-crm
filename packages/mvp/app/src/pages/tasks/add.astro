@@ -5,61 +5,56 @@ import { createTask, type TaskInit } from '@/lib/tasks';
 const { user } = Astro.locals;
 
 if (!user)
-  return Astro.redirect('/login');
+return Astro.redirect('/login');
 
 if (Astro.request.method === 'POST') {
-  type RawFormData = Omit<TaskInit, 'author' | 'org' | 'created' | 'status'>;
+	type RawFormData = Omit<TaskInit, 'author' | 'opportunity' | 'created' | 'status'>;
 
-  // FIXME: Validate FormData.
-  const formData = Object.fromEntries(
-    await Astro.request.formData().then((data) => data.entries()),
-  ) as RawFormData;
+	// FIXME: Validate FormData.
+	const formData = Object.fromEntries(
+		await Astro.request.formData().then((data) => data.entries()),
+	) as RawFormData;
 
-  let opportunity: number | null = null;
-  if (Astro.url.searchParams.has('opportunity'))
-    opportunity = Number.parseInt(Astro.url.searchParams.get('opportunity')!);
+	let opportunity: number | null = null;
+	if (Astro.url.searchParams.has('opportunity')) {
+		opportunity = Number.parseInt(Astro.url.searchParams.get('opportunity')!);
+	} else {
+		const data = { status: 400, statusText: 'Bad request; missing opportunity' };
+		return Response.json(data, data);
+	}
 
-  const taskInit = {
-    author: user.id,
-    org: user.primary_org,
-    opportunity,
-    ...formData,
-  } satisfies TaskInit;
+	const taskInit = {
+		author: user.id,
+		opportunity,
+		...formData,
+	} satisfies TaskInit;
 
-  const newTask = await createTask(taskInit);
+	const newTask = await createTask(taskInit);
 
-  return Astro.redirect(`/tasks/${newTask.id}`);
-};
+	return Astro.redirect(`/tasks/${newTask.id}`);
+}
 ---
 
 <MainLayout
 	meta={{
-    title: 'Add Task',
-    description: 'Create a new task',
-  }}
+		title: 'Add Task',
+		description: 'Create a new task',
+	}}
 	class="container"
 >
-  <h1>Create a new task</h1>
-  <section class="pico">
-    <form method="post">
-      <fieldset>
-        <label>
-          Title
-          <input
-	type="text"
-	name="title"
-	placeholder="Title"
-	required
->
-        </label>
-        <label>
-          <textarea
-	name="body"
-	placeholder="A description of the task..."
-          />
-        </label>
-        <input type="submit" value="Add task">
-      </fieldset>
-    </form>
-  </section>
+	<h1>Create a new task</h1>
+	<section class="pico">
+		<form method="post">
+			<fieldset>
+				<label>
+					Title
+					<input type="text" name="title" placeholder="Title" required />
+				</label>
+				<label>
+					<textarea name="body" placeholder="A description of the task..."></textarea>
+				</label>
+				<input type="submit" value="Add task" />
+			</fieldset>
+		</form>
+	</section>
 </MainLayout>

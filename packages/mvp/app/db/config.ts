@@ -10,23 +10,6 @@ import { column, defineDb, defineTable, NOW } from 'astro:db';
 // @ts-expect-error Type imports are used by JSDoc links.
 import type { OpportunityStageEnum, OrgRoleValueEnum, TaskStatusEnum } from '@/lib/enums';
 
-/**
- * - "Organization" generally means a business, but can be something else like
- *   a nonprofit.
- * - an org can be created by a "User"
- * - an org can have multiple "Accounts"
- * - an org must have at least one "Member"
- *
- * @deprecated
- */
-const Organization = defineTable({
-	columns: {
-		id: column.number({ primaryKey: true }),
-		name: column.text(),
-		description: column.text({ optional: true }),
-	},
-});
-
 // "User" and "Session" table definitions are adapted from "lucia-adapter-astrodb".
 // https://github.com/pilcrowOnPaper/lucia-adapter-astrodb
 
@@ -42,10 +25,6 @@ const User = defineTable({
 		username: column.text({ unique: true }),
 		password_hash: column.text(),
 		fullname: column.text(),
-		/**
-		 * @deprecated
-		 */
-		primary_org: column.number({ references: () => Organization.columns.id }),
 	},
 });
 
@@ -82,10 +61,6 @@ const Session = defineTable({
  */
 const OrgRole = defineTable({
 	columns: {
-		/**
-		 * @deprecated
-		 */
-		org: column.number({ references: () => Organization.columns.id }),
 		user: column.text({ references: () => User.columns.id }),
 		/** @see {@link OrgRoleValueEnum} */
 		role: column.number({ default: 0 }),
@@ -104,10 +79,6 @@ const OrgRole = defineTable({
 const Account = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
-		/**
-		 * @deprecated
-		 */
-		org: column.number({ references: () => Organization.columns.id }),
 		name: column.text(),
 		description: column.text(),
 		email: column.text(),
@@ -216,10 +187,6 @@ const Deal = defineTable({
 const Opportunity = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
-		/**
-		 * @deprecated
-		 */
-		org: column.number({ references: () => Organization.columns.id }),
 		account: column.number({ references: () => Account.columns.id }),
 		author: column.text({ references: () => User.columns.id }),
 		name: column.text(),
@@ -239,10 +206,6 @@ const Task = defineTable({
 		id: column.number({ primaryKey: true }),
 		created: column.date({ default: NOW }),
 		author: column.text({ references: () => User.columns.id }),
-		/**
-		 * @deprecated
-		 */
-		org: column.number({ references: () => Organization.columns.id }),
 		title: column.text(),
 		body: column.text({ optional: true }),
 		/**
@@ -257,7 +220,6 @@ export default defineDb({
 	tables: {
 		User,
 		Session,
-		Organization,
 		OrgRole,
 		Account,
 		Opportunity,

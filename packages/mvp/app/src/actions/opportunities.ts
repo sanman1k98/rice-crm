@@ -17,11 +17,7 @@ export const create = defineAction({
 		const user = ctx.locals.user;
 		if (!user)
 			throw new ActionError({ code: 'UNAUTHORIZED' });
-		const created = await _createOpportunity({
-			org: user.primary_org,
-			author: user.id,
-			...input,
-		});
+		const created = await _createOpportunity({ author: user.id, ...input });
 		return { id: created.id };
 	},
 });

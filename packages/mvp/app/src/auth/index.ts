@@ -24,13 +24,12 @@ export const lucia = new Lucia(adapter, {
 	getUserAttributes: (user) => ({
 		username: user.username,
 		fullname: user.fullname,
-		primary_org: user.primary_org,
 	}),
 });
 
 declare module 'lucia' {
 	interface Register {
 		Lucia: typeof lucia;
-		DatabaseUserAttributes: Pick<UserColumns, 'fullname' | 'username' | 'primary_org'>;
+		DatabaseUserAttributes: Pick<UserColumns, 'fullname' | 'username'>;
 	}
 }

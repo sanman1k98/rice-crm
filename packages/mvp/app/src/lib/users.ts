@@ -59,7 +59,6 @@ const partialUserColumns: Omit<typeof User._.columns, 'password_hash'> = {
 	id: User.id,
 	username: User.username,
 	fullname: User.fullname,
-	primary_org: User.primary_org,
 };
 
 /**
@@ -91,7 +90,6 @@ export async function createUser(opts: UserInit): Promise<UserInfo> {
 		.insert(OrgRole)
 		.values({
 			user: newUser.id,
-			org: newUser.primary_org,
 			role,
 		});
 

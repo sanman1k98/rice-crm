@@ -36,8 +36,7 @@ export async function createTasks(
 	author: UserInfo,
 	tasks: Omit<TaskInit, 'author' | 'org'>[],
 ) {
-	const { id: authorId, primary_org: orgId } = author;
-	const values = tasks.map((task) => ({ org: orgId, author: authorId, ...task }));
+	const values = tasks.map((task) => ({ author: author.id, ...task }));
 	return db.insert(Task).values(values);
 }
 
