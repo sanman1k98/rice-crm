@@ -1,17 +1,17 @@
 /**
  * @file CRUD operations for contacts.
  */
-import type { Address, Email, Link, Phone } from './shared';
+import type { AddressInfo, EmailInfo, LinkInfo, PhoneInfo } from './shared';
 import { Contact, db, eq, sql } from 'astro:db';
 
 type ContactInfo = typeof Contact.$inferSelect;
 type ContactId = ContactInfo['id'];
 
 export type ContactInit = Omit<typeof Contact.$inferInsert, | 'id'> & {
-	emails?: Email[];
-	phones?: Phone[];
-	addresses?: Address[];
-	links?: Link[];
+	emails?: EmailInfo[];
+	phones?: PhoneInfo[];
+	addresses?: AddressInfo[];
+	links?: LinkInfo[];
 };
 
 export async function createContact(opts: ContactInit) {

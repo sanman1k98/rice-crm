@@ -1,19 +1,20 @@
-export interface Email {
+export interface EmailInfo {
 	label: string;
 	email: string;
 };
 
-export interface Phone {
+export interface PhoneInfo {
 	label: string;
 	phone: string;
 };
 
-export interface Address {
+export interface AddressInfo {
 	label: string;
 	address: string;
 };
 
-export interface Link {
+export interface LinkInfo {
 	label: string;
+	/** A webpage URL. */
 	link: string;
 };

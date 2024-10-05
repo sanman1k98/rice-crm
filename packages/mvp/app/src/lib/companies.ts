@@ -1,17 +1,17 @@
 /**
  * @file CRUD operations for companies.
  */
-import type { Address, Email, Link, Phone } from './shared';
+import type { AddressInfo, EmailInfo, LinkInfo, PhoneInfo } from './shared';
 import { Company, db, eq, sql } from 'astro:db';
 
 type CompanyInfo = typeof Company.$inferSelect;
 export type CompanyId = CompanyInfo['id'];
 
 export type CompanyInit = Omit<typeof Company.$inferInsert, | 'id'> & {
-	emails?: Email[];
-	phones?: Phone[];
-	addresses?: Address[];
-	links?: Link[];
+	emails?: EmailInfo[];
+	phones?: PhoneInfo[];
+	addresses?: AddressInfo[];
+	links?: LinkInfo[];
 };
 
 export async function createCompany(opts: CompanyInit) {
