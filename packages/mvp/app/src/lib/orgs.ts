@@ -1,7 +1,12 @@
 /**
  * @file CRUD operations for the entire organization.
  */
-import { Account, db, Opportunity, Task, User } from 'astro:db';
+import { Account, Contact, db, Opportunity, Task, User } from 'astro:db';
+
+const selectOrgContacts = db
+	.select()
+	.from(Contact)
+	.prepare();
 
 const selectOrgTasks = db
 	.select()
@@ -22,6 +27,10 @@ const selectOrgMembers = db
 	.select()
 	.from(User)
 	.prepare();
+
+export function getOrgContacts() {
+	return selectOrgContacts.all();
+}
 
 /**
  * Get all the tasks for the organization
