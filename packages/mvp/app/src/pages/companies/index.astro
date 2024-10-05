@@ -1,0 +1,40 @@
+---
+import Layout from '@/layouts/MainLayout.astro';
+import { getOrgCompanies } from '@/lib/orgs';
+
+const { user } = Astro.locals;
+
+if (!user)
+  return Astro.redirect('/login');
+
+const companies = await getOrgCompanies();
+---
+
+<Layout
+	meta={{
+		title: 'Companies',
+		description: 'All companies',
+	}}
+	class="mx-auto container pico"
+>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">ID</th>
+				<th scope="col">Name</th>
+				<th scope="col">Note</th>
+			</tr>
+		</thead>
+		<tbody>
+			{
+				companies.map((c) => (
+					<tr>
+						<th>{c.id}</th>
+						<td>{c.name}</td>
+						<td>{c.note}</td>
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
+</Layout>
