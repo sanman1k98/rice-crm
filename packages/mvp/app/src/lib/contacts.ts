@@ -11,7 +11,7 @@ type ContactPhones = Record<string, string>;
 type ContactAddresses = Record<string, string>;
 type ContactLinks = Record<string, string>;
 
-type ContactInit = Omit<typeof Contact.$inferInsert, | 'id'> & {
+export type ContactInit = Omit<typeof Contact.$inferInsert, | 'id'> & {
 	emails?: ContactEmails;
 	phones?: ContactPhones;
 	addresses?: ContactAddresses;

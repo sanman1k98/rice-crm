@@ -4,14 +4,14 @@
 import { Company, db, eq, sql } from 'astro:db';
 
 type CompanyInfo = typeof Company.$inferSelect;
-type CompanyId = CompanyInfo['id'];
+export type CompanyId = CompanyInfo['id'];
 
 type CompanyEmails = Record<string, string>;
 type CompanyPhones = Record<string, string>;
 type CompanyAddresses = Record<string, string>;
 type CompanyLinks = Record<string, string>;
 
-type CompanyInit = Omit<typeof Company.$inferInsert, | 'id'> & {
+export type CompanyInit = Omit<typeof Company.$inferInsert, | 'id'> & {
 	emails?: CompanyEmails;
 	phones?: CompanyPhones;
 	addresses?: CompanyAddresses;
