@@ -54,9 +54,14 @@ function generateCompany() {
 }
 
 function generateContact() {
+	const firstName = faker.person.firstName();
+	const lastName = faker.person.lastName();
+	const email = faker.internet.email({ firstName, lastName });
 	return {
 		firstName: faker.person.firstName(),
 		lastName: faker.person.lastName(),
+		emails: [{ label: 'work', email }],
+		note: faker.person.bio(),
 	} satisfies ContactInit;
 }
 
