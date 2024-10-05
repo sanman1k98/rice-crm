@@ -1,3 +1,10 @@
+/**
+ * @file Seed data into the local dev database with Faker.
+ *
+ * @see https://fakerjs.dev
+ * @see https://docs.astro.build/en/guides/astro-db/
+ * @see https://docs.astro.build/en/guides/integrations-guide/db/
+ */
 import { createAccount } from '@/lib/accounts';
 import { type CompanyInit, createCompany } from '@/lib/companies';
 import { type ContactInit, createContact } from '@/lib/contacts';
