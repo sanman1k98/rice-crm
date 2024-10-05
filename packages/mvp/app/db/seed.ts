@@ -67,8 +67,8 @@ function generateContact(opts?: { company?: CompanyId }) {
 	const email = faker.internet.email({ firstName, lastName });
 	const companyId = opts?.company;
 	return {
-		firstName: faker.person.firstName(),
-		lastName: faker.person.lastName(),
+		firstName,
+		lastName,
 		emails: [{ label: companyId ? 'work' : 'personal', email }],
 		company: companyId ?? null,
 		note: faker.person.bio(),
