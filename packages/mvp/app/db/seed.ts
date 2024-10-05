@@ -1,7 +1,63 @@
 import { createAccount } from '@/lib/accounts';
+import { type CompanyInit, createCompany } from '@/lib/companies';
+import { type ContactInit, createContact } from '@/lib/contacts';
+import { createLead } from '@/lib/leads';
 import { createOpportunity, OpportunityStageEnum } from '@/lib/opportunities';
 import { createTasks } from '@/lib/tasks';
-import { createUser, OrgRoleValueEnum } from '@/lib/users';
+import { createUser, OrgRoleValueEnum, type UserInfo } from '@/lib/users';
+import { faker } from '@faker-js/faker';
+
+async function seedDeprecatedTables(user: UserInfo) {
+	const testCustomer = await createAccount({
+		name: 'Test Customer',
+		description: 'This Account was created for development.',
+		email: 'test.customer@example.com',
+		address: 'Earth',
+	});
+
+	const exampleOpportunity = await createOpportunity({
+		author: user.id,
+		account: testCustomer.id,
+		name: 'Example opportunity',
+		stage: OpportunityStageEnum.Engage,
+		amount: 1_000_000,
+	});
+
+	await createTasks(user, [
+		{
+			title: 'Create backend',
+			opportunity: exampleOpportunity.id,
+			body: faker.lorem.paragraph(),
+		},
+		{
+			title: 'Create frontend',
+			opportunity: exampleOpportunity.id,
+			body: faker.lorem.paragraph(),
+		},
+		{
+			title: 'Profit',
+			opportunity: exampleOpportunity.id,
+			body: faker.lorem.paragraph(),
+		},
+		{
+			title: 'Spend money',
+			opportunity: exampleOpportunity.id,
+			body: faker.lorem.paragraph(),
+		},
+	]);
+}
+
+function generateCompany() {
+	return {
+		name: faker.company.name(),
+	} satisfies CompanyInit;
+}
+
+function generateContact() {
+	return {
+		name: faker.person.fullName(),
+	} satisfies ContactInit;
+}
 
 export default async function () {
 	const testUser = await createUser({
@@ -11,53 +67,21 @@ export default async function () {
 		role: OrgRoleValueEnum.Owner,
 	});
 
-	const testCustomer = await createAccount({
-		name: 'Test Customer',
-		description: 'This Account was created for development.',
-		email: 'test.customer@example.com',
-		address: 'Earth',
-	});
+	await seedDeprecatedTables(testUser);
 
-	const exampleOpportunity = await createOpportunity({
-		author: testUser.id,
-		account: testCustomer.id,
-		name: 'Example opportunity',
-		stage: OpportunityStageEnum.Engage,
-		amount: 1_000_000,
-	});
+	const companies = await Promise.all(
+		Array
+			.from({ length: 10 }, generateCompany)
+			.map(createCompany),
+	);
 
-	await createTasks(testUser, [
-		{
-			title: 'Create backend',
-			opportunity: exampleOpportunity.id,
-			body: `
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
-odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
-sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`,
-		},
-		{
-			title: 'Create frontend',
-			opportunity: exampleOpportunity.id,
-			body: `
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
-odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
-sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`,
-		},
-		{
-			title: 'Profit',
-			opportunity: exampleOpportunity.id,
-			body: `
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
-odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
-sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`,
-		},
-		{
-			title: 'Spend money',
-			opportunity: exampleOpportunity.id,
-			body: `
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
-odio ipsa. Reiciendis dolorum ipsa itaque error, eius facilis excepturi cumque
-sit ut mollitia, vitae iure ullam voluptates tempore blanditiis libero!`,
-		},
-	]);
+	const contacts = await Promise.all(
+		Array
+			.from({ length: 100 }, generateContact)
+			.map(createContact),
+	);
+
+	const leads = await Promise.all(
+		Array.from(contacts, (c) => createLead({ author: testUser.id, contact: c.id })),
+	);
 }
