@@ -1,4 +1,5 @@
 ---
+import type { EmailInfo } from '@/lib/shared';
 import Layout from '@/layouts/MainLayout.astro';
 import { getOrgContacts } from '@/lib/orgs';
 
@@ -23,6 +24,7 @@ const contacts = await getOrgContacts();
 				<th scope="col">ID</th>
 				<th scope="col">First name</th>
 				<th scope="col">Last name</th>
+				<th scope="col">Emails</th>
 				<th scope="col">Note</th>
 			</tr>
 		</thead>
@@ -33,6 +35,7 @@ const contacts = await getOrgContacts();
 						<th>{c.id}</th>
 						<td>{c.firstName}</td>
 						<td>{c.lastName}</td>
+						<td>{(c.emails as EmailInfo[]).map((e) => e.email).join(', ')}</td>
 						<td>{c.note}</td>
 					</tr>
 				))
