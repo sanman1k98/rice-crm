@@ -10,7 +10,11 @@ export interface PhoneInfo {
 
 export interface AddressInfo {
 	label: string;
-	address: string;
+	street1: string;
+	street2: string;
+	city: string;
+	state: string;
+	zip: number;
 };
 
 export interface LinkInfo {
