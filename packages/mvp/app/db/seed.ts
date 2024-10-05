@@ -55,7 +55,8 @@ function generateCompany() {
 
 function generateContact() {
 	return {
-		name: faker.person.fullName(),
+		firstName: faker.person.firstName(),
+		lastName: faker.person.lastName(),
 	} satisfies ContactInit;
 }
 

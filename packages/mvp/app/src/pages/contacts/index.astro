@@ -21,7 +21,8 @@ const contacts = await getOrgContacts();
 		<thead>
 			<tr>
 				<th scope="col">ID</th>
-				<th scope="col">Name</th>
+				<th scope="col">First name</th>
+				<th scope="col">Last name</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,7 +30,8 @@ const contacts = await getOrgContacts();
 				contacts.map((c) => (
 					<tr>
 						<th>{c.id}</th>
-						<td>{c.name}</td>
+						<td>{c.firstName}</td>
+						<td>{c.lastName}</td>
 					</tr>
 				))
 			}
