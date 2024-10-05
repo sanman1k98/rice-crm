@@ -23,6 +23,7 @@ const contacts = await getOrgContacts();
 				<th scope="col">ID</th>
 				<th scope="col">First name</th>
 				<th scope="col">Last name</th>
+				<th scope="col">Note</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -32,6 +33,7 @@ const contacts = await getOrgContacts();
 						<th>{c.id}</th>
 						<td>{c.firstName}</td>
 						<td>{c.lastName}</td>
+						<td>{c.note}</td>
 					</tr>
 				))
 			}
