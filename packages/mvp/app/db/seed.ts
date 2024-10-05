@@ -5,14 +5,14 @@
  * @see https://docs.astro.build/en/guides/astro-db/
  * @see https://docs.astro.build/en/guides/integrations-guide/db/
  */
+import type { CompanyId, CompanyInit } from '@/lib/companies';
+import type { ContactInit } from '@/lib/contacts';
 import { createAccount } from '@/lib/accounts';
-import { type CompanyInit, createCompany } from '@/lib/companies';
-import { type ContactInit, createContact } from '@/lib/contacts';
-import { createLead } from '@/lib/leads';
 import { createOpportunity, OpportunityStageEnum } from '@/lib/opportunities';
 import { createTasks } from '@/lib/tasks';
 import { createUser, OrgRoleValueEnum, type UserInfo } from '@/lib/users';
 import { faker } from '@faker-js/faker';
+import { Company, Contact, db } from 'astro:db';
 
 async function seedDeprecatedTables(user: UserInfo) {
 	const testCustomer = await createAccount({
@@ -57,17 +57,20 @@ async function seedDeprecatedTables(user: UserInfo) {
 function generateCompany() {
 	return {
 		name: faker.company.name(),
+		note: faker.company.catchPhrase(),
 	} satisfies CompanyInit;
 }
 
-function generateContact() {
+function generateContact(opts?: { company?: CompanyId }) {
 	const firstName = faker.person.firstName();
 	const lastName = faker.person.lastName();
 	const email = faker.internet.email({ firstName, lastName });
+	const companyId = opts?.company;
 	return {
 		firstName: faker.person.firstName(),
 		lastName: faker.person.lastName(),
-		emails: [{ label: 'work', email }],
+		emails: [{ label: companyId ? 'work' : 'personal', email }],
+		company: companyId ?? null,
 		note: faker.person.bio(),
 	} satisfies ContactInit;
 }
@@ -82,19 +85,39 @@ export default async function () {
 
 	await seedDeprecatedTables(testUser);
 
-	const companies = await Promise.all(
-		Array
-			.from({ length: 10 }, generateCompany)
-			.map(createCompany),
+	const companyIds = await db
+		.insert(Company)
+		.values(
+			Array.from(
+				{ length: 10 },
+				() => generateCompany(),
+			),
+		)
+		.returning({ id: Company.id })
+		.all();
+
+	const insertEmployees = companyIds.map(
+		({ id }) => db
+			.insert(Contact)
+			.values(
+				Array.from(
+					{ length: 10 },
+					() => generateContact({ company: id }),
+				),
+			),
 	);
 
-	const contacts = await Promise.all(
-		Array
-			.from({ length: 100 }, generateContact)
-			.map(createContact),
-	);
+	const insertOtherContacts = db
+		.insert(Contact)
+		.values(
+			Array.from(
+				{ length: 20 },
+				() => generateContact(),
+			),
+		);
 
-	const leads = await Promise.all(
-		Array.from(contacts, (c) => createLead({ author: testUser.id, contact: c.id })),
-	);
+	await db.batch([
+		insertOtherContacts,
+		...insertEmployees,
+	]);
 }
