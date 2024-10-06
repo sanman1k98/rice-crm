@@ -1,16 +1,11 @@
 /**
  * @file CRUD operations for the entire organization.
  */
-import { Account, Company, Contact, db, Opportunity, Task, User } from 'astro:db';
+import { Account, Company, db, Opportunity, Task, User } from 'astro:db';
 
 const selectOrgCompanies = db
 	.select()
 	.from(Company)
-	.prepare();
-
-const selectOrgContacts = db
-	.select()
-	.from(Contact)
 	.prepare();
 
 const selectOrgTasks = db
@@ -35,10 +30,6 @@ const selectOrgMembers = db
 
 export function getOrgCompanies() {
 	return selectOrgCompanies.all();
-}
-
-export function getOrgContacts() {
-	return selectOrgContacts.all();
 }
 
 /**
