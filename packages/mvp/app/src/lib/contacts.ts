@@ -4,8 +4,10 @@
 import type { AddressInfo, EmailInfo, LinkInfo, PhoneInfo } from './shared';
 import { Contact, db, eq, sql } from 'astro:db';
 
-type ContactInfo = typeof Contact.$inferSelect;
-type ContactId = ContactInfo['id'];
+export type ContactInfo = typeof Contact.$inferSelect;
+export type ContactId = ContactInfo['id'];
+
+export const ContactSortFields = ['lastName', 'firstName', 'company'] as const satisfies (keyof ContactInfo)[];
 
 export type ContactInit = Omit<typeof Contact.$inferInsert, | 'id'> & {
 	emails?: EmailInfo[];
@@ -22,6 +24,14 @@ export async function createContact(opts: ContactInit) {
 		.get();
 }
 
+const defaultOrder = [Contact.lastName, Contact.firstName];
+
+export const selectContacts = db
+	.select()
+	.from(Contact)
+	.orderBy(...defaultOrder)
+	.prepare();
+
 const selectContact = db
 	.select()
 	.from(Contact)
@@ -30,4 +40,11 @@ const selectContact = db
 
 export async function getContactInfo(id: ContactId) {
 	return selectContact.get({ id });
+}
+
+const sortableFields = ['lastName', 'firstName', 'company'] as const satisfies (keyof ContactInfo)[];
+type SortableField = typeof sortableFields[number];
+
+export function isSortableField(f: string): f is SortableField {
+	return (sortableFields as string[]).includes(f);
 }

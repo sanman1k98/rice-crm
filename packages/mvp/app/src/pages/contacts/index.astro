@@ -1,14 +1,71 @@
 ---
 import type { EmailInfo } from '@/lib/shared';
 import Layout from '@/layouts/MainLayout.astro';
-import { getOrgContacts } from '@/lib/orgs';
+import { type ContactInfo, isSortableField, selectContacts } from '@/lib/contacts';
+import { asc, Contact, db, desc } from 'astro:db';
 
 const { user } = Astro.locals;
 
 if (!user)
   return Astro.redirect('/login');
 
-const contacts = await getOrgContacts();
+let contacts: ContactInfo[];
+
+/**
+ * Create an object of options from the given URLSearchParams.
+ *
+ * @example
+ * ```ts
+ * let opts = getQueryOpts(new URLSearchParams('sort=company,lastName,firstName'))
+ * console.log(opts) // { company: undefined, lastName: undefined, firstName: undefined }
+ *
+ * opts = getQueryOpts(new URLSearchParams('sort=company+desc,lastName,firstName'))
+ * console.log(opts) // { company: 'desc', lastName: undefined, firstName: undefined }
+ *
+ * opts = getQueryOpts(new URLSearchParams('sort=id'))
+ * console.log(opts) // { id: undefined }
+ *
+ * opts = getQueryOpts(new URLSearchParams('sort=lastName+desc&sort=firstName+desc'))
+ * console.log(opts) // { lastName: 'desc', firstName: 'desc' }
+ * ```
+ */
+function getQueryOpts(searchParams: URLSearchParams) {
+	const entries = searchParams
+		.getAll('sort')
+		.flatMap(
+			(value) => value
+				.split(',')
+				.map((e) => {
+					const [k, v] = e.split(' ');
+					return [k, v];
+				}),
+		);
+	return Object.fromEntries(entries) as Record<string, string | undefined>;
+}
+
+if (!Astro.url.searchParams.has('sort')) {
+	contacts = await selectContacts.all();
+} else {
+	const opts = getQueryOpts(Astro.url.searchParams);
+	contacts = await db
+		.select()
+		.from(Contact)
+		.orderBy(
+			...Object.entries(opts).flatMap(
+				([k, v]) => {
+					const col = isSortableField(k) && Contact[k];
+					if (!col)
+						return [];
+					else if (v === 'asc')
+						return asc(col);
+					else if (v === 'desc')
+						return desc(col);
+					else
+						return col;
+				},
+			),
+		);
+}
 ---
 
 <Layout
