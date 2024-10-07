@@ -27,6 +27,9 @@ let contacts: ContactInfo[];
  *
  * opts = getQueryOpts(new URLSearchParams('sort=lastName+desc&sort=firstName+desc'))
  * console.log(opts) // { lastName: 'desc', firstName: 'desc' }
+ *
+ * opts = getQueryOpts(new URLSearchParams('sort=lastName+desc&sort=lastName'))
+ * console.log(opts) // { lastName: undefined }
  * ```
  */
 function getQueryOpts(searchParams: URLSearchParams) {
