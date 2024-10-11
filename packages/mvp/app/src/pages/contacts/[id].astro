@@ -1,0 +1,60 @@
+---
+import Layout from '@/layouts/MainLayout.astro';
+import { getCompanyInfo } from '@/lib/companies';
+import { getContactInfo } from '@/lib/contacts';
+import { type EmailInfo, EmailInfoSchema } from '@/lib/shared';
+
+const { user } = Astro.locals;
+
+if (!user)
+	return Astro.redirect('/login');
+
+const id = Number.parseInt(Astro.params.id!, 10);
+
+const contact = Number.isInteger(id)
+	? await getContactInfo(id)
+	: null;
+
+if (!contact)
+	return new Response(null, { status: 404 });
+
+const fullName = [contact.firstName, contact.lastName].join(' ');
+const emails = (contact.emails as EmailInfo[] | null)
+	? (contact.emails as EmailInfo[]).map((email) => EmailInfoSchema.safeParse(email))
+	: null;
+
+const company = contact.company
+	? await getCompanyInfo(contact.company)
+	: null;
+---
+
+<Layout
+	class="container pico"
+	meta={{
+		title: fullName,
+		description: fullName,
+	}}
+>
+	<hgroup>
+		<h1>{fullName}</h1>
+		{company && <p>{company.name}</p>}
+	</hgroup>
+	{emails && (
+		<section>
+			<h3>Emails</h3>
+			<ul>
+				{emails.map(({ data }) => data && (
+					<li>
+						<span>{data.email}</span>
+					</li>
+				))}
+			</ul>
+		</section>
+	)}
+	{contact.note && (
+		<section>
+			<h3>Note</h3>
+			<p class="capitalize">{contact.note}</p>
+		</section>
+	)}
+</Layout>
