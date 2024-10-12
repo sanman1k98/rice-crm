@@ -2,7 +2,7 @@
  * @file CRUD operations for companies.
  */
 import type { AddressInfo, EmailInfo, LinkInfo, PhoneInfo } from './shared';
-import { Company, db, eq, sql } from 'astro:db';
+import { Company, Contact, db, eq, sql } from 'astro:db';
 
 type CompanyInfo = typeof Company.$inferSelect;
 export type CompanyId = CompanyInfo['id'];
@@ -28,6 +28,16 @@ const selectCompany = db
 	.where(eq(Company.id, sql.placeholder('id')))
 	.prepare();
 
+const selectCompanyContacts = db
+	.select()
+	.from(Contact)
+	.where(eq(Contact.company, sql.placeholder('id')))
+	.prepare();
+
 export async function getCompanyInfo(id: CompanyId) {
 	return selectCompany.get({ id });
+}
+
+export async function getCompanyContacts(id: CompanyId) {
+	return selectCompanyContacts.all({ id });
 }
