@@ -65,12 +65,15 @@ function generateContact(opts?: { company?: CompanyId }) {
 	const firstName = faker.person.firstName();
 	const lastName = faker.person.lastName();
 	const email = faker.internet.email({ firstName, lastName });
+	const phone = faker.phone.number();
 	const companyId = opts?.company;
 	return {
 		firstName,
 		lastName,
 		emails: [{ label: companyId ? 'work' : 'personal', email }],
+		phones: [{ label: 'mobile', phone }],
 		company: companyId ?? null,
+		jobTitle: companyId ? faker.person.jobTitle() : null,
 		note: faker.person.bio(),
 	} satisfies ContactInit;
 }
