@@ -1,0 +1,55 @@
+---
+import Layout from '@/layouts/MainLayout.astro';
+import { getCompanyContacts, getCompanyInfo } from '@/lib/companies';
+
+const { user } = Astro.locals;
+
+if (!user)
+	return Astro.redirect('/login');
+
+const id = Number.parseInt(Astro.params.id!, 10);
+
+const company = Number.isInteger(id)
+	? await getCompanyInfo(id)
+	: null;
+
+if (!company)
+	return new Response(null, { status: 404 });
+
+const contacts = await getCompanyContacts(id);
+---
+
+<Layout
+	class="container pico"
+	meta={{
+		title: company.name,
+		description: company.note ?? company.name,
+	}}
+>
+	<h1>{company.name}</h1>
+	<section>
+		<h2>Contacts</h2>
+		<div class="overflow-auto">
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Title</th>
+					</tr>
+				</thead>
+				<tbody>
+					{
+						contacts.map((c) => (
+							<tr class="text-nowrap">
+								<th>
+									<a href={`/contacts/${c.id}`}>{[c.firstName, c.lastName].join(' ')}</a>
+								</th>
+								<td>{c.jobTitle}</td>
+							</tr>
+						))
+					}
+				</tbody>
+			</table>
+		</div>
+	</section>
+</Layout>
