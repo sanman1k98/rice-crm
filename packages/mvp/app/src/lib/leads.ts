@@ -3,9 +3,9 @@
  */
 import { db, eq, Lead, sql } from 'astro:db';
 
-type LeadInfo = typeof Lead.$inferSelect;
+export type LeadInfo = typeof Lead.$inferSelect;
 export type LeadId = LeadInfo['id'];
-type LeadInit = Omit<typeof Lead.$inferInsert, | 'id'>;
+export type LeadInit = Omit<typeof Lead.$inferInsert, | 'id'>;
 
 export async function createLead(opts: LeadInit) {
 	return db

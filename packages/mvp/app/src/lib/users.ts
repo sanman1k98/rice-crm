@@ -14,8 +14,8 @@ export const OrgRoleValueEnum = {
 export type OrgRoleValue = typeof OrgRoleValueEnum[keyof typeof OrgRoleValueEnum];
 export type UserInfo = Omit<typeof User.$inferSelect, 'password_hash'>;
 
-type UserId = UserInfo['id'];
-type UserInit = Omit<typeof User.$inferInsert, 'id' | 'password_hash'> & {
+export type UserId = UserInfo['id'];
+export type UserInit = Omit<typeof User.$inferInsert, 'id' | 'password_hash'> & {
 	password: string;
 	/** @defaultValue `OrgRoleValueEnum.Member` */
 	role?: OrgRoleValue;
