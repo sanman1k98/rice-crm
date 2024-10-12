@@ -6,13 +6,14 @@
  * @see https://docs.astro.build/en/guides/integrations-guide/db/
  */
 import type { CompanyId, CompanyInit } from '@/lib/companies';
-import type { ContactInit } from '@/lib/contacts';
+import type { ContactId, ContactInit } from '@/lib/contacts';
+import type { LeadInit } from '@/lib/leads';
 import { createAccount } from '@/lib/accounts';
 import { createOpportunity, OpportunityStageEnum } from '@/lib/opportunities';
 import { createTasks } from '@/lib/tasks';
-import { createUser, OrgRoleValueEnum, type UserInfo } from '@/lib/users';
+import { createUser, OrgRoleValueEnum, type UserId, type UserInfo } from '@/lib/users';
 import { faker } from '@faker-js/faker';
-import { Company, Contact, db } from 'astro:db';
+import { Company, Contact, db, Lead } from 'astro:db';
 
 async function seedDeprecatedTables(user: UserInfo) {
 	const testCustomer = await createAccount({
@@ -78,6 +79,14 @@ function generateContact(opts?: { company?: CompanyId }) {
 	} satisfies ContactInit;
 }
 
+function generateLead(opts: { author: UserId; contact: ContactId }) {
+	return {
+		contact: opts.contact,
+		author: opts.author,
+		status: faker.hacker.ingverb(),
+	} satisfies LeadInit;
+}
+
 export default async function () {
 	const testUser = await createUser({
 		fullname: 'Firstname Lastname',
@@ -123,4 +132,18 @@ export default async function () {
 		insertOtherContacts,
 		...insertEmployees,
 	]);
+
+	const contactPerCompany = await db
+		.select({ id: Contact.id })
+		.from(Contact)
+		.groupBy(Contact.company)
+		.all();
+
+	await db
+		.insert(Lead)
+		.values(
+			contactPerCompany.map(
+				({ id }) => generateLead({ contact: id, author: testUser.id }),
+			),
+		);
 }
