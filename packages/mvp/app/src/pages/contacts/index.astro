@@ -1,5 +1,5 @@
 ---
-import type { EmailInfo } from '@/lib/shared';
+import type { EmailInfo, PhoneInfo } from '@/lib/shared';
 import Layout from '@/layouts/MainLayout.astro';
 import { type ContactInfo, isSortableField, selectContacts } from '@/lib/contacts';
 import { asc, Contact, db, desc } from 'astro:db';
@@ -76,28 +76,33 @@ if (!Astro.url.searchParams.has('sort')) {
 		title: 'Contacts',
 		description: 'All contacts',
 	}}
-	class="mx-auto container overflow-auto pico"
+	class="mx-auto container pico"
 >
-	<table>
-		<thead>
-			<tr>
-				<th scope="col">Name</th>
-				<th scope="col">Emails</th>
-				<th scope="col">Note</th>
-			</tr>
-		</thead>
-		<tbody>
-			{
-				contacts.map((c) => (
-					<tr>
-						<th>
-							<a href={`/contacts/${c.id}`}>{[c.firstName, c.lastName].join(' ')}</a>
-						</th>
-						<td>{(c.emails as EmailInfo[]).map((e) => e.email).join(', ')}</td>
-						<td>{c.note}</td>
-					</tr>
-				))
-			}
-		</tbody>
-	</table>
+	<h1>Contacts</h1>
+	<div class="overflow-auto">
+		<table class="">
+			<thead>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Emails</th>
+					<th scope="col">Phone</th>
+					<!-- <th scope="col">Title</th> -->
+				</tr>
+			</thead>
+			<tbody>
+				{
+					contacts.map((c) => (
+						<tr>
+							<th>
+								<a class="text-nowrap" href={`/contacts/${c.id}`}>{[c.firstName, c.lastName].join(' ')}</a>
+							</th>
+							<td>{(c.emails as EmailInfo[]).map((e) => e.email).join(', ')}</td>
+							<td class="text-nowrap">{(c.phones as PhoneInfo[]).map((p) => p.phone).join(', ')}</td>
+							<!-- <td>{c.jobTitle}</td> -->
+						</tr>
+					))
+				}
+			</tbody>
+		</table>
+	</div>
 </Layout>
