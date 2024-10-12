@@ -109,6 +109,7 @@ const Contact = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
 		company: column.number({ references: () => Company.columns.id, optional: true }),
+		jobTitle: column.text({ optional: true }),
 		firstName: column.text(),
 		lastName: column.text(),
 		emails: column.json({ optional: true }),
