@@ -37,7 +37,11 @@ const company = contact.company
 >
 	<hgroup>
 		<h1>{fullName}</h1>
-		{company && <p>{company.name}</p>}
+		{company && (
+			<p>
+				<a href={`/companies/${company.id}`}>{company.name}</a>
+			</p>
+		)}
 	</hgroup>
 	{emails && (
 		<section>

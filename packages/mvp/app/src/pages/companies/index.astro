@@ -17,10 +17,10 @@ const companies = await getOrgCompanies();
 	}}
 	class="mx-auto container pico"
 >
+	<h1>Companies</h1>
 	<table>
 		<thead>
 			<tr>
-				<th scope="col">ID</th>
 				<th scope="col">Name</th>
 				<th scope="col">Note</th>
 			</tr>
@@ -29,8 +29,9 @@ const companies = await getOrgCompanies();
 			{
 				companies.map((c) => (
 					<tr>
-						<th>{c.id}</th>
-						<td>{c.name}</td>
+						<td>
+							<a href={`/companies/${c.id}`}>{c.name}</a>
+						</td>
 						<td>{c.note}</td>
 					</tr>
 				))
