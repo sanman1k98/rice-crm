@@ -1,4 +1,4 @@
-# CRM
+# Rice CRM
 
 ## Development
 
@@ -20,7 +20,7 @@ brew install node pnpm
 
 ```sh
 # Clone the repository
-git clone https://github.com/sanman1k98/crm.git
+git clone https://github.com/sanman1k98/rice-crm.git
 
 # Change directory into cloned repo
 cd crm
