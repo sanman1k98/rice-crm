@@ -1,5 +1,5 @@
 {
-	"name": "@mvp/app",
+	"name": "@rice-crm/mvp-app",
 	"type": "module",
 	"private": true,
 	"scripts": {

@@ -9,11 +9,11 @@
 	"scripts": {
 		"preinstall": "npx only-allow pnpm",
 		"lint": "eslint .",
-		"dev": "pnpm --filter app run dev",
+		"dev": "pnpm --filter mvp-app run dev",
 		"lint:mvp": "eslint ./packages/mvp/app/",
-		"dev:mvp": "pnpm --filter app run dev",
-		"build:mvp": "pnpm --filter app run build",
-		"preview:mvp": "pnpm --filter app run preview",
+		"dev:mvp": "pnpm --filter mvp-app run dev",
+		"build:mvp": "pnpm --filter mvp-app run build",
+		"preview:mvp": "pnpm --filter mvp-app run preview",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"devDependencies": {
