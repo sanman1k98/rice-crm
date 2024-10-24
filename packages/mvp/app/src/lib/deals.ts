@@ -4,9 +4,9 @@
 import type { LeadId } from './leads';
 import { db, Deal, eq, sql } from 'astro:db';
 
-type DealInfo = typeof Deal.$inferSelect;
-type DealId = DealInfo['id'];
-type DealInit = Omit<typeof Deal.$inferInsert, | 'id' | 'lead'>;
+export type DealInfo = typeof Deal.$inferSelect;
+export type DealId = DealInfo['id'];
+export type DealInit = Omit<typeof Deal.$inferInsert, | 'id' | 'lead'>;
 
 /**
  * Create a deal from a fully qualified lead.
