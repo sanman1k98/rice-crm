@@ -22,8 +22,8 @@ const deals = await selectDeals.all();
 		{
 			deals.map((d) => (
 				<article class="w-full md:w-64">
-					<h2>{new Intl.NumberFormat(undefined, { style: 'currency', currency: d.currency }).format(d.amount)}</h2>
-					<strong>{d.company}</strong>
+					<h2>{d.company}</h2>
+					<strong>{new Intl.NumberFormat(undefined, { style: 'currency', currency: d.currency }).format(d.amount)}</strong>
 				</article>
 			))
 		}
