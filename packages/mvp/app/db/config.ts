@@ -173,7 +173,7 @@ const Deal = defineTable({
 		id: column.number({ primaryKey: true }),
 		/** The original lead. */
 		lead: column.number({ references: () => Lead.columns.id }),
-		company: column.number({ references: () => Company.columns.id }),
+		company: column.number({ optional: true, references: () => Company.columns.id }),
 		/** Amount of money for this deal. */
 		amount: column.number(),
 		currency: column.text(),
