@@ -1,7 +1,7 @@
 /**
  * @file CRUD operations for leads.
  */
-import { Contact, db, eq, Lead, sql, User } from 'astro:db';
+import { Contact, db, desc, eq, Lead, sql, User } from 'astro:db';
 
 export type LeadInfo = typeof Lead.$inferSelect;
 export type LeadId = LeadInfo['id'];
@@ -15,7 +15,7 @@ export async function createLead(opts: LeadInit) {
 		.get();
 }
 
-const defaultOrder = [Lead.updated, Lead.created];
+const defaultOrder = [desc(Lead.score), Lead.updated, Lead.created];
 
 export const selectLeads = db
 	.select({
@@ -23,6 +23,7 @@ export const selectLeads = db
 		updated: Lead.updated,
 		created: Lead.created,
 		status: Lead.status,
+		score: Lead.score,
 		authorId: User.id,
 		authorName: User.fullname,
 		contactId: Contact.id,
