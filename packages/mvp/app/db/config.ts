@@ -136,6 +136,17 @@ const Lead = defineTable({
 		status: column.text({ optional: true }),
 		created: column.date({ default: NOW }),
 		updated: column.date({ default: NOW }),
+		/**
+		 * An arbitrary number based on vibes.
+		 *
+		 * "Lead scoring will give your sales team the visibility to chase the right leads, right away.
+		 * Reps can work on “hot” leads and those that make buying decisions, while marketing automation
+		 * can do the less urgent task of nurturing the warm and colder leads under the supervision of
+		 * the marketing team."
+		 *
+		 * @see https://www.pipedrive.com/en/blog/lead-qualification#the-best-benefits-of-a-quality-lead-scoring-process
+		 */
+		score: column.number({ default: 0 }),
 	},
 });
 
