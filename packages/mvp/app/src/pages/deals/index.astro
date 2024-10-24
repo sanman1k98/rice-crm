@@ -1,0 +1,31 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { selectDeals } from '@/lib/deals';
+
+const { user } = Astro.locals;
+
+if (!user)
+  return Astro.redirect('/login');
+
+const deals = await selectDeals.all();
+---
+
+<MainLayout
+	meta={{
+		title: 'Deals',
+		description: 'Deals',
+	}}
+	class="container pico"
+>
+	<h1>Deals</h1>
+	<div>
+		{
+			deals.map((d) => (
+				<article class="w-full md:w-64">
+					<h2>{new Intl.NumberFormat(undefined, { style: 'currency', currency: d.currency }).format(d.amount)}</h2>
+					<strong>{d.company}</strong>
+				</article>
+			))
+		}
+	</div>
+</MainLayout>

@@ -2,7 +2,7 @@
  * @file CRUD operations for deals.
  */
 import type { LeadId } from './leads';
-import { db, Deal, eq, sql } from 'astro:db';
+import { Company, Contact, db, Deal, eq, Lead, sql, User } from 'astro:db';
 
 export type DealInfo = typeof Deal.$inferSelect;
 export type DealId = DealInfo['id'];
@@ -21,6 +21,21 @@ export async function createDeal(leadId: LeadId, opts: DealInit): Promise<DealIn
 		.returning()
 		.get();
 }
+
+export const selectDeals = db
+	.select({
+		id: Deal.id,
+		amount: Deal.amount,
+		currency: Deal.currency,
+		status: Lead.status,
+		company: Company.name,
+	})
+	.from(Deal)
+	.leftJoin(Lead, eq(Lead.id, Deal.lead))
+	.leftJoin(Contact, eq(Contact.id, Lead.contact))
+	.leftJoin(Company, eq(Company.id, Contact.company))
+	.leftJoin(User, eq(User.id, Lead.author))
+	.prepare();
 
 const selectDeal = db
 	.select()
