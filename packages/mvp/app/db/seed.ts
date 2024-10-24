@@ -85,6 +85,7 @@ function generateLead(opts: { author: UserId; contact: ContactId }) {
 		contact: opts.contact,
 		author: opts.author,
 		status: faker.hacker.ingverb(),
+		score: faker.number.int({ min: 1, max: 100 }),
 	} satisfies LeadInit;
 }
 
