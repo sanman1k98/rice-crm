@@ -1,6 +1,6 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
-import { selectDeals } from '@/lib/deals';
+import { formatDealValue, selectDeals } from '@/lib/deals';
 
 const { user } = Astro.locals;
 
@@ -23,7 +23,7 @@ const deals = await selectDeals.all();
 			deals.map((d) => (
 				<article class="w-full">
 					<h2 class="md:text-nowrap">{d.company}</h2>
-					<strong>{new Intl.NumberFormat(undefined, { style: 'currency', currency: d.currency }).format(d.amount)}</strong>
+					<strong>{formatDealValue(d.amount, d.currency)}</strong>
 				</article>
 			))
 		}
