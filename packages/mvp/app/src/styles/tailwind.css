@@ -1,0 +1,5 @@
+@import url("@picocss/pico/css/pico.conditional.min.css") layer(base);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
