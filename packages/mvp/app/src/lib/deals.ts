@@ -46,3 +46,11 @@ const selectDeal = db
 export async function getDealInfo(id: DealId): Promise<DealInfo | undefined> {
 	return selectDeal.get({ id });
 }
+
+export function formatDealValue(amount: number, currency: string): string {
+	const formatter = new Intl.NumberFormat(undefined, {
+		style: 'currency',
+		currency,
+	});
+	return formatter.format(amount);
+}
