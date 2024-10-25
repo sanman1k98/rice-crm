@@ -1,5 +1,6 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
+import { formatDealValue } from '@/lib/deals';
 import { selectLeads } from '@/lib/leads';
 
 const { user } = Astro.locals;
@@ -7,10 +8,10 @@ const { user } = Astro.locals;
 if (!user)
   return Astro.redirect('/login');
 
-const formatter = new Intl.DateTimeFormat('en-US', {
-	dateStyle: 'short',
-	timeStyle: 'short',
-});
+// const formatter = new Intl.DateTimeFormat('en-US', {
+// 	dateStyle: 'short',
+// 	timeStyle: 'short',
+// });
 
 const leads = await selectLeads.all();
 ---
@@ -23,40 +24,40 @@ const leads = await selectLeads.all();
 	class="container mx-auto pico"
 >
 	<h1>Leads</h1>
-	<div class="overflow-auto">
-		<table class="">
-			<thead>
-				<tr>
-					<th scope="col">ID</th>
-					<th scope="col">Author</th>
-					<th scope="col">Contact</th>
-					<th scope="col">Status</th>
-					<th scope="col">Score</th>
-					<th scope="col">Updated</th>
-					<th scope="col">Created</th>
-				</tr>
-			</thead>
-			<tbody>
-				{
-					leads.map((l) => (
-						<tr class="text-nowrap">
-							<th scope="row">
-								<a href={`/leads/${l.id}`}>{l.id}</a>
-							</th>
-							<td>{l.authorName}</td>
-							<td>
-								<a class="secondary" href={`/contacts/${l.contactId}`}>{[l.contactFirstName, l.contactLastName].join(' ')}</a>
-							</td>
-							<td>{l.status}</td>
-							<td class="w-full">
-								<progress value={l.score} max="100" class="w-64" />
-							</td>
-							<td>{formatter.format(l.updated)}</td>
-							<td>{formatter.format(l.created)}</td>
-						</tr>
-					))
-				}
-			</tbody>
-		</table>
-	</div>
+	<hr />
+	<section>
+		<h2>Active</h2>
+		<div class="overflow-auto">
+			<table class="">
+				<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Author</th>
+						<th scope="col">Contact</th>
+						<th scope="col">Status</th>
+						<th scope="col">Score</th>
+					</tr>
+				</thead>
+				<tbody>
+					{
+						leads.filter((l) => l.deal === null).map((l) => (
+							<tr class="text-nowrap">
+								<th scope="row">
+									<a href={`/leads/${l.id}`}>{l.id}</a>
+								</th>
+								<td>{l.author.fullname}</td>
+								<td>
+									<a class="secondary" href={`/contacts/${l.contact.id}`}>{[l.contact.firstName, l.contact.lastName].join(' ')}</a>
+								</td>
+								<td>{l.status}</td>
+								<td>
+									<progress value={l.score} max="100" class="!mb-0 !w-48" />
+								</td>
+							</tr>
+						))
+					}
+				</tbody>
+			</table>
+		</div>
+	</section>
 </MainLayout>

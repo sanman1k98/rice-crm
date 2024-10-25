@@ -1,7 +1,7 @@
 /**
  * @file CRUD operations for leads.
  */
-import { Contact, db, desc, eq, Lead, sql, User } from 'astro:db';
+import { Contact, db, Deal, desc, eq, Lead, sql, User } from 'astro:db';
 
 export type LeadInfo = typeof Lead.$inferSelect;
 export type LeadId = LeadInfo['id'];
@@ -24,16 +24,15 @@ export const selectLeads = db
 		created: Lead.created,
 		status: Lead.status,
 		score: Lead.score,
-		authorId: User.id,
-		authorName: User.fullname,
-		contactId: Contact.id,
-		contactFirstName: Contact.firstName,
-		contactLastName: Contact.lastName,
+		author: User,
+		contact: Contact,
+		deal: Deal,
 	})
 	.from(Lead)
 	.orderBy(...defaultOrder)
-	.leftJoin(Contact, eq(Contact.id, Lead.contact))
-	.leftJoin(User, eq(User.id, Lead.author))
+	.innerJoin(Contact, eq(Contact.id, Lead.contact))
+	.innerJoin(User, eq(User.id, Lead.author))
+	.leftJoin(Deal, eq(Deal.lead, Lead.id))
 	.prepare();
 
 const selectLead = db
