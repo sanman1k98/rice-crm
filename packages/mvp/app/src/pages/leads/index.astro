@@ -60,4 +60,31 @@ const leads = await selectLeads.all();
 			</table>
 		</div>
 	</section>
+	<section>
+		<h2>Qualified deals</h2>
+		<div class="overflow-auto">
+			<table class="">
+				<thead>
+					<tr>
+						<th scope="col">Contact</th>
+						<th scope="col">Status</th>
+						<th scope="col">Deal amount</th>
+					</tr>
+				</thead>
+				<tbody>
+					{
+						leads.filter((l) => l.deal !== null).map((l) => (
+							<tr class="text-nowrap">
+								<th>
+									<a class="" href={`/contacts/${l.contact.id}`}>{[l.contact.firstName, l.contact.lastName].join(' ')}</a>
+								</th>
+								<td>{l.status}</td>
+								<td>{formatDealValue(l.deal!.amount, l.deal!.currency)}</td>
+							</tr>
+						))
+					}
+				</tbody>
+			</table>
+		</div>
+	</section>
 </MainLayout>
