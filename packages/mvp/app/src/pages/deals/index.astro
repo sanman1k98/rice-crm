@@ -18,14 +18,14 @@ const deals = await selectDeals.all();
 	class="container pico"
 >
 	<h1>Deals</h1>
-	<div>
+	<section class="w-full md:max-w-fit">
 		{
 			deals.map((d) => (
-				<article class="w-full md:w-64">
-					<h2>{d.company}</h2>
+				<article class="w-full">
+					<h2 class="md:text-nowrap">{d.company}</h2>
 					<strong>{new Intl.NumberFormat(undefined, { style: 'currency', currency: d.currency }).format(d.amount)}</strong>
 				</article>
 			))
 		}
-	</div>
+	</section>
 </MainLayout>
