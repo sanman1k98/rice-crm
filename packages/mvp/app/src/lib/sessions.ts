@@ -1,7 +1,12 @@
 /**
- * @file Adapted from Lucia's docs: Sessions with Drizzle ORM.
+ * @file A sessions API adapted from Lucia's docs.
+ *
+ * @see https://lucia-auth.com
  * @see https://lucia-auth.com/sessions/basic-api/drizzle-orm
+ * @see https://lucia-auth.com/sessions/cookies/
+ * @see https://lucia-auth.com/sessions/cookies/astro
  */
+import type { APIContext } from 'astro';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
 import { db, eq, Session, User } from 'astro:db';
@@ -65,4 +70,24 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 
 export async function invalidateSession(sessionId: TSession['id']): Promise<void> {
 	await db.delete(Session).where(eq(Session.id, sessionId));
+}
+
+export function setSessionTokenCookie(ctx: APIContext, token: string, expiresAt: Date): void {
+	ctx.cookies.set('session', token, {
+		httpOnly: true,
+		sameSite: 'lax',
+		secure: import.meta.env.PROD,
+		expires: expiresAt,
+		path: '/',
+	});
+}
+
+export function deleteSessionTokenCookie(ctx: APIContext): void {
+	ctx.cookies.set('session', '', {
+		httpOnly: true,
+		sameSite: 'lax',
+		secure: import.meta.env.PROD,
+		maxAge: 0,
+		path: '/',
+	});
 }
