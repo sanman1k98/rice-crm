@@ -14,6 +14,7 @@ import { createOpportunity, OpportunityStageEnum } from '@/lib/opportunities';
 import { createTasks } from '@/lib/tasks';
 import { createUser, OrgRoleValueEnum, type UserId, type UserInfo } from '@/lib/users';
 import { faker } from '@faker-js/faker';
+import { actions } from 'astro:actions';
 import { Company, Contact, db, Deal, Lead } from 'astro:db';
 
 async function seedDeprecatedTables(user: UserInfo) {
@@ -106,7 +107,7 @@ export default async function () {
 		role: OrgRoleValueEnum.Owner,
 	});
 
-	await seedDeprecatedTables(testUser);
+	// await seedDeprecatedTables(testUser);
 
 	const companyIds = await db
 		.insert(Company)

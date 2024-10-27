@@ -7,6 +7,7 @@
  * @see https://lucia-auth.com/sessions/cookies/astro
  */
 import type { APIContext } from 'astro';
+import type { ActionAPIContext } from 'astro:actions';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
 import { db, eq, Session, User } from 'astro:db';
@@ -72,7 +73,7 @@ export async function invalidateSession(sessionId: TSession['id']): Promise<void
 	await db.delete(Session).where(eq(Session.id, sessionId));
 }
 
-export function setSessionTokenCookie(ctx: APIContext, token: string, expiresAt: Date): void {
+export function setSessionTokenCookie(ctx: APIContext | ActionAPIContext, token: string, expiresAt: Date): void {
 	ctx.cookies.set('session', token, {
 		httpOnly: true,
 		sameSite: 'lax',
@@ -82,7 +83,7 @@ export function setSessionTokenCookie(ctx: APIContext, token: string, expiresAt:
 	});
 }
 
-export function deleteSessionTokenCookie(ctx: APIContext): void {
+export function deleteSessionTokenCookie(ctx: APIContext | ActionAPIContext): void {
 	ctx.cookies.set('session', '', {
 		httpOnly: true,
 		sameSite: 'lax',

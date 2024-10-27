@@ -1,5 +1,5 @@
 import type { MiddlewareHandler } from 'astro';
-import { lucia } from './auth';
+import { deleteSessionTokenCookie, setSessionTokenCookie, validateSessionToken } from './lib/sessions';
 
 /**
  * Validate user requests with Lucia.
@@ -7,22 +7,20 @@ import { lucia } from './auth';
  * @see https://lucia-auth.com/getting-started/astro
  */
 const auth: MiddlewareHandler = async (context, next) => {
-	const sessionId = context.cookies.get(lucia.sessionCookieName)?.value ?? null;
-	if (!sessionId) {
+	const token = context.cookies.get('session')?.value ?? null;
+	if (token === null) {
 		context.locals.user = null;
 		context.locals.session = null;
 		return next();
 	}
 
-	const { session, user } = await lucia.validateSession(sessionId);
-	if (session?.fresh) {
-		const sessionCookie = lucia.createSessionCookie(session.id);
-		context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+	const { session, user } = await validateSessionToken(token);
+	if (session !== null) {
+		setSessionTokenCookie(context, token, session.expiresAt);
+	} else {
+		deleteSessionTokenCookie(context);
 	}
-	if (!session) {
-		const sessionCookie = lucia.createBlankSessionCookie();
-		context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-	}
+
 	context.locals.session = session;
 	context.locals.user = user;
 	return next();

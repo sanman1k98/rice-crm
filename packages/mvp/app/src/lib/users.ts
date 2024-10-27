@@ -1,7 +1,8 @@
-import { generateId, scrypt } from '@/auth/utils';
 /**
  * @file CRUD operations for users.
  */
+import { hash } from '@node-rs/argon2';
+import { generateRandomString, type RandomReader } from '@oslojs/crypto/random';
 import { db, eq, OrgRole, sql, User } from 'astro:db';
 
 export const OrgRoleValueEnum = {
@@ -21,39 +22,29 @@ export type UserInit = Omit<typeof User.$inferInsert, 'id' | 'password_hash'> & 
 	role?: OrgRoleValue;
 };
 
+const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+const random: RandomReader = {
+	read(bytes) {
+		crypto.getRandomValues(bytes);
+	},
+};
+
+function generateUserId() {
+	return generateRandomString(random, alphanumeric, 16);
+}
+
+async function hashPassword(password: string): Promise<string> {
+	return await hash(password, {
+		memoryCost: 19456,
+		timeCost: 2,
+		outputLen: 32,
+		parallelism: 1,
+	});
+}
+
 /**
  * @summary Used to specify which columns in `User` table to query.
- *
- * WARN: `@astrojs/db@0.11.7` table types DO NOT accurately match their runtime values.
- *
- * Astro DB uses Drizzle ORM under the hood but with some added functionality
- * in order to simplify the developer experience. For example, you can define a
- * table without a column to use as the primary key and Astro DB will
- * implicitly create one for you. Unfortunately, this behavior appears to be
- * undocumented and the generated types don't seem to reflect this.
- *
- * We should use `getTableColumns()` from Drizzle which can be used to omit
- * certain columns for a partial selection, but Astro DB does not re-export
- * that helper function.
- *
- * @see https://orm.drizzle.team/docs/goodies#get-typed-table-columns
- *
- * According to the generated type information for `User`, we should be able to
- * use object destructuring and the spread operator to create the
- * `partialUserColumns` object below.
- *
- * @example
- * ```ts
- * // This will not work
- * const { password_hash: _, ...partialUserColumns } = User._.columns;
- * ```
- *
- * But the generated type information intended for the developer using the ORM
- * do not include all of the private runtime internals that power its full
- * type-safety, hence the reason for the `getTableColumns()` helper function.
- *
- * At least we can use the generated types to derive our own type which we can
- * then use to constrain the `partialUserColumns` object.
  */
 const partialUserColumns: Omit<typeof User._.columns, 'password_hash'> = {
 	id: User.id,
@@ -73,15 +64,18 @@ const partialUserColumns: Omit<typeof User._.columns, 'password_hash'> = {
  * without the `password_hash` column.
  */
 export async function createUser(opts: UserInit): Promise<UserInfo> {
-	const { role = OrgRoleValueEnum.Member, password, ...rest } = opts;
-
-	const id = generateId() as string;
-	const password_hash = await scrypt.hash(password);
+	const newUserId = generateUserId();
+	const passwordHash = await hashPassword(opts.password);
 
 	// Insert the new user and get it back.
 	const newUser = await db
 		.insert(User)
-		.values({ id, password_hash, ...rest })
+		.values({
+			id: newUserId,
+			fullname: opts.fullname,
+			username: opts.username,
+			password_hash: passwordHash,
+		})
 		.returning(partialUserColumns)
 		.get();
 
@@ -90,7 +84,7 @@ export async function createUser(opts: UserInit): Promise<UserInfo> {
 		.insert(OrgRole)
 		.values({
 			user: newUser.id,
-			role,
+			role: opts.role ?? OrgRoleValueEnum.Member,
 		});
 
 	// TODO: Return both `UserInfo` and `OrgRole` information.

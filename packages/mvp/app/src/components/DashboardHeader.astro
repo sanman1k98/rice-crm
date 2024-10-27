@@ -1,5 +1,6 @@
 ---
 import type { CSSProperty } from 'astro/types';
+import { actions } from 'astro:actions';
 
 // TODO: only have links for authenticated users.
 // Don't conditionally render links based on `Astro.locals.user`.
@@ -35,49 +36,47 @@ const pages = Array.from(
 ---
 
 <header class={Astro.props.class} style={Astro.props.style}>
-  <nav>
-    <ul>
-      <li><strong><a href="/home">Rice CRM</a></strong></li>
-    </ul>
-    <ul>
-      {Astro.locals.user
-? (
-        <>
-          {pages.map((page) => (
-            <li class="!hidden md:!block">
-              <a
-	aria-current={page.current}
-	href={page.href}
-              >{page.text}</a>
-            </li>
-          ))}
-        </>
-        <li class="!hidden md:!block">
-          <form method="post" action="/api/v0/auth/logout">
-            <input type="submit" value="Logout" class="secondary" />
-          </form>
-        </li>
-      )
-: (
-        <li class="!hidden md:!inline-block"><a role="button" href="/login">Login</a></li>
-      )}
-      <li class="md:!hidden">
-        <details class="dropdown">
-          <summary>Menu</summary>
-          <ul dir="rtl">
-            {
-              pages.map((page) => (
-                <li class="">
-                  <a
-	aria-current={page.current}
-	href={page.href}
-                  >{page.text}</a>
-                </li>
-              ))
-            }
-          </ul>
-        </details>
-      </li>
-    </ul>
-  </nav>
+	<nav>
+		<ul>
+			<li><strong><a href="/home">Rice CRM</a></strong></li>
+		</ul>
+		<ul>
+			{Astro.locals.user ? (
+				<>
+					{pages.map((page) => (
+						<li class="!hidden md:!block">
+							<a
+								aria-current={page.current}
+								href={page.href}
+							>{page.text}</a>
+						</li>
+					))}
+				</>
+				<li class="!hidden md:!block">
+					<form method="post" action={actions.user.logout}>
+						<input type="submit" value="Logout" class="secondary" />
+					</form>
+				</li>
+			) : (
+				<li class="!hidden md:!inline-block"><a role="button" href="/login">Login</a></li>
+			)}
+			<li class="md:!hidden">
+				<details class="dropdown">
+					<summary>Menu</summary>
+					<ul dir="rtl">
+						{
+						pages.map((page) => (
+						<li class="">
+							<a
+								aria-current={page.current}
+								href={page.href}
+							>{page.text}</a>
+						</li>
+						))
+						}
+					</ul>
+				</details>
+			</li>
+		</ul>
+	</nav>
 </header>

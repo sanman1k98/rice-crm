@@ -4,7 +4,7 @@
 
 declare namespace App {
 	interface Locals {
-		session: import('lucia').Session | null;
-		user: import('lucia').User | null;
+		session: import('./lib/sessions').TSession | null;
+		user: import('./lib/sessions').TUser | null;
 	}
 }

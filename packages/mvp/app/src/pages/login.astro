@@ -1,9 +1,9 @@
 ---
 import Layout from '@/layouts/MainLayout.astro';
 
-// TODO: Consider handling login requests here?
-//
-// export const POST: APIRoute = (ctx) => {};
+if (Astro.locals.user) {
+	return Astro.redirect('/home');
+}
 ---
 
 <Layout
@@ -15,7 +15,8 @@ import Layout from '@/layouts/MainLayout.astro';
 >
 	<div class="pico">
 		<h1>Login</h1>
-		<form id="login" method="post" action="api/v0/auth/login">
+		<!-- <form id="login" method="POST" action={actions.user.login}> -->
+		<form>
 			<label>
 				Username
 				<input id="username" name="username" placeholder="test" type="text" required />
@@ -33,28 +34,17 @@ import Layout from '@/layouts/MainLayout.astro';
 		</form>
 	</div>
 
-	<script>
-(document.getElementById('login') as HTMLFormElement).addEventListener(
-	'submit',
-	async function (ev) {
+<script>
+	import { actions } from 'astro:actions';
+
+	const form = document.querySelector('form');
+	form?.addEventListener('submit', async (ev) => {
 		ev.preventDefault();
-
-		try {
-			const res = await fetch(this.action, {
-				method: this.method,
-				body: new FormData(this),
-			});
-
-			if (res.redirected || res.ok)
-				return window.location.replace('/home');
-
-			const helper = this.querySelector(':scope #invalid-helper')!;
-			helper.removeAttribute('aria-hidden');
-			helper.textContent = await res.text();
-		} catch (e) {
-			console.error(e);
-		}
-	},
-);
+		const formdata = new FormData(form);
+		const { error } = await actions.user.login(formdata);
+		if (!error)
+			window.location.replace('/home');
+	});
 </script>
+
 </Layout>

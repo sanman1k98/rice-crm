@@ -1,5 +1,5 @@
-import * as opportunities from './opportunities';
+import { user } from './user';
 
 export const server = {
-	opportunities,
+	user,
 };
