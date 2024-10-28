@@ -1,0 +1,38 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { actions } from 'astro:actions';
+
+if (!Astro.locals.user)
+	return Astro.redirect.login();
+
+const result = Astro.getActionResult(actions.contact.create);
+
+if (result && result.data.id)
+	return Astro.redirect(`/contacts/${result.data.id}`);
+---
+
+<MainLayout
+	meta={{
+		title: 'Add a new contact',
+		description: 'Add a new contact',
+	}}
+	class="container pico"
+>
+	<h1>Add a new contact</h1>
+	<section>
+		<form method="post" action={actions.contact.create}>
+			<fieldset>
+				<label>
+					<input type="text" name="firstName" placeholder="First name" required />
+				</label>
+				<label>
+					<input type="text" name="lastName" placeholder="Last name" required />
+				</label>
+				<label>
+					<textarea name="note" placeholder="Any additional information about this contact..."></textarea>
+				</label>
+				<input type="submit" value="Add contact" />
+			</fieldset>
+		</form>
+	</section>
+</MainLayout>

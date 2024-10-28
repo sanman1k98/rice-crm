@@ -10,10 +10,10 @@ export type ContactId = ContactInfo['id'];
 export const ContactSortFields = ['lastName', 'firstName', 'company'] as const satisfies (keyof ContactInfo)[];
 
 export type ContactInit = Omit<typeof Contact.$inferInsert, | 'id'> & {
-	emails?: EmailInfo[];
-	phones?: PhoneInfo[];
-	addresses?: AddressInfo[];
-	links?: LinkInfo[];
+	emails?: EmailInfo[] | null;
+	phones?: PhoneInfo[] | null;
+	addresses?: AddressInfo[] | null;
+	links?: LinkInfo[] | null;
 };
 
 export async function createContact(opts: ContactInit) {
