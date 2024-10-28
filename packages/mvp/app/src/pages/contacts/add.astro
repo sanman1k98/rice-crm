@@ -4,11 +4,6 @@ import { actions } from 'astro:actions';
 
 if (!Astro.locals.user)
 	return Astro.redirect.login();
-
-const result = Astro.getActionResult(actions.contact.create);
-
-if (result && result.data.id)
-	return Astro.redirect(`/contacts/${result.data.id}`);
 ---
 
 <MainLayout
@@ -31,8 +26,36 @@ if (result && result.data.id)
 				<label>
 					<textarea name="note" placeholder="Any additional information about this contact..."></textarea>
 				</label>
+				<small
+					id="invalid-helper"
+					aria-hidden="true"
+					class="!text-red-600 aria-hidden:hidden"
+				></small>
 				<input type="submit" value="Add contact" />
 			</fieldset>
 		</form>
 	</section>
+
+	<script>
+		import { actions, isInputError } from 'astro:actions';
+
+		const formEl = document.querySelector('form') as HTMLFormElement;
+		const submitButton = document.querySelector('input[type="submit"]') as HTMLInputElement;
+
+		submitButton.addEventListener('submit', async (ev) => {
+			ev.preventDefault();
+			const formData = new FormData(formEl);
+			const res = await actions.contact.create(formData);
+			if (res.data) {
+				window.location.href = `/contacts/${res.data.id}`;
+			} else if (isInputError(res.error)) {
+				const message = Object.values(res.error.fields)
+					.flat()
+					.join(', ');
+				const helper = document.getElementById('invalid-helper')!;
+				helper.removeAttribute('aria-hidden');
+				helper.textContent = message;
+			}
+		});
+	</script>
 </MainLayout>
