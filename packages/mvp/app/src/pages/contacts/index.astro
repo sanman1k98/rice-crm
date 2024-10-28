@@ -31,6 +31,8 @@ let contacts: ContactInfo[];
  * opts = getQueryOpts(new URLSearchParams('sort=lastName+desc&sort=lastName'))
  * console.log(opts) // { lastName: undefined }
  * ```
+ *
+ * TODO: Extract this function into some utility module.
  */
 function getQueryOpts(searchParams: URLSearchParams) {
 	const entries = searchParams
@@ -76,17 +78,16 @@ if (!Astro.url.searchParams.has('sort')) {
 		title: 'Contacts',
 		description: 'All contacts',
 	}}
-	class="mx-auto container pico"
+	class="container pico"
 >
 	<h1>Contacts</h1>
-	<div class="overflow-auto">
-		<table class="">
+	<div class="overflow-auto mb-24">
+		<table>
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
 					<th scope="col">Emails</th>
 					<th scope="col">Phone</th>
-					<!-- <th scope="col">Title</th> -->
 				</tr>
 			</thead>
 			<tbody>
@@ -98,7 +99,6 @@ if (!Astro.url.searchParams.has('sort')) {
 							</th>
 							<td>{(c.emails as EmailInfo[]).map((e) => e.email).join(', ')}</td>
 							<td class="text-nowrap">{(c.phones as PhoneInfo[]).map((p) => p.phone).join(', ')}</td>
-							<!-- <td>{c.jobTitle}</td> -->
 						</tr>
 					))
 				}
