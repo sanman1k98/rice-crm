@@ -121,6 +121,16 @@ const Contact = defineTable({
 	},
 });
 
+const VCard = defineTable({
+	columns: {
+		/**
+		 * jCard data.
+		 * @see https://github.com/kewisch/ical.js
+		 */
+		data: column.json({}),
+	},
+});
+
 /**
  * Leads are gathered from various sources such as websites, mailing lists, conferences, LinkedIn,
  * etc. A lead can become a deal when all of the qualification criteria are met.
@@ -238,6 +248,7 @@ export default defineDb({
 		Opportunity,
 		Company,
 		Contact,
+		VCard,
 		Lead,
 		Label,
 		LeadsMeta,
