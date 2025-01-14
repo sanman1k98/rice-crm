@@ -9,53 +9,9 @@ import type { CompanyId, CompanyInit } from '@/lib/companies';
 import type { ContactId, ContactInit } from '@/lib/contacts';
 import type { DealInit } from '@/lib/deals';
 import type { LeadId, LeadInit } from '@/lib/leads';
-import { createAccount } from '@/lib/accounts';
-import { createOpportunity, OpportunityStageEnum } from '@/lib/opportunities';
-import { createTasks } from '@/lib/tasks';
-import { createUser, OrgRoleValueEnum, type UserId, type UserInfo } from '@/lib/users';
+import { createUser, OrgRoleValueEnum, type UserId } from '@/lib/users';
 import { faker } from '@faker-js/faker';
-import { actions } from 'astro:actions';
 import { Company, Contact, db, Deal, Lead } from 'astro:db';
-
-async function seedDeprecatedTables(user: UserInfo) {
-	const testCustomer = await createAccount({
-		name: 'Test Customer',
-		description: 'This Account was created for development.',
-		email: 'test.customer@example.com',
-		address: 'Earth',
-	});
-
-	const exampleOpportunity = await createOpportunity({
-		author: user.id,
-		account: testCustomer.id,
-		name: 'Example opportunity',
-		stage: OpportunityStageEnum.Engage,
-		amount: 1_000_000,
-	});
-
-	await createTasks(user, [
-		{
-			title: 'Create backend',
-			opportunity: exampleOpportunity.id,
-			body: faker.lorem.paragraph(),
-		},
-		{
-			title: 'Create frontend',
-			opportunity: exampleOpportunity.id,
-			body: faker.lorem.paragraph(),
-		},
-		{
-			title: 'Profit',
-			opportunity: exampleOpportunity.id,
-			body: faker.lorem.paragraph(),
-		},
-		{
-			title: 'Spend money',
-			opportunity: exampleOpportunity.id,
-			body: faker.lorem.paragraph(),
-		},
-	]);
-}
 
 function generateCompany() {
 	return {
