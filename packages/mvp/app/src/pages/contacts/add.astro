@@ -1,9 +1,8 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
-import { actions } from 'astro:actions';
 
 if (!Astro.locals.user)
-	return Astro.redirect.login();
+	return Astro.redirect('/login');
 ---
 
 <MainLayout
@@ -15,41 +14,37 @@ if (!Astro.locals.user)
 >
 	<h1>Add a new contact</h1>
 	<section>
-		<form method="post" action={actions.contact.create}>
-			<fieldset>
-				<label>
-					<input type="text" name="firstName" placeholder="First name" required />
-				</label>
-				<label>
-					<input type="text" name="lastName" placeholder="Last name" required />
-				</label>
-				<label>
-					<textarea name="note" placeholder="Any additional information about this contact..."></textarea>
-				</label>
-				<small
-					id="invalid-helper"
-					aria-hidden="true"
-					class="!text-red-600 aria-hidden:hidden"
-				></small>
-				<input type="submit" value="Add contact" />
-			</fieldset>
+		<form id="contact-form">
+			<label>
+				<input type="text" name="firstName" placeholder="First name" required />
+			</label>
+			<label>
+				<input type="text" name="lastName" placeholder="Last name" required />
+			</label>
+			<label>
+				<textarea name="note" placeholder="Any additional information about this contact..."></textarea>
+			</label>
+			<small
+				id="invalid-helper"
+				aria-hidden="true"
+				class="!text-red-600 aria-hidden:hidden"
+			></small>
+			<input type="submit" value="Add" />
 		</form>
 	</section>
 
 	<script>
 		import { actions, isInputError } from 'astro:actions';
 
-		const formEl = document.querySelector('form') as HTMLFormElement;
-		const submitButton = document.querySelector('input[type="submit"]') as HTMLInputElement;
-
-		submitButton.addEventListener('submit', async (ev) => {
+		const form = document.getElementById('contact-form') as HTMLFormElement;
+		form.addEventListener('submit', async (ev) => {
 			ev.preventDefault();
-			const formData = new FormData(formEl);
-			const res = await actions.contact.create(formData);
-			if (res.data) {
-				window.location.href = `/contacts/${res.data.id}`;
-			} else if (isInputError(res.error)) {
-				const message = Object.values(res.error.fields)
+			const formData = new FormData(form);
+			const { data, error } = await actions.contact.create(formData);
+			if (data) {
+				window.location.replace(`/contacts/${data.id}`);
+			} else if (isInputError(error)) {
+				const message = Object.values(error.fields)
 					.flat()
 					.join(', ');
 				const helper = document.getElementById('invalid-helper')!;
