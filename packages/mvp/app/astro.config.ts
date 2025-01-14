@@ -16,12 +16,4 @@ export default defineConfig({
 		}),
 		db(),
 	],
-	security: {
-		// Enable CSRF protection (required for Lucia auth).
-		checkOrigin: true,
-	},
-	experimental: {
-		// Will be the default in Astro 5.0.
-		directRenderScript: true,
-	},
 });
